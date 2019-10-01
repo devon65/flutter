@@ -1,4 +1,4 @@
-package com.example.flutter.ui.main
+package com.example.flutter.ui.main.login
 
 import android.content.Context
 import android.os.Bundle
@@ -42,7 +42,7 @@ class LoginFragment : Fragment() {
         if (context is LoginFragmentListener) {
             mListener = context
         } else {
-            throw RuntimeException(context!!.toString() + " must implement OnFragmentInteractionListener")
+            //throw RuntimeException(context!!.toString() + " must implement OnFragmentInteractionListener")
         }
     }
 

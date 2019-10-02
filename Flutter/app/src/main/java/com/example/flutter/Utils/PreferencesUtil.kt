@@ -3,7 +3,7 @@ package com.example.flutter.Utils
 import android.content.Context
 import android.preference.PreferenceManager
 
-object SharedPreferencesUtil {
+object PreferencesUtil {
     fun getBoolean(context: Context?, key: String, defaultBoolean: Boolean): Boolean{
         if(context == null){return defaultBoolean}
         val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)

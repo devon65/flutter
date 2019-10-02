@@ -12,7 +12,6 @@ interface MainContract {
 
     interface IMainActivity : BaseView<MainActivityPresenter> {
         fun getContext(): Context
-        fun displayWeatherState()
         fun launchLoginActivity()
     }
 }

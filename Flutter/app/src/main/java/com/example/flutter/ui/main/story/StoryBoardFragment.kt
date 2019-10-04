@@ -1,33 +1,38 @@
 package com.example.flutter.ui.main.story
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.flutter.R
-import com.example.flutter.ui.main.PageViewModel
-import com.example.flutter.ui.main.feed.NewsFeedFragment
-import com.example.flutter.ui.main.feed.StatusRecyclerViewAdapter
-import com.example.flutter.ui.main.feed.dummy.DummyContent
+import com.example.flutter.Utils.SessionInfo
+import com.example.flutter.models.ClickableLink
+import com.example.flutter.models.User
+import com.example.flutter.ui.main.status.OnStatusInteractionListener
+import com.example.flutter.ui.main.status.StatusRecyclerViewAdapter
+import com.example.flutter.ui.main.status.dummy.DummyContent
 
 /**
  * A placeholder fragment containing a simple view.
  */
 class StoryBoardFragment : Fragment() {
 
-    private lateinit var pageViewModel: PageViewModel
+    private lateinit var currentUser: User
+    private var listener: OnStoryBoardInteractionListener? = null
 
-    // TODO: Customize parameters
-    private var columnCount = 1
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
 
-    private var listener: NewsFeedFragment.OnListFragmentInteractionListener? = null
+        arguments?.let {
+            val userId = it.getString(USER_ID)
+            this.currentUser = SessionInfo.getUserById(userId ?: "") ?: SessionInfo.currentUser
+        }
+    }
 
     override fun onCreateView(
             inflater: LayoutInflater, container: ViewGroup?,
@@ -38,37 +43,38 @@ class StoryBoardFragment : Fragment() {
         val statusList = view.findViewById<RecyclerView>(R.id.story_status_list)
         // Set the adapter
         with(statusList) {
-            layoutManager = when {
-                columnCount <= 1 -> LinearLayoutManager(context)
-                else -> GridLayoutManager(context, columnCount)
-            }
-            adapter = StatusRecyclerViewAdapter(DummyContent.ITEMS, listener)
+            layoutManager = LinearLayoutManager(context)
+            adapter = StatusRecyclerViewAdapter(SessionInfo.getUserStory(currentUser), listener)
         }
 
         return view
     }
 
-    interface OnListFragmentInteractionListener {
-        // TODO: Update argument type and name
-        fun onListFragmentInteraction(item: DummyContent.DummyItem?)
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        if (context is OnStoryBoardInteractionListener) {
+            listener = context
+        } else {
+            throw RuntimeException(context.toString() + " must implement OnStoryBoardInteractionListener")
+        }
+    }
+
+    override fun onDetach() {
+        super.onDetach()
+        listener = null
+    }
+
+    interface OnStoryBoardInteractionListener: OnStatusInteractionListener {
     }
 
     companion object {
-        /**
-         * The fragment argument representing the section number for this
-         * fragment.
-         */
-        private const val ARG_SECTION_NUMBER = "section_number"
+        private const val USER_ID = "userId"
 
-        /**
-         * Returns a new instance of this fragment for the given section
-         * number.
-         */
         @JvmStatic
-        fun newInstance(sectionNumber: Int): StoryBoardFragment {
+        fun newInstance(userId: String? = null): StoryBoardFragment {
             return StoryBoardFragment().apply {
                 arguments = Bundle().apply {
-                    putInt(ARG_SECTION_NUMBER, sectionNumber)
+                    putString(USER_ID, userId)
                 }
             }
         }

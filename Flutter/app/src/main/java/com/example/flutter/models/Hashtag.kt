@@ -1,10 +1,13 @@
 package com.example.flutter.models
+import android.view.View
 
-class Hashtag: ClickableLink {
-    override val linkDisplay: String
-        get() = TODO("not implemented") //To change initializer of created properties use File | Settings | File Templates.
 
-    override fun onClick() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+class Hashtag(linkText: String ,clickListener: ClickableLinkListener? = null): ClickableLink(linkText, clickListener) {
+    init {
+        val sup = "ahhh1"
+    }
+
+    override fun onClick(widget: View) {
+        clickListener?.onLinkClicked(linkText)
     }
 }

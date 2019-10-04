@@ -1,10 +1,13 @@
 package com.example.flutter.models
 
-class URL: ClickableLink {
-    override val linkDisplay: String
-        get() = TODO("not implemented") //To change initializer of created properties use File | Settings | File Templates.
+import android.content.Context
+import android.text.style.ClickableSpan
+import android.view.View
+import android.widget.TextView
 
-    override fun onClick() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+class URL(linkText: String ,clickListener: ClickableLinkListener? = null) : ClickableLink(linkText ,clickListener) {
+
+    override fun onClick(widget: View) {
+        clickListener?.onLinkClicked(linkText)
     }
 }

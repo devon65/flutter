@@ -1,4 +1,4 @@
-package com.example.flutter.ui.main.feed.dummy
+package com.example.flutter.ui.main.status.dummy
 
 import java.util.ArrayList
 import java.util.HashMap

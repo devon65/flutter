@@ -2,6 +2,7 @@ package com.example.flutter.ui.main.feed
 
 import android.content.Context
 import android.os.Bundle
+import android.se.omapi.Session
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -10,27 +11,25 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.example.flutter.R
+import com.example.flutter.Utils.SessionInfo
+import com.example.flutter.models.Hashtag
+import com.example.flutter.models.Status
+import com.example.flutter.ui.main.status.OnStatusInteractionListener
 
-import com.example.flutter.ui.main.feed.dummy.DummyContent
-import com.example.flutter.ui.main.feed.dummy.DummyContent.DummyItem
+import com.example.flutter.ui.main.status.dummy.DummyContent
+import com.example.flutter.ui.main.status.dummy.DummyContent.DummyItem
+import com.example.flutter.ui.main.status.StatusRecyclerViewAdapter
 
-/**
- * A fragment representing a list of Items.
- * Activities containing this fragment MUST implement the
- * [NewsFeedFragment.OnListFragmentInteractionListener] interface.
- */
-class NewsFeedFragment : Fragment() {
+class NewsFeedFragment : Fragment(), OnStatusInteractionListener {
 
-    // TODO: Customize parameters
-    private var columnCount = 1
-
-    private var listener: OnListFragmentInteractionListener? = null
+    private var hashtag: String? = null
+    private var listener: OnNewsFeedInteractionListener? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         arguments?.let {
-            columnCount = it.getInt(ARG_COLUMN_COUNT)
+            hashtag = it.getString(HASHTAG_ID)
         }
     }
 
@@ -40,13 +39,12 @@ class NewsFeedFragment : Fragment() {
         val view = inflater.inflate(R.layout.fragment_news_feed, container, false)
 
         val statusList = view.findViewById<RecyclerView>(R.id.feed_status_list)
+        val feedList = if (hashtag != null) SessionInfo.getStatusesByHashtag(hashtag?: "")
+                        else SessionInfo.getUserFeed(SessionInfo.currentUser)
         // Set the adapter
         with(statusList) {
-            layoutManager = when {
-                columnCount <= 1 -> LinearLayoutManager(context)
-                else -> GridLayoutManager(context, columnCount)
-            }
-            adapter = StatusRecyclerViewAdapter(DummyContent.ITEMS, listener)
+            layoutManager = LinearLayoutManager(context)
+            adapter = StatusRecyclerViewAdapter(feedList, listener)
         }
 
         return view
@@ -54,11 +52,11 @@ class NewsFeedFragment : Fragment() {
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-//        if (context is OnListFragmentInteractionListener) {
-//            listener = context
-//        } else {
-//            throw RuntimeException(context.toString() + " must implement OnListFragmentInteractionListener")
-//        }
+        if (context is OnNewsFeedInteractionListener) {
+            listener = context
+        } else {
+            throw RuntimeException(context.toString() + " must implement OnNewsFeedInteractionListener")
+        }
     }
 
     override fun onDetach() {
@@ -66,33 +64,29 @@ class NewsFeedFragment : Fragment() {
         listener = null
     }
 
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     *
-     *
-     * See the Android Training lesson
-     * [Communicating with Other Fragments](http://developer.android.com/training/basics/fragments/communicating.html)
-     * for more information.
-     */
-    interface OnListFragmentInteractionListener {
-        // TODO: Update argument type and name
-        fun onListFragmentInteraction(item: DummyItem?)
+    interface OnNewsFeedInteractionListener: OnStatusInteractionListener
+
+    override fun onHashtagClicked(hashtagText: String) {
+        listener?.onHashtagClicked(hashtagText)
+    }
+
+    override fun onUserMentionClicked(userMentionText: String, userId: String?) {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override fun onStatusClicked(status: Status) {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
     companion object {
 
-        // TODO: Customize parameter argument names
-        const val ARG_COLUMN_COUNT = "column-count"
+        const val HASHTAG_ID = "hashtagId"
 
-        // TODO: Customize parameter initialization
         @JvmStatic
-        fun newInstance(columnCount: Int) =
+        fun newInstance(hashtag: String? = null) =
             NewsFeedFragment().apply {
                 arguments = Bundle().apply {
-                    putInt(ARG_COLUMN_COUNT, columnCount)
+                    putString(HASHTAG_ID, hashtag)
                 }
             }
     }

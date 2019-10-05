@@ -1,8 +1,12 @@
 package com.example.flutter.ui.main.feed
 
+import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.AttributeSet
+import android.view.View
+import android.widget.TextView
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import com.example.flutter.R
@@ -19,6 +23,9 @@ class HashtagFeedActivity : AppCompatActivity(), FeedContract.IFeedActivity, New
         setContentView(R.layout.activity_hashtag_feed)
 
         val hashtag = intent.getStringExtra(HASHTAG_ID) ?: ""
+
+        val hashtagTitle = findViewById<TextView>(R.id.hashtag_feed_title)
+        hashtagTitle.text = String.format(getString(R.string.hashtag_feed_title), hashtag)
 
         setPresenter(FeedPresenter(this))
         presenter.onViewCreated(hashtag)

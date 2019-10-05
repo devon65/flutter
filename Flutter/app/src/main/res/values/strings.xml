@@ -6,5 +6,6 @@
     <string name="login_username">Username</string>
     <string name="login_password">Password</string>
 
-    <string name="hashtag_feed_title">Who\'s Fluttering about %s?</string>
+    <string name="hashtag_feed_title">Who\'s Fluttering about %s
+    </string>
 </resources>

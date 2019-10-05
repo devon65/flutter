@@ -21,7 +21,7 @@ object SessionInfo {
         return DummyData.getStatusesByHashtag(tag)
     }
 
-    fun getUserById(userId: String): User?{
+    fun getUserById(userId: String?): User?{
         return DummyData.idToUserMap[userId]
     }
 
@@ -31,5 +31,9 @@ object SessionInfo {
 
     fun getUserStory(user: User?): List<Status>{
         return DummyData.getUserStory(user)
+    }
+
+    fun getUserIdByAlias(alias: String?): String?{
+        return DummyData.aliasToUserMap[alias]?.userId
     }
 }

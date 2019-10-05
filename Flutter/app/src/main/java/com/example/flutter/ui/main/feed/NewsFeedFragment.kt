@@ -2,23 +2,18 @@ package com.example.flutter.ui.main.feed
 
 import android.content.Context
 import android.os.Bundle
-import android.se.omapi.Session
 import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.example.flutter.R
-import com.example.flutter.Utils.SessionInfo
-import com.example.flutter.models.Hashtag
 import com.example.flutter.models.Status
 import com.example.flutter.ui.main.status.OnStatusInteractionListener
 
-import com.example.flutter.ui.main.status.dummy.DummyContent
-import com.example.flutter.ui.main.status.dummy.DummyContent.DummyItem
 import com.example.flutter.ui.main.status.StatusRecyclerViewAdapter
+import kotlinx.android.synthetic.main.fragment_status_list.*
 
 class NewsFeedFragment : Fragment(), OnStatusInteractionListener {
 
@@ -39,8 +34,7 @@ class NewsFeedFragment : Fragment(), OnStatusInteractionListener {
         val view = inflater.inflate(R.layout.fragment_news_feed, container, false)
 
         val statusList = view.findViewById<RecyclerView>(R.id.feed_status_list)
-        val feedList = if (hashtag != null) SessionInfo.getStatusesByHashtag(hashtag?: "")
-                        else SessionInfo.getUserFeed(SessionInfo.currentUser)
+        val feedList = listener?.getStatusFeedList(hashtag) ?: listOf()
         // Set the adapter
         with(statusList) {
             layoutManager = LinearLayoutManager(context)
@@ -64,18 +58,20 @@ class NewsFeedFragment : Fragment(), OnStatusInteractionListener {
         listener = null
     }
 
-    interface OnNewsFeedInteractionListener: OnStatusInteractionListener
-
-    override fun onHashtagClicked(hashtagText: String) {
-        listener?.onHashtagClicked(hashtagText)
+    interface OnNewsFeedInteractionListener: OnStatusInteractionListener {
+        fun getStatusFeedList(hashtagText: String?): List<Status>
     }
 
-    override fun onUserMentionClicked(userMentionText: String, userId: String?) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    override fun launchHashtagFeed(hashtagText: String) {
+        listener?.launchHashtagFeed(hashtagText)
     }
 
-    override fun onStatusClicked(status: Status) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    override fun launchUserStory(userMentionText: String, userId: String?) {
+        listener?.launchUserStory(userMentionText, userId)
+    }
+
+    override fun launchStatusView(status: Status) {
+        listener?.launchStatusView(status)
     }
 
     companion object {

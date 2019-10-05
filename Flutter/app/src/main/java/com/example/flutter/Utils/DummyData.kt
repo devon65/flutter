@@ -36,8 +36,8 @@ object DummyData {
             return mIdToStatus ?: makeIdToStatusMap()
         }
 
-    private var mHashtagToStatuses: Map<String, ArrayList<String>>? = null
-    val hashtagToStatuses: Map<String, ArrayList<String>>
+    private var mHashtagToStatuses: Map<String, Set<String>>? = null
+    val hashtagToStatuses: Map<String, Set<String>>
         get() {
             return mHashtagToStatuses ?: makeHashtagToStatusesMap()
         }
@@ -177,13 +177,13 @@ object DummyData {
         return newAliasToUserMap
     }
 
-    private fun makeHashtagToStatusesMap(): Map<String, ArrayList<String>>{
-        val newHashtagToStatusMap = HashMap<String, ArrayList<String>>()
+    private fun makeHashtagToStatusesMap(): Map<String, Set<String>>{
+        val newHashtagToStatusMap = HashMap<String, HashSet<String>>()
 
         for (status in fakeStatuses){
             for (tag in status.hashtagList){
                 if (newHashtagToStatusMap[tag] == null) {
-                    newHashtagToStatusMap[tag] = ArrayList(listOf(status.statusId))
+                    newHashtagToStatusMap[tag] = HashSet(setOf(status.statusId))
                 }
                 else{
                     newHashtagToStatusMap[tag]?.add(status.statusId)

@@ -12,10 +12,12 @@ import androidx.appcompat.app.AppCompatActivity
 import com.example.flutter.R
 import com.example.flutter.Utils.Constants
 import com.example.flutter.models.Status
+import com.example.flutter.models.User
 import com.example.flutter.ui.main.feed.HashtagFeedActivity
 import com.example.flutter.ui.main.feed.NewsFeedFragment
 import com.example.flutter.ui.main.login.LoginActivity
 import com.example.flutter.ui.main.story.StoryBoardFragment
+import com.example.flutter.ui.main.story.UserStoryActivity
 
 class MainActivity : AppCompatActivity(), MainContract.IMainActivity,
     NewsFeedFragment.OnNewsFeedInteractionListener, StoryBoardFragment.OnStoryBoardInteractionListener {
@@ -67,34 +69,39 @@ class MainActivity : AppCompatActivity(), MainContract.IMainActivity,
         }
     }
 
-    override fun launchViewHashtagActivity(hashtag: String) {
-        val intent = Intent(this, HashtagFeedActivity::class.java).apply {
-            putExtra(HashtagFeedActivity.HASHTAG_ID, hashtag)
-        }
-        startActivity(intent)
-    }
-
-    override fun launchViewProfileActivity(userId: String) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
-    override fun launchViewStatusActivity(status: Status) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
     override fun getContext(): Context {
         return this
     }
 
-    override fun onHashtagClicked(hashtagText: String) {
-        launchViewHashtagActivity(hashtagText)
+    override fun launchHashtagFeed(hashtagText: String) {
+        val intent = Intent(this, HashtagFeedActivity::class.java).apply {
+            putExtra(HashtagFeedActivity.HASHTAG_ID, hashtagText)
+        }
+        startActivity(intent)
     }
 
-    override fun onUserMentionClicked(userMentionText: String, userId: String?) {
-        if (userId != null) { launchViewProfileActivity(userId) }
+    override fun launchUserStory(userMentionText: String, userId: String?) {
+        if (userId != null) {
+            val intent = Intent(this, UserStoryActivity::class.java).apply {
+                putExtra(UserStoryActivity.USER_ID, userId)
+            }
+            startActivity(intent)
+        }
     }
 
-    override fun onStatusClicked(status: Status) {
-        launchViewStatusActivity(status)
+    override fun launchStatusView(status: Status) {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override fun getStatusFeedList(hashtagText: String?): List<Status> {
+        return presenter.getStatusFeedList()
+    }
+
+    override fun getUser(userId: String?): User {
+        return presenter.getUser()
+    }
+
+    override fun getUserStory(user: User?): List<Status> {
+        return presenter.getUserStory()
     }
 }

@@ -28,18 +28,18 @@ class StatusRecyclerViewAdapter(
     init {
         mOnClickListener = View.OnClickListener { v ->
             val item = v.tag as Status
-            statusInteractionListener?.onStatusClicked(item)
+            statusInteractionListener?.launchStatusView(item)
         }
     }
 
     private val hashtagListener = object: ClickableLinkListener {
         override fun onLinkClicked(linkText: String, id: String?) {
-            statusInteractionListener?.onHashtagClicked(linkText)
+            statusInteractionListener?.launchHashtagFeed(linkText)
         }
     }
     private val userMentionListener = object: ClickableLinkListener {
         override fun onLinkClicked(linkText: String, id: String?) {
-            statusInteractionListener?.onUserMentionClicked(linkText)
+            statusInteractionListener?.launchUserStory(linkText, id)
         }
     }
 
@@ -60,7 +60,7 @@ class StatusRecyclerViewAdapter(
         holder.messageBody.movementMethod = LinkMovementMethod.getInstance()
 
         val handleText = SpannableString(status.user.alias)
-        StatusHelper.setUserMentions(handleText, userMentionListener)
+        StatusHelper.setUserMentions(handleText, userMentionListener, status.user.userId)
 
         holder.handle.text = handleText
         holder.handle.movementMethod = LinkMovementMethod.getInstance()

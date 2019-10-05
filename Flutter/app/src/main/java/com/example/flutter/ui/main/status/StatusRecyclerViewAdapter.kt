@@ -7,17 +7,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.TextView
 import com.example.flutter.R
-import com.example.flutter.models.ClickableLink.ClickableLinkListener
+import com.example.flutter.ui.main.status.ClickableLink.ClickableLinkListener
 import com.example.flutter.models.Status
-import com.example.flutter.ui.main.status.dummy.DummyContent.DummyItem
 
-/**
- * [RecyclerView.Adapter] that can display a [DummyItem] and makes a call to the
- * specified [OnListFragmentInteractionListener].
- * TODO: Replace the implementation with code for your data type.
- */
+
 class StatusRecyclerViewAdapter(
     private val mValues: List<Status>,
     private val statusInteractionListener: OnStatusInteractionListener?) :
@@ -64,10 +60,11 @@ class StatusRecyclerViewAdapter(
 
         holder.handle.text = handleText
         holder.handle.movementMethod = LinkMovementMethod.getInstance()
-//        with(holder.mView) {
-//            tag = status
-//            setOnClickListener(mOnClickListener)
-//        }
+
+        with(holder.statusLayout) {
+            tag = status
+            setOnClickListener(mOnClickListener)
+        }
     }
 
     override fun getItemCount(): Int = mValues.size
@@ -77,5 +74,6 @@ class StatusRecyclerViewAdapter(
         val messageBody: TextView = mView.findViewById(R.id.status_message_body)
         val handle: TextView = mView.findViewById(R.id.status_handle)
         val profilePic: ImageView = mView.findViewById(R.id.status_profile_pic)
+        val statusLayout: LinearLayout = mView.findViewById(R.id.status_layout)
     }
 }

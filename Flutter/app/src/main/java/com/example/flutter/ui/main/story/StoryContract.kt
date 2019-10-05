@@ -12,7 +12,7 @@ interface StoryContract {
         fun getUserStory(user: User?): List<Status>
     }
 
-    interface IStoryActivity : BaseStatusesView<StoryPresenter> {
+    interface IStoryActivity : BaseStatusesView<IStoryPresenter> {
         fun viewUserStoryFragment(userId: String)
     }
 }

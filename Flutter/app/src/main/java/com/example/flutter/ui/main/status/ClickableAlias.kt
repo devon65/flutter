@@ -1,12 +1,9 @@
-package com.example.flutter.models
+package com.example.flutter.ui.main.status
 
-import android.content.Context
 import android.view.View
-import android.widget.TextView
-import android.widget.Toast
 import com.example.flutter.Utils.SessionInfo
 
-class UserAlias(linkText: String, clickListener: ClickableLinkListener? = null, val userId: String? = null) :
+class ClickableAlias(linkText: String, clickListener: ClickableLinkListener? = null, val userId: String? = null) :
     ClickableLink(linkText, clickListener) {
 
     override fun onClick(widget: View) {

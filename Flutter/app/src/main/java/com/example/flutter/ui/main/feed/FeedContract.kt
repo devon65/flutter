@@ -1,12 +1,8 @@
 package com.example.flutter.ui.main.feed
 
-import android.content.Context
 import com.example.flutter.BasePresenter
 import com.example.flutter.BaseStatusesView
-import com.example.flutter.BaseView
-import com.example.flutter.models.Hashtag
 import com.example.flutter.models.Status
-import com.example.flutter.ui.main.MainActivityPresenter
 
 interface FeedContract {
     interface IFeedPresenter : BasePresenter {
@@ -14,7 +10,7 @@ interface FeedContract {
         fun getStatusFeedList(hashtagText: String?): List<Status>
     }
 
-    interface IFeedActivity : BaseStatusesView<FeedPresenter> {
+    interface IFeedActivity : BaseStatusesView<IFeedPresenter> {
         fun viewHashtagFeedFragment(hashtagText: String)
     }
 }

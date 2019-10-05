@@ -2,11 +2,7 @@ package com.example.flutter.ui.main.status
 
 import android.text.SpannableString
 import android.text.Spanned
-import android.widget.ExpandableListView
 import com.example.flutter.Utils.Constants
-import com.example.flutter.models.ClickableLink
-import com.example.flutter.models.Hashtag
-import com.example.flutter.models.UserAlias
 import java.util.regex.Pattern
 
 
@@ -19,7 +15,11 @@ object StatusHelper {
 
         while (matcher.find()) {
             val linkText = message.substring(matcher.start(), matcher.end())
-            message.setSpan(Hashtag(linkText, clickListener), matcher.start(), matcher.end(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+            message.setSpan(
+                ClickableHashtag(
+                    linkText,
+                    clickListener
+                ), matcher.start(), matcher.end(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
         }
     }
 
@@ -30,7 +30,12 @@ object StatusHelper {
 
         while (matcher.find()) {
             val linkText = message.substring(matcher.start(), matcher.end())
-            message.setSpan(UserAlias(linkText, clickListener, userId), matcher.start(), matcher.end(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+            message.setSpan(
+                ClickableAlias(
+                    linkText,
+                    clickListener,
+                    userId
+                ), matcher.start(), matcher.end(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
         }
     }
 

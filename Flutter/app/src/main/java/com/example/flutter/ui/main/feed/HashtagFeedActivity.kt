@@ -1,22 +1,18 @@
 package com.example.flutter.ui.main.feed
 
-import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.AttributeSet
-import android.view.View
 import android.widget.TextView
-import androidx.core.os.bundleOf
-import androidx.fragment.app.Fragment
 import com.example.flutter.R
-import com.example.flutter.models.Hashtag
 import com.example.flutter.models.Status
+import com.example.flutter.ui.main.status.StatusViewActivity
 import com.example.flutter.ui.main.story.UserStoryActivity
 
 class HashtagFeedActivity : AppCompatActivity(), FeedContract.IFeedActivity, NewsFeedFragment.OnNewsFeedInteractionListener {
 
     internal lateinit var presenter: FeedContract.IFeedPresenter
+    lateinit var hashtagTitle: TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -24,14 +20,13 @@ class HashtagFeedActivity : AppCompatActivity(), FeedContract.IFeedActivity, New
 
         val hashtag = intent.getStringExtra(HASHTAG_ID) ?: ""
 
-        val hashtagTitle = findViewById<TextView>(R.id.hashtag_feed_title)
-        hashtagTitle.text = String.format(getString(R.string.hashtag_feed_title), hashtag)
+        hashtagTitle = findViewById(R.id.hashtag_feed_title)
 
         setPresenter(FeedPresenter(this))
         presenter.onViewCreated(hashtag)
     }
 
-    override fun setPresenter(presenter: FeedPresenter) {
+    override fun setPresenter(presenter: FeedContract.IFeedPresenter) {
         this.presenter = presenter
     }
 
@@ -41,6 +36,7 @@ class HashtagFeedActivity : AppCompatActivity(), FeedContract.IFeedActivity, New
     }
 
     override fun viewHashtagFeedFragment(hashtagText: String) {
+        hashtagTitle.text = String.format(getString(R.string.hashtag_feed_title), hashtagText)
         val fragment = NewsFeedFragment.newInstance(hashtagText)
         supportFragmentManager.beginTransaction()
             .replace(R.id.feed_fragment_holder, fragment)
@@ -55,13 +51,18 @@ class HashtagFeedActivity : AppCompatActivity(), FeedContract.IFeedActivity, New
         if (userId != null) {
             val intent = Intent(this, UserStoryActivity::class.java).apply {
                 putExtra(UserStoryActivity.USER_ID, userId)
+                addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
             }
             startActivity(intent)
         }
     }
 
     override fun launchStatusView(status: Status) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        val intent = Intent(this, StatusViewActivity::class.java).apply {
+            putExtra(StatusViewActivity.STATUS_ID, status.statusId)
+            addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+        }
+        startActivity(intent)
     }
 
     override fun getStatusFeedList(hashtagText: String?): List<Status> {

@@ -5,35 +5,41 @@ import com.example.flutter.models.User
 
 object SessionInfo {
 
+    private val dataExtractor: DataExtractionInterface = DummyData
+
     private var mCurrentUser: User? = null
     val currentUser: User
         get() {
-            return mCurrentUser ?: getSuperUser()
+            return mCurrentUser ?: extractCurrentUser()
         }
 
-    private fun getSuperUser(): User{
-         val superUser = DummyData.superUser
+    private fun extractCurrentUser(): User{
+         val superUser = dataExtractor.getCurrentUser()
         mCurrentUser = superUser
         return superUser
     }
 
     fun getStatusesByHashtag(tag: String): List<Status>{
-        return DummyData.getStatusesByHashtag(tag)
+        return dataExtractor.getStatusesByHashtag(tag)
+    }
+
+    fun getStatusById(statusId: String?): Status?{
+        return dataExtractor.getStatusById(statusId)
     }
 
     fun getUserById(userId: String?): User?{
-        return DummyData.idToUserMap[userId]
+        return dataExtractor.getUserById(userId)
     }
 
     fun getUserFeed(user: User?): List<Status>{
-        return DummyData.getUserFeed(user)
+        return dataExtractor.getUserFeed(user)
     }
 
     fun getUserStory(user: User?): List<Status>{
-        return DummyData.getUserStory(user)
+        return dataExtractor.getUserStory(user)
     }
 
     fun getUserIdByAlias(alias: String?): String?{
-        return DummyData.aliasToUserMap[alias]?.userId
+        return dataExtractor.getUserIdByAlias(alias)
     }
 }

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/linearLayout"
+    android:id="@+id/status_layout"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:padding="10dp"
@@ -28,6 +28,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAllCaps="false"
+            android:textSize="18sp"
+            android:lineSpacingExtra="3sp"
             android:text="Snoopy is a fictional character, the pet beagle of Charlie Brown in the comic strip Peanuts by Charles M. Schulz. Snoopy is a fictional character, the pet beagle of Charlie Brown in the comic strip Peanuts by Charles M. Schulz. "/>
 
     </LinearLayout>

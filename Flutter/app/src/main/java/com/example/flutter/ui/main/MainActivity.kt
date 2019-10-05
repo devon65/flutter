@@ -16,6 +16,7 @@ import com.example.flutter.models.User
 import com.example.flutter.ui.main.feed.HashtagFeedActivity
 import com.example.flutter.ui.main.feed.NewsFeedFragment
 import com.example.flutter.ui.main.login.LoginActivity
+import com.example.flutter.ui.main.status.StatusViewActivity
 import com.example.flutter.ui.main.story.StoryBoardFragment
 import com.example.flutter.ui.main.story.UserStoryActivity
 
@@ -90,7 +91,10 @@ class MainActivity : AppCompatActivity(), MainContract.IMainActivity,
     }
 
     override fun launchStatusView(status: Status) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        val intent = Intent(this, StatusViewActivity::class.java).apply {
+            putExtra(StatusViewActivity.STATUS_ID, status.statusId)
+        }
+        startActivity(intent)
     }
 
     override fun getStatusFeedList(hashtagText: String?): List<Status> {

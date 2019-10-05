@@ -7,6 +7,7 @@ import com.example.flutter.R
 import com.example.flutter.models.Status
 import com.example.flutter.models.User
 import com.example.flutter.ui.main.feed.HashtagFeedActivity
+import com.example.flutter.ui.main.status.StatusViewActivity
 
 class UserStoryActivity : AppCompatActivity(), StoryContract.IStoryActivity, StoryBoardFragment.OnStoryBoardInteractionListener {
 
@@ -22,7 +23,7 @@ class UserStoryActivity : AppCompatActivity(), StoryContract.IStoryActivity, Sto
         presenter.onViewCreated(userId)
     }
 
-    override fun setPresenter(presenter: StoryPresenter) {
+    override fun setPresenter(presenter: StoryContract.IStoryPresenter) {
         this.presenter = presenter
     }
 
@@ -41,6 +42,7 @@ class UserStoryActivity : AppCompatActivity(), StoryContract.IStoryActivity, Sto
     override fun launchHashtagFeed(hashtagText: String) {
         val intent = Intent(this, HashtagFeedActivity::class.java).apply {
             putExtra(HashtagFeedActivity.HASHTAG_ID, hashtagText)
+            addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
         }
         startActivity(intent)
     }
@@ -50,7 +52,11 @@ class UserStoryActivity : AppCompatActivity(), StoryContract.IStoryActivity, Sto
     }
 
     override fun launchStatusView(status: Status) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        val intent = Intent(this, StatusViewActivity::class.java).apply {
+            putExtra(StatusViewActivity.STATUS_ID, status.statusId)
+            addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+        }
+        startActivity(intent)
     }
 
     override fun getUser(userId: String?): User? {

@@ -2,9 +2,8 @@ package com.example.flutter.Utils
 
 import com.example.flutter.models.Status
 import com.example.flutter.models.User
-import com.example.flutter.models.UserAlias
 
-object DummyData {
+object DummyData: DataExtractionInterface {
 
     const val statusesPerUser = 4
     private val names = arrayListOf("John", "James", "Peter", "Jack", "Fred")
@@ -54,17 +53,8 @@ object DummyData {
             return mAliasToUser ?: makeAliasToUserMap()
         }
 
-    fun getStatusesByHashtag(tag: String): List<Status>{
-        val statusList = ArrayList<Status>()
-        for (statusId in hashtagToStatuses[tag] ?: listOf<String>()){
-            val taggedStatus = idToStatusMap[statusId]
-            if (taggedStatus != null) {
-                statusList.add(taggedStatus)
-            }
-        }
-        return statusList
-    }
 
+    //Fake Data Creators
     private fun makeFakeUsers(numUsers: Int): ArrayList<User>{
         val users = ArrayList<User>()
         for (id in 1..numUsers){
@@ -140,24 +130,6 @@ object DummyData {
         return idToUserMap
     }
 
-    fun getUserFeed(user: User?): List<Status>{
-        val friendList = user?.usersFollowed
-        val statusesOfFriends = ArrayList<Status>()
-        for(userId in friendList ?: listOf()){
-            statusesOfFriends.addAll(getUserStory(idToUserMap[userId]))
-        }
-        return statusesOfFriends
-    }
-
-    fun getUserStory(user: User?): List<Status>{
-        val storyStatuses = ArrayList<Status>()
-        for(statusId in user?.statusList ?: listOf<String>()){
-            val status = idToStatusMap[statusId]
-            if(status != null) { storyStatuses.add(status) }
-        }
-        return storyStatuses
-    }
-
     private fun makeSuperUser(): User{
         val newSuperUser = User(userId = "0", name = "Joe Cool", alias = "@JCool",
             usersFollowed = idToUserMap.keys.toList(), followers = idToUserMap.keys.toList()
@@ -192,5 +164,52 @@ object DummyData {
         }
         mHashtagToStatuses = newHashtagToStatusMap
         return newHashtagToStatusMap
+    }
+
+
+    //Getters
+    override fun getStatusesByHashtag(tag: String): List<Status>{
+        val statusList = ArrayList<Status>()
+        for (statusId in hashtagToStatuses[tag] ?: listOf<String>()){
+            val taggedStatus = idToStatusMap[statusId]
+            if (taggedStatus != null) {
+                statusList.add(taggedStatus)
+            }
+        }
+        return statusList
+    }
+
+    override fun getUserFeed(user: User?): List<Status>{
+        val friendList = user?.usersFollowed
+        val statusesOfFriends = ArrayList<Status>()
+        for(userId in friendList ?: listOf()){
+            statusesOfFriends.addAll(getUserStory(idToUserMap[userId]))
+        }
+        return statusesOfFriends
+    }
+
+    override fun getUserStory(user: User?): List<Status>{
+        val storyStatuses = ArrayList<Status>()
+        for(statusId in user?.statusList ?: listOf<String>()){
+            val status = idToStatusMap[statusId]
+            if(status != null) { storyStatuses.add(status) }
+        }
+        return storyStatuses
+    }
+
+    override fun getUserById(userId: String?): User? {
+        return idToUserMap[userId]
+    }
+
+    override fun getUserIdByAlias(alias: String?): String? {
+        return aliasToUserMap[alias]?.userId
+    }
+
+    override fun getCurrentUser(): User {
+        return superUser
+    }
+
+    override fun getStatusById(statusId: String?): Status? {
+        return idToStatusMap[statusId]
     }
 }

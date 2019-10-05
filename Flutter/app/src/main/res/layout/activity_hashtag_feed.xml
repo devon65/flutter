@@ -13,6 +13,7 @@
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
         android:layout_gravity="center"
+        android:textAlignment="center"
         android:text="@string/hashtag_feed_title"
         android:textSize="25sp" />
 

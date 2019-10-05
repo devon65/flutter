@@ -10,8 +10,7 @@ interface LoginContract {
         fun onLoginPressed(username: String, password: String)
     }
 
-    interface ILoginActivity :
-        BaseView<ILoginPresenter> {
+    interface ILoginActivity : BaseView<ILoginPresenter> {
         fun onLoginSuccess()
         fun onLoginFailure()
         fun getContext(): Context

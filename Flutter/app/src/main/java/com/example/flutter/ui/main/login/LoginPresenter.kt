@@ -8,6 +8,7 @@ class LoginPresenter(loginActivity: LoginContract.ILoginActivity) : LoginContrac
     var loginActivity : LoginContract.ILoginActivity? = loginActivity
 
     override fun onViewCreated() {
+        loginActivity?.launchLoginScreen()
         return
     }
 
@@ -15,7 +16,6 @@ class LoginPresenter(loginActivity: LoginContract.ILoginActivity) : LoginContrac
         val success = true;
         if(success){
             PreferencesUtil.setBoolean(loginActivity?.getContext(), Constants.IS_LOGGED_IN_PREF, true)
-            Toast.makeText(loginActivity?.getContext(), username + " " + password, Toast.LENGTH_LONG).show()
             loginActivity?.onLoginSuccess()
         }
         else{

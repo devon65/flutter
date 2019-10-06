@@ -11,8 +11,8 @@ class MainActivityPresenter(mainActivity: MainContract.IMainActivity) :
     private var mainActivity : MainContract.IMainActivity? = mainActivity
 
     override fun onViewCreated() {
-        if(!PreferencesUtil.getBoolean(mainActivity?.getContext(), Constants.IS_LOGGED_IN_PREF, false)){
-//        if(true){
+//        if(!PreferencesUtil.getBoolean(mainActivity?.getContext(), Constants.IS_LOGGED_IN_PREF, false)){
+        if(true){
             mainActivity?.launchLoginActivity()
         }
     }

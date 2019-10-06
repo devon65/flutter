@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item>
+        <shape xmlns:android="http://schemas.android.com/apk/res/android"
+            android:shape="ring"
+            android:innerRadius="0dp"
+            android:thicknessRatio="2"
+            android:useLevel="false">
+            <solid android:color="@color/common_google_signin_btn_text_light_disabled"/>
+        </shape>
+    </item>
+
+    <item android:drawable="@drawable/ic_camera_icon"
+        android:start="50dp"
+        android:end="50dp"
+        android:top="50dp"
+        android:bottom="50dp"/>
+</layer-list>

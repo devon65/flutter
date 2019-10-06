@@ -13,6 +13,10 @@ interface LoginContract {
     interface ILoginActivity : BaseView<ILoginPresenter> {
         fun onLoginSuccess()
         fun onLoginFailure()
+        fun onSignupSuccess()
+        fun onSignupFailure()
+        fun launchLoginScreen()
+        fun launchSignUpScreen()
         fun getContext(): Context
     }
 }

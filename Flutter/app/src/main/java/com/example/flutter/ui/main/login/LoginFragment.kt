@@ -8,8 +8,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.EditText
+import android.widget.TextView
 
 import com.example.flutter.R
+import kotlinx.android.synthetic.main.fragment_sign_up.*
+import org.w3c.dom.Text
 
 
 class LoginFragment : Fragment() {
@@ -29,10 +33,16 @@ class LoginFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?): View? {
-        // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_login, container, false)
 
-//        val switchToSignUpButton = view.findViewById<Button>(R)
+        val switchToSignUpButton = view.findViewById<TextView>(R.id.signup_here)
+        switchToSignUpButton.setOnClickListener{listener?.launchSignUpScreen()}
+
+        val userAlias = view.findViewById<EditText>(R.id.login_alias)
+        val password = view.findViewById<EditText>(R.id.login_password)
+
+        val loginButton = view.findViewById<Button>(R.id.login_button)
+        loginButton.setOnClickListener{listener?.onLoginClicked(userAlias.text.toString(), password.text.toString())}
         return view
     }
 
@@ -52,21 +62,12 @@ class LoginFragment : Fragment() {
 
     interface OnLoginFragmentInteractionListener {
         fun onLoginClicked(username: String, password: String)
-        fun onSwitchToSignUpClicked()
+        fun launchSignUpScreen()
     }
 
     companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment LoginFragment.
-         */
-        // TODO: Rename and change types and number of parameters
         @JvmStatic
-        fun newInstance(param1: String, param2: String) =
+        fun newInstance() =
             LoginFragment().apply {
                 arguments = Bundle().apply {
 //                    putString(ARG_PARAM1, param1)

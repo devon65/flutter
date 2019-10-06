@@ -1,10 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Flutter</string>
-    <string name="tab_text_1">My Story</string>
-    <string name="tab_text_2">News Feed</string>
 
-    <string name="login_username">Username</string>
-    <string name="login_password">Password</string>
-
-    <string name="hashtag_feed_title">Who\'s Fluttering about\n%s</string>
 </resources>

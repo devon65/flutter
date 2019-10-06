@@ -9,8 +9,8 @@ import com.example.flutter.ui.main.feed.NewsFeedFragment
 import com.example.flutter.ui.main.story.StoryBoardFragment
 
 private val TAB_TITLES = arrayOf(
-        R.string.tab_text_1,
-        R.string.tab_text_2
+        R.string.main_my_story,
+        R.string.main_news_feed
 )
 
 /**

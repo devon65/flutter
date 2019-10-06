@@ -20,7 +20,7 @@ object PreferencesUtil {
     fun getString(context: Context?, key: String, defaultString: String = ""): String{
         if(context == null){return defaultString}
         val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)
-        return sharedPreferences.getString(key, defaultString)
+        return sharedPreferences.getString(key, defaultString) ?: defaultString
     }
 
     fun setString(context: Context?, key: String, value: String): Boolean{

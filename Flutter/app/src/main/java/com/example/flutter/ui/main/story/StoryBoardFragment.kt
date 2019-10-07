@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -15,6 +16,7 @@ import com.example.flutter.models.Status
 import com.example.flutter.models.User
 import com.example.flutter.ui.main.status.OnStatusInteractionListener
 import com.example.flutter.ui.main.status.StatusRecyclerViewAdapter
+import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_story_board.*
 
 /**
@@ -45,6 +47,26 @@ class StoryBoardFragment : Fragment() {
         val userAlias = view.findViewById<TextView>(R.id.user_alias)
         userAlias.text = displayedUser?.alias
 
+        val followersButton = view.findViewById<Button>(R.id.followers_button)
+        followersButton.setOnClickListener{
+            val personIdList = ArrayList(displayedUser?.followers ?: listOf())
+            val title = if(personIdList.isNullOrEmpty()) {
+                String.format(getString(R.string.person_list_has_no_friends), displayedUser?.name)
+            }else{
+                String.format(getString(R.string.person_list_title_followers), displayedUser?.name)
+            }
+            listener?.launchPersonList(title, personIdList)
+        }
+        val usersFolllowedButton = view.findViewById<Button>(R.id.users_followed_button)
+        usersFolllowedButton.setOnClickListener{
+            val personIdList = ArrayList(displayedUser?.usersFollowed ?: listOf())
+            val title = if(personIdList.isNullOrEmpty()) {
+                String.format(getString(R.string.person_list_has_no_friends), displayedUser?.name)
+            }else{
+                String.format(getString(R.string.person_list_title_users_followed), displayedUser?.name)
+            }
+            listener?.launchPersonList(title, personIdList)}
+
         val statusList = view.findViewById<RecyclerView>(R.id.story_status_list)
         val storyFeed = listener?.getUserStory(displayedUser) ?: listOf()
         // Set the adapter
@@ -73,6 +95,7 @@ class StoryBoardFragment : Fragment() {
     interface OnStoryBoardInteractionListener: OnStatusInteractionListener {
         fun getUser(userId: String?): User?
         fun getUserStory(user: User?): List<Status>
+        fun launchPersonList(title: String, userIdList: ArrayList<String>)
     }
 
     companion object {

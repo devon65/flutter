@@ -19,6 +19,7 @@ import com.example.flutter.ui.main.login.LoginActivity
 import com.example.flutter.ui.main.status.StatusViewActivity
 import com.example.flutter.ui.main.story.StoryBoardFragment
 import com.example.flutter.ui.main.story.UserStoryActivity
+import com.example.flutter.ui.main.personlist.PersonListActivity
 
 class MainActivity : AppCompatActivity(), MainContract.IMainActivity,
     NewsFeedFragment.OnNewsFeedInteractionListener, StoryBoardFragment.OnStoryBoardInteractionListener {
@@ -93,6 +94,14 @@ class MainActivity : AppCompatActivity(), MainContract.IMainActivity,
     override fun launchStatusView(status: Status) {
         val intent = Intent(this, StatusViewActivity::class.java).apply {
             putExtra(StatusViewActivity.STATUS_ID, status.statusId)
+        }
+        startActivity(intent)
+    }
+
+    override fun launchPersonList(title: String, userIdList: ArrayList<String>) {
+        val intent = Intent(this, PersonListActivity::class.java).apply {
+            putExtra(PersonListActivity.PERSON_ID_LIST, userIdList)
+            putExtra(PersonListActivity.PERSON_LIST_TITLE, title)
         }
         startActivity(intent)
     }

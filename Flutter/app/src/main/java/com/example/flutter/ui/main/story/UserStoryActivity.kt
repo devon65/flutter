@@ -7,6 +7,7 @@ import com.example.flutter.R
 import com.example.flutter.models.Status
 import com.example.flutter.models.User
 import com.example.flutter.ui.main.feed.HashtagFeedActivity
+import com.example.flutter.ui.main.personlist.PersonListActivity
 import com.example.flutter.ui.main.status.StatusViewActivity
 
 class UserStoryActivity : AppCompatActivity(), StoryContract.IStoryActivity, StoryBoardFragment.OnStoryBoardInteractionListener {
@@ -55,6 +56,14 @@ class UserStoryActivity : AppCompatActivity(), StoryContract.IStoryActivity, Sto
         val intent = Intent(this, StatusViewActivity::class.java).apply {
             putExtra(StatusViewActivity.STATUS_ID, status.statusId)
             addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+        }
+        startActivity(intent)
+    }
+
+    override fun launchPersonList(title: String, userIdList: ArrayList<String>) {
+        val intent = Intent(this, PersonListActivity::class.java).apply {
+            putExtra(PersonListActivity.PERSON_ID_LIST, userIdList)
+            putExtra(PersonListActivity.PERSON_LIST_TITLE, title)
         }
         startActivity(intent)
     }

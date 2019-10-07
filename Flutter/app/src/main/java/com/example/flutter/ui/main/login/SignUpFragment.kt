@@ -106,7 +106,7 @@ class SignUpFragment : Fragment() {
     }
 
     companion object {
-        private val TAG = SignUpFragment.javaClass.name
+        private val TAG = "SignUpFragment"
         @JvmStatic
         fun newInstance() =
             SignUpFragment().apply {

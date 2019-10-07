@@ -59,8 +59,9 @@ object DummyData: DataExtractionInterface {
         val users = ArrayList<User>()
         for (id in 1..numUsers){
             val name = getName()
+            val friends = listOf("0", (id + 1).toString())
             val alias = Constants.CALLOUT + name.replace(" ", "_") + id
-            users.add(User(id.toString(), name, alias))
+            users.add(User(id.toString(), name, alias, followers = friends, usersFollowed = friends))
         }
         mfakeUsers = users
         return users

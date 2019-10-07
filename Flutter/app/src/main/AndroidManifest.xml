@@ -11,7 +11,12 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ui.main.status.StatusViewActivity"></activity>
+        <activity android:name=".ui.main.personlist.PersonListActivity"></activity>
+        <activity
+            android:name=".ui.main.personlist.UserListActivity"
+            android:label="@string/title_activity_user_list"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".ui.main.status.StatusViewActivity" />
         <activity android:name=".ui.main.story.UserStoryActivity" />
         <activity android:name=".ui.main.feed.HashtagFeedActivity" />
         <activity android:name=".ui.main.login.LoginActivity" />

@@ -1,0 +1,26 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+xmlns:tools="http://schemas.android.com/tools"
+android:layout_width="match_parent"
+android:layout_height="match_parent"
+android:orientation="vertical"
+tools:context=".ui.main.feed.HashtagFeedActivity">
+
+
+<TextView
+    android:id="@+id/person_list_title"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_margin="10dp"
+    android:layout_gravity="center"
+    android:textAlignment="center"
+    android:text="@string/person_list_title_followers"
+    android:textSize="25sp" />
+
+<LinearLayout
+    android:id="@+id/person_list_fragment_holder"
+    android:layout_width="match_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical" />
+
+
+</LinearLayout>

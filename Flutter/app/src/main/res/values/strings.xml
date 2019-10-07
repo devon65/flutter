@@ -19,8 +19,16 @@
     <!--Hashtag-->
     <string name="hashtag_feed_title">Who\'s Fluttering about\n%s</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-
+    <!--UserStory-->
+    <string name="story_followers">Followers</string>
+    <string name="story_users_followed">Users Followed</string>
+    <string name="story_following">Following</string>
+    <string name="story_follow">Follow</string>
+    <string name="title_activity_user_list">UserListActivity</string>
+    <string name="person_list_title_followers">Followers of %s</string>
+    <string name="person_list_title_users_followed">Users Followed by %s</string>
+    <string name="person_list_has_no_friends">%s has no friends :(</string>
+    
+    <string name="action_settings">Settings</string>
 
 </resources>

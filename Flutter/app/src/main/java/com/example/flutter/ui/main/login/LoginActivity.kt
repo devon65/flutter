@@ -77,6 +77,8 @@ class LoginActivity : AppCompatActivity(), LoginContract.ILoginActivity,
         return this
     }
 
-
+    override fun onBackPressed() {
+        //do nothing
+    }
 
 }

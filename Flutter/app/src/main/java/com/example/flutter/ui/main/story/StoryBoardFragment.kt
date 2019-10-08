@@ -27,6 +27,9 @@ import com.example.flutter.ui.main.status.OnStatusInteractionListener
 import com.example.flutter.ui.main.status.StatusRecyclerViewAdapter
 import java.io.FileNotFoundException
 import java.lang.Exception
+import android.view.View.OnFocusChangeListener
+
+
 
 /**
  * A placeholder fragment containing a simple view.
@@ -109,12 +112,17 @@ class StoryBoardFragment : Fragment() {
 
         val statusUpdateAttachmentButton = view.findViewById<ImageView>(R.id.story_update_status_attachment_icon)
         statusUpdateAttachmentButton.setOnClickListener{
-            enablePostCancelButtons()
+            enableStatusEditing()
             launchSelectPhoto(ADD_ATTACHMENT_REQUEST_CODE)
         }
 
         statusText = view.findViewById<EditText>(R.id.story_update_status_text)
-        statusText?.setOnClickListener{enablePostCancelButtons()}
+        statusText?.setOnFocusChangeListener{ v, hasFocus ->
+            if (hasFocus){
+                enableStatusEditing()
+            }
+        }
+        statusText?.setOnClickListener{enableStatusEditing()}
         statusAttachment = view.findViewById<ImageView>(R.id.story_status_attachment)
 
         postStatusButton = view.findViewById<Button>(R.id.story_post_status_button)
@@ -129,7 +137,8 @@ class StoryBoardFragment : Fragment() {
         startActivityForResult(intent, requestCode)
     }
 
-    private fun enablePostCancelButtons(){
+    private fun enableStatusEditing(){
+        statusText?.isCursorVisible = true
         postStatusButton?.visibility = View.VISIBLE
         cancelStatusButton?.visibility = View.VISIBLE
     }
@@ -140,6 +149,7 @@ class StoryBoardFragment : Fragment() {
 
     private fun clearOutStatusEdit(){
         statusText?.text?.clear()
+        statusText?.isCursorVisible = false
         statusAttachment?.setImageResource(android.R.color.transparent)
         postStatusButton?.visibility = View.GONE
         cancelStatusButton?.visibility = View.GONE

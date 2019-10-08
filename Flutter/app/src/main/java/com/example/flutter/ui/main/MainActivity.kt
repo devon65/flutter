@@ -4,8 +4,8 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import com.google.android.material.floatingactionbutton.FloatingActionButton
-import com.google.android.material.snackbar.Snackbar
+import android.view.Menu
+import android.view.MenuItem
 import com.google.android.material.tabs.TabLayout
 import androidx.viewpager.widget.ViewPager
 import androidx.appcompat.app.AppCompatActivity
@@ -46,6 +46,19 @@ class MainActivity : AppCompatActivity(), MainContract.IMainActivity,
         presenter.onViewCreated()
     }
 
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        val inflater = menuInflater
+        inflater.inflate(R.menu.menu_main, menu)
+        return super.onCreateOptionsMenu(menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        when (item?.itemId){
+            R.id.action_logout -> onLogout()
+        }
+        return super.onOptionsItemSelected(item)
+    }
+
     override fun onDestroy() {
         presenter.onDestroy()
         super.onDestroy()
@@ -55,6 +68,9 @@ class MainActivity : AppCompatActivity(), MainContract.IMainActivity,
         this.presenter = presenter
     }
 
+    override fun onLogout() {
+        launchLoginActivity()
+    }
 
     override fun launchLoginActivity(){
         val intent = Intent(this, LoginActivity::class.java).apply {

@@ -17,5 +17,6 @@ interface MainContract {
     interface IMainActivity : BaseStatusesView<MainActivityPresenter> {
         fun getContext(): Context
         fun launchLoginActivity()
+        fun onLogout()
     }
 }

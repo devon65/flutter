@@ -61,6 +61,8 @@ class StatusRecyclerViewAdapter(
         holder.handle.text = handleText
         holder.handle.movementMethod = LinkMovementMethod.getInstance()
 
+//        holder.statusAttachment.drawable =
+
         with(holder.statusLayout) {
             tag = status
             setOnClickListener(mOnClickListener)
@@ -75,5 +77,6 @@ class StatusRecyclerViewAdapter(
         val handle: TextView = mView.findViewById(R.id.status_handle)
         val profilePic: ImageView = mView.findViewById(R.id.status_profile_pic)
         val statusLayout: LinearLayout = mView.findViewById(R.id.status_layout)
+        val statusAttachment: ImageView = mView.findViewById(R.id.status_image_attachment)
     }
 }

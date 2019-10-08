@@ -14,7 +14,7 @@
     tools:context=".ui.main.story.StoryBoardFragment">
 
     <ImageView
-        android:id="@+id/profile_pic"
+        android:id="@+id/story_profile_pic"
         android:layout_width="150dp"
         android:layout_height="150dp"
         android:layout_marginTop="20dp"
@@ -23,6 +23,30 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <LinearLayout
+        android:id="@+id/story_edit_profile_pic"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/story_profile_pic"
+        tools:visibility="visible">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:src="@drawable/ic_edit_icon_blue" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/story_edit_profile_pic"
+            android:textColor="@color/editBlue" />
+
+    </LinearLayout>
 
     <TextView
         android:id="@+id/user_name"
@@ -34,31 +58,18 @@
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/profile_pic" />
+        app:layout_constraintTop_toBottomOf="@+id/story_edit_profile_pic" />
 
     <TextView
         android:id="@+id/user_alias"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
-        android:textSize="15dp"
         android:text="\@jcool"
         android:textColor="@color/hyperlinkBlue"
+        android:textSize="15dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/user_name" />
-
-
-    <include
-        android:id="@+id/story_status_list"
-        layout="@layout/fragment_status_list"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginTop="20dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/button_holder" />
 
     <LinearLayout
         android:id="@+id/button_holder"
@@ -84,6 +95,91 @@
             android:text="@string/story_users_followed" />
 
     </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/story_update_status_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="10dp"
+        android:layout_marginTop="30dp"
+        android:orientation="horizontal"
+        android:visibility="gone"
+        app:layout_constraintTop_toBottomOf="@+id/button_holder"
+        tools:layout_editor_absoluteX="10dp"
+        tools:visibility="visible">
+
+        <ImageView
+            android:id="@+id/story_update_status_icon"
+            android:layout_width="35dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="10dp"
+            android:src="@drawable/ic_edit_icon" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <EditText
+                android:id="@+id/story_update_status_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:hint="@string/story_update_status" />
+
+            <ImageView
+                android:id="@+id/story_status_attachment"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                tools:src="@mipmap/ic_launcher" />
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/story_update_status_attachment_icon"
+            android:layout_width="35dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:src="@drawable/ic_attachment_icon" />
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/story_post_status_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:backgroundTint="@color/editBlue"
+        android:text="@string/story_post_status"
+        android:textColor="@color/cardview_light_background"
+        android:textStyle="bold"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="@+id/story_update_status_layout"
+        app:layout_constraintTop_toBottomOf="@+id/story_update_status_layout"
+        tools:visibility="visible" />
+
+
+    <Button
+        android:id="@+id/story_cancel_status_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="10dp"
+        android:text="@string/story_cancel_status"
+        android:visibility="gone"
+        tools:visibility="visible"
+        app:layout_constraintEnd_toStartOf="@+id/story_post_status_button"
+        app:layout_constraintTop_toTopOf="@+id/story_post_status_button" />
+
+    <include
+        android:id="@+id/story_status_list"
+        layout="@layout/fragment_status_list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/story_post_status_button" />
+
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
 

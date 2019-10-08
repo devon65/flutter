@@ -1,12 +1,20 @@
 package com.example.flutter.ui.main.story
 
+import android.app.Activity
 import android.content.Context
+import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.media.Image
+import android.opengl.Visibility
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.TextView
+import android.widget.*
+import androidx.core.graphics.drawable.toDrawable
+import androidx.core.view.drawToBitmap
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -14,10 +22,11 @@ import com.example.flutter.R
 import com.example.flutter.Utils.SessionInfo
 import com.example.flutter.models.Status
 import com.example.flutter.models.User
+import com.example.flutter.ui.main.login.SignUpFragment
 import com.example.flutter.ui.main.status.OnStatusInteractionListener
 import com.example.flutter.ui.main.status.StatusRecyclerViewAdapter
-import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.fragment_story_board.*
+import java.io.FileNotFoundException
+import java.lang.Exception
 
 /**
  * A placeholder fragment containing a simple view.
@@ -26,6 +35,12 @@ class StoryBoardFragment : Fragment() {
 
     private var displayedUser: User? = null
     private var listener: OnStoryBoardInteractionListener? = null
+    private var statusAttachment: ImageView? = null
+    private var profilePicture: ImageView? = null
+    private var updateStatusLayout: LinearLayout? = null
+    private var statusText: EditText? = null
+    private var postStatusButton: Button? = null
+    private var cancelStatusButton: Button? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -57,8 +72,8 @@ class StoryBoardFragment : Fragment() {
             }
             listener?.launchPersonList(title, personIdList)
         }
-        val usersFolllowedButton = view.findViewById<Button>(R.id.users_followed_button)
-        usersFolllowedButton.setOnClickListener{
+        val usersFollowedButton = view.findViewById<Button>(R.id.users_followed_button)
+        usersFollowedButton.setOnClickListener{
             val personIdList = ArrayList(displayedUser?.usersFollowed ?: listOf())
             val title = if(personIdList.isNullOrEmpty()) {
                 String.format(getString(R.string.person_list_has_no_friends), displayedUser?.name)
@@ -75,7 +90,80 @@ class StoryBoardFragment : Fragment() {
             adapter = StatusRecyclerViewAdapter(storyFeed, listener)
         }
 
+        if (displayedUser?.userId == SessionInfo.currentUser.userId){
+            initializeCurrentUserEditing(view)
+        }
+
         return view
+    }
+
+    private fun initializeCurrentUserEditing(view: View){
+        profilePicture = view.findViewById<ImageView>(R.id.story_profile_pic)
+        profilePicture?.setOnClickListener{launchSelectPhoto(EDIT_PROFILE_PIC_REQUEST_CODE)}
+        val editProfileButton = view.findViewById<LinearLayout>(R.id.story_edit_profile_pic)
+        editProfileButton.visibility = View.VISIBLE
+        editProfileButton.setOnClickListener{launchSelectPhoto(EDIT_PROFILE_PIC_REQUEST_CODE)}
+
+        updateStatusLayout = view.findViewById<LinearLayout>(R.id.story_update_status_layout)
+        updateStatusLayout?.visibility = View.VISIBLE
+
+        val statusUpdateAttachmentButton = view.findViewById<ImageView>(R.id.story_update_status_attachment_icon)
+        statusUpdateAttachmentButton.setOnClickListener{
+            enablePostCancelButtons()
+            launchSelectPhoto(ADD_ATTACHMENT_REQUEST_CODE)
+        }
+
+        statusText = view.findViewById<EditText>(R.id.story_update_status_text)
+        statusText?.setOnClickListener{enablePostCancelButtons()}
+        statusAttachment = view.findViewById<ImageView>(R.id.story_status_attachment)
+
+        postStatusButton = view.findViewById<Button>(R.id.story_post_status_button)
+        postStatusButton?.setOnClickListener{onPostStatusClicked()}
+        cancelStatusButton = view.findViewById<Button>(R.id.story_cancel_status_button)
+        cancelStatusButton?.setOnClickListener{clearOutStatusEdit()}
+    }
+
+    private fun launchSelectPhoto(requestCode: Int){
+        val intent = Intent(Intent.ACTION_PICK,
+            android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
+        startActivityForResult(intent, requestCode)
+    }
+
+    private fun enablePostCancelButtons(){
+        postStatusButton?.visibility = View.VISIBLE
+        cancelStatusButton?.visibility = View.VISIBLE
+    }
+
+    private fun onPostStatusClicked(){
+        clearOutStatusEdit()
+    }
+
+    private fun clearOutStatusEdit(){
+        statusText?.text?.clear()
+        statusAttachment?.setImageResource(android.R.color.transparent)
+        postStatusButton?.visibility = View.GONE
+        cancelStatusButton?.visibility = View.GONE
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if(resultCode == Activity.RESULT_OK){
+            try {
+                val targetUri = data?.data
+                val bitmap = BitmapFactory.decodeStream(context?.contentResolver?.openInputStream(targetUri))
+                if (bitmap != null){
+                    when (requestCode) {
+                        EDIT_PROFILE_PIC_REQUEST_CODE -> this.profilePicture?.background = bitmap.toDrawable(resources)
+                        ADD_ATTACHMENT_REQUEST_CODE -> this.statusAttachment?.setImageBitmap(bitmap)
+                    }
+                }
+            }catch (e: FileNotFoundException){
+                Log.e(TAG, "Could not find selected picture on system.")
+            }catch (e: Exception){
+                Log.e(TAG, "Could not convert file")
+            }
+        }
     }
 
     override fun onAttach(context: Context) {
@@ -99,7 +187,10 @@ class StoryBoardFragment : Fragment() {
     }
 
     companion object {
+        private const val TAG = "StoryBoardFragment"
         private const val USER_ID = "userId"
+        private const val EDIT_PROFILE_PIC_REQUEST_CODE = 0
+        private const val ADD_ATTACHMENT_REQUEST_CODE = 1
 
         @JvmStatic
         fun newInstance(userId: String? = null): StoryBoardFragment {

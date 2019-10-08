@@ -38,11 +38,11 @@ class MainActivity : AppCompatActivity(), MainContract.IMainActivity,
 
         setPresenter(MainActivityPresenter(this))
 
-        val fab: FloatingActionButton = findViewById(R.id.fab)
-        fab.setOnClickListener { view ->
-            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                    .setAction("Action", null).show()
-        }
+//        val fab: FloatingActionButton = findViewById(R.id.fab)
+//        fab.setOnClickListener { view ->
+//            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+//                    .setAction("Action", null).show()
+//        }
         presenter.onViewCreated()
     }
 
@@ -64,6 +64,7 @@ class MainActivity : AppCompatActivity(), MainContract.IMainActivity,
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == Constants.ON_LOGIN_COMPLETE) {
             if (resultCode == Activity.RESULT_OK) {
                 //TODO: Do something if necessary

@@ -25,10 +25,14 @@
     <string name="story_following">Following</string>
     <string name="story_follow">Follow</string>
     <string name="title_activity_user_list">UserListActivity</string>
+    <string name="story_edit_profile_pic">Edit Profile Picture</string>
+    <string name="story_update_status">Update Your Status</string>
+    <string name="story_post_status">Post</string>
+    <string name="story_cancel_status">Cancel</string>
     <string name="person_list_title_followers">Followers of %s</string>
     <string name="person_list_title_users_followed">Users Followed by %s</string>
     <string name="person_list_has_no_friends">%s has no friends :(</string>
-    
+
     <string name="action_settings">Settings</string>
 
 </resources>

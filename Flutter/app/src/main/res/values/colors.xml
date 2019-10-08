@@ -4,4 +4,6 @@
     <color name="colorPrimaryDark">#00574B</color>
     <color name="colorAccent">#D81B60</color>
     <color name="hyperlinkBlue">#0000FF</color>
+    <color name="editBlue">#3657fe</color>
+    <color name="textWhite">#FFFFFF</color>
 </resources>

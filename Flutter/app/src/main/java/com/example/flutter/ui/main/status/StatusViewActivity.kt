@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.SpannableString
 import android.text.method.LinkMovementMethod
+import android.view.View
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
@@ -47,6 +48,12 @@ class StatusViewActivity : AppCompatActivity(), StatusContract.IStatusActivity {
         StatusHelper.setUserMentions(handleText, userMentionListener, status?.user?.userId)
         handle.text = handleText
         handle.movementMethod = LinkMovementMethod.getInstance()
+
+        if (status?.attachedPhoto != null) {
+            val statusImageAttachment: ImageView = findViewById(R.id.status_image_attachment)
+            statusImageAttachment.visibility = View.VISIBLE
+            statusImageAttachment.setImageDrawable(status?.attachedPhoto)
+        }
 
         val profilePic: ImageView = findViewById(R.id.status_profile_pic)
 

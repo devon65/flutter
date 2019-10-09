@@ -5,6 +5,8 @@ package com.example.flutter.ui.main.status
 import android.text.style.ClickableSpan
 import android.view.View
 import android.text.TextPaint
+import com.example.flutter.R
+import com.example.flutter.Utils.BlueBird
 
 
 open class ClickableLink(val linkText: String, val clickListener: ClickableLinkListener? = null): ClickableSpan() {
@@ -15,6 +17,7 @@ open class ClickableLink(val linkText: String, val clickListener: ClickableLinkL
 
     override fun updateDrawState(ds: TextPaint) {
         super.updateDrawState(ds)
+        ds.color = BlueBird.instance.getColor(R.color.hyperlinkBlue)
     }
 
     override fun onClick(widget: View) {

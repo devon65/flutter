@@ -1,5 +1,8 @@
 package com.example.flutter.Utils
 
+import android.content.res.Resources
+import androidx.core.graphics.drawable.toBitmap
+import com.example.flutter.R
 import com.example.flutter.models.Status
 import com.example.flutter.models.User
 
@@ -106,7 +109,8 @@ object DummyData: DataExtractionInterface {
     private fun makePictureStatus(user: User): Status{
         val messageBody = "This will probably be the best picture you've seen in years! " +
                 fakeUsers.random().alias  + " " + funHashtags.random() + " " + funHashtags.random()
-        return Status(user, messageBody)
+        val attachment = BlueBird.context.getDrawable(R.mipmap.ic_rock_climbing2)
+        return Status(user, messageBody, attachedPhoto = attachment)
     }
 
     fun getName(): String{

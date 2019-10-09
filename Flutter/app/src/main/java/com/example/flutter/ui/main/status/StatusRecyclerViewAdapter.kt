@@ -19,12 +19,14 @@ class StatusRecyclerViewAdapter(
     private val statusInteractionListener: OnStatusInteractionListener?) :
     RecyclerView.Adapter<StatusRecyclerViewAdapter.ViewHolder>() {
 
-    private val mOnClickListener: View.OnClickListener
+    private val mOnStatusClickListener: View.OnClickListener
 
     init {
-        mOnClickListener = View.OnClickListener { v ->
-            val item = v.tag as Status
-            statusInteractionListener?.launchStatusView(item)
+        mOnStatusClickListener = View.OnClickListener { v ->
+            if (v.tag != null) {
+                val item = v.tag as Status
+                statusInteractionListener?.launchStatusView(item)
+            }
         }
     }
 
@@ -61,9 +63,18 @@ class StatusRecyclerViewAdapter(
         holder.handle.text = handleText
         holder.handle.movementMethod = LinkMovementMethod.getInstance()
 
+        if(status.attachedPhoto != null){
+            with(holder.statusImageAttachment){
+                tag = status
+                visibility = View.VISIBLE
+                setImageDrawable(status.attachedPhoto)
+                setOnClickListener(mOnStatusClickListener)
+            }
+        }
+
         with(holder.statusLayout) {
             tag = status
-            setOnClickListener(mOnClickListener)
+            setOnClickListener(mOnStatusClickListener)
         }
     }
 
@@ -75,5 +86,6 @@ class StatusRecyclerViewAdapter(
         val handle: TextView = mView.findViewById(R.id.status_handle)
         val profilePic: ImageView = mView.findViewById(R.id.status_profile_pic)
         val statusLayout: LinearLayout = mView.findViewById(R.id.status_layout)
+        val statusImageAttachment: ImageView = mView.findViewById(R.id.status_image_attachment)
     }
 }

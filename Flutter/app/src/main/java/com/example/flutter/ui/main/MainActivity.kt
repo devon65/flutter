@@ -35,6 +35,7 @@ class MainActivity : AppCompatActivity(), MainContract.IMainActivity,
         viewPager.adapter = sectionsPagerAdapter
         val tabs: TabLayout = findViewById(R.id.tabs)
         tabs.setupWithViewPager(viewPager)
+        viewPager.setCurrentItem(HomePagerAdapter.FEED_FRAGMENT)
 
         setPresenter(MainActivityPresenter(this))
 

@@ -35,6 +35,12 @@ class HomePagerAdapter(private val context: Context, fm: FragmentManager)
 
     override fun getCount(): Int {
         // Show 2 total pages.
-        return 2
+        return NUM_TABS
+    }
+
+    companion object{
+        const val STORY_FRAGMENT = 0
+        const val FEED_FRAGMENT = 1
+        const val NUM_TABS = 2
     }
 }

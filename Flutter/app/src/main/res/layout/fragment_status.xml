@@ -35,11 +35,12 @@
 
         <ImageView
             android:id="@+id/status_image_attachment"
-            android:layout_width="match_parent"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
+            android:minHeight="200dp"
             android:visibility="gone"
-            tools:visibility="visible"
-            tools:src="@mipmap/ic_rock_climbing"/>
+            tools:src="@mipmap/ic_rock_climbing2"
+            tools:visibility="visible" />
 
         <VideoView
             android:id="@+id/status_video_attachment"

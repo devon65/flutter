@@ -1,5 +1,6 @@
 package com.example.flutter.ui.main.personlist
 
+import com.example.flutter.Utils.Constants
 import com.example.flutter.Utils.SessionInfo
 import com.example.flutter.models.User
 
@@ -7,15 +8,12 @@ class PersonListPresenter(personListActivity: PersonListContract.IPersonListActi
 
     private var personListActivity: PersonListContract.IPersonListActivity? = personListActivity
 
-    override fun getUserListByIdList(idList: List<String>): List<User> {
-        val personList = ArrayList<User>()
-        for (personId in idList){
-            val person = SessionInfo.getUserById(personId)
-            if (person != null) {
-                personList.add(person)
-            }
+    override fun getPersonList(personListType: String, userId: String): List<User> {
+        return when(personListType){
+            Constants.FOLLOWERS -> SessionInfo.getUserFollowers(userId)
+            Constants.USERS_FOLLOWED -> SessionInfo.getPersonsFollowedByUser(userId)
+            else -> listOf()
         }
-        return personList
     }
 
     override fun onDestroy() {

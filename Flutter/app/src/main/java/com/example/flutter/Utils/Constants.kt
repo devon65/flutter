@@ -16,4 +16,8 @@ object Constants {
     //DummyData
     const val NUM_FAKE_USERS = 5
 
+    //Users
+    const val FOLLOWERS = "followers"
+    const val USERS_FOLLOWED = "users_followed"
+
 }

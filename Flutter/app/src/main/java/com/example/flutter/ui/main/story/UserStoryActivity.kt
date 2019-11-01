@@ -60,10 +60,11 @@ class UserStoryActivity : AppCompatActivity(), StoryContract.IStoryActivity, Sto
         startActivity(intent)
     }
 
-    override fun launchPersonList(title: String, userIdList: ArrayList<String>) {
+    override fun launchPersonList(personListType: String, userId: String?, usersName: String?) {
         val intent = Intent(this, PersonListActivity::class.java).apply {
-            putExtra(PersonListActivity.PERSON_ID_LIST, userIdList)
-            putExtra(PersonListActivity.PERSON_LIST_TITLE, title)
+            putExtra(PersonListActivity.PERSON_LIST_TYPE, personListType)
+            putExtra(PersonListActivity.USER_ID, userId)
+            putExtra(PersonListActivity.NAME, usersName)
         }
         startActivity(intent)
     }

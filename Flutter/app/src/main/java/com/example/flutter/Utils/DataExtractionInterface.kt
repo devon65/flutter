@@ -16,5 +16,9 @@ interface DataExtractionInterface {
 
     fun getCurrentUser(): User
 
+    fun getUserFollowers(userId: String): List<User>
+
+    fun getPersonsFollowedByUser(userId: String): List<User>
+
     fun getStatusById(statusId: String?): Status?
 }

@@ -33,6 +33,7 @@
     <string name="person_list_title_followers">Followers of %s</string>
     <string name="person_list_title_users_followed">Users Followed by %s</string>
     <string name="person_list_has_no_friends">%s has no friends :(</string>
+    <string name="person_list_my_peeps">MY PEEPS!</string>
 
     <string name="action_settings">Settings</string>
 

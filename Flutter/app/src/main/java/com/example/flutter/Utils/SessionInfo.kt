@@ -39,6 +39,14 @@ object SessionInfo {
         return dataExtractor.getUserStory(user)
     }
 
+    fun getUserFollowers(userId: String): List<User>{
+        return dataExtractor.getUserFollowers(userId)
+    }
+
+    fun getPersonsFollowedByUser(userId: String): List<User>{
+        return dataExtractor.getPersonsFollowedByUser(userId)
+    }
+
     fun getUserIdByAlias(alias: String?): String?{
         return dataExtractor.getUserIdByAlias(alias)
     }

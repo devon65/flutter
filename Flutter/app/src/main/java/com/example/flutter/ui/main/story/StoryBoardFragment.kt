@@ -28,7 +28,7 @@ import com.example.flutter.ui.main.status.StatusRecyclerViewAdapter
 import java.io.FileNotFoundException
 import java.lang.Exception
 import android.view.View.OnFocusChangeListener
-
+import com.example.flutter.Utils.Constants
 
 
 /**
@@ -67,23 +67,11 @@ class StoryBoardFragment : Fragment() {
 
         val followersButton = view.findViewById<Button>(R.id.followers_button)
         followersButton.setOnClickListener{
-            val personIdList = ArrayList(displayedUser?.followers ?: listOf())
-            val title = if(personIdList.isNullOrEmpty()) {
-                String.format(getString(R.string.person_list_has_no_friends), displayedUser?.name)
-            }else{
-                String.format(getString(R.string.person_list_title_followers), displayedUser?.name)
-            }
-            listener?.launchPersonList(title, personIdList)
+            listener?.launchPersonList(Constants.FOLLOWERS, displayedUser?.userId, displayedUser?.name)
         }
         val usersFollowedButton = view.findViewById<Button>(R.id.users_followed_button)
         usersFollowedButton.setOnClickListener{
-            val personIdList = ArrayList(displayedUser?.usersFollowed ?: listOf())
-            val title = if(personIdList.isNullOrEmpty()) {
-                String.format(getString(R.string.person_list_has_no_friends), displayedUser?.name)
-            }else{
-                String.format(getString(R.string.person_list_title_users_followed), displayedUser?.name)
-            }
-            listener?.launchPersonList(title, personIdList)}
+            listener?.launchPersonList(Constants.USERS_FOLLOWED, displayedUser?.userId, displayedUser?.name)}
 
         val statusList = view.findViewById<RecyclerView>(R.id.story_status_list)
         val storyFeed = listener?.getUserStory(displayedUser) ?: listOf()
@@ -193,7 +181,7 @@ class StoryBoardFragment : Fragment() {
     interface OnStoryBoardInteractionListener: OnStatusInteractionListener {
         fun getUser(userId: String?): User?
         fun getUserStory(user: User?): List<Status>
-        fun launchPersonList(title: String, userIdList: ArrayList<String>)
+        fun launchPersonList(personListType: String, userId: String?, usersName: String?)
     }
 
     companion object {

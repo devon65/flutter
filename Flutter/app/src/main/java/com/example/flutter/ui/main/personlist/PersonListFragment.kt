@@ -18,17 +18,17 @@ class PersonListFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        arguments?.let {
-            userIdList = it.getStringArrayList(USER_ID_LIST) ?: listOf()
-        }
+//
+//        arguments?.let {
+//            userIdList = it.getStringArrayList(USER_ID_LIST) ?: listOf()
+//        }
     }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_personview_list, container, false)
-        val userList = listener?.getUserListByIdList(userIdList) ?: listOf()
+        val userList = listener?.getPersonList() ?: listOf()
         // Set the adapter
         if (view is RecyclerView) {
             with(view) {
@@ -55,18 +55,18 @@ class PersonListFragment : Fragment() {
 
     interface PersonListFragmentListener {
         fun onPersonClicked(person: User?)
-        fun getUserListByIdList(idList: List<String>): List<User>
+        fun getPersonList(): List<User>
     }
 
     companion object {
         const val USER_ID_LIST = "userIdList"
 
         @JvmStatic
-        fun newInstance(userIdList: ArrayList<String>) =
+        fun newInstance() =
             PersonListFragment().apply {
-                arguments = Bundle().apply {
-                    putStringArrayList(USER_ID_LIST, userIdList)
-                }
+//                arguments = Bundle().apply {
+//                    putStringArrayList(USER_ID_LIST, userIdList)
+//                }
             }
     }
 }

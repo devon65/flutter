@@ -204,6 +204,30 @@ object DummyData: DataExtractionInterface {
         return storyStatuses
     }
 
+    override fun getUserFollowers(userId: String): List<User> {
+        val followerIds = getUserById(userId)?.followers ?: listOf()
+        val result = mutableListOf<User>()
+        for (id in followerIds){
+            val user = getUserById(id)
+            if (user != null) {
+                result.add(user)
+            }
+        }
+        return result
+    }
+
+    override fun getPersonsFollowedByUser(userId: String): List<User> {
+        val followerIds = getUserById(userId)?.usersFollowed ?: listOf()
+        val result = mutableListOf<User>()
+        for (id in followerIds){
+            val user = getUserById(id)
+            if (user != null) {
+                result.add(user)
+            }
+        }
+        return result
+    }
+
     override fun getUserById(userId: String?): User? {
         return idToUserMap[userId]
     }

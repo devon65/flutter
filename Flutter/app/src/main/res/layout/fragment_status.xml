@@ -33,21 +33,33 @@
             android:lineSpacingExtra="3sp"
             android:text="Snoopy is a fictional character, the pet beagle of Charlie Brown in the comic strip Peanuts by Charles M. Schulz. Snoopy is a fictional character, the pet beagle of Charlie Brown in the comic strip Peanuts by Charles M. Schulz. "/>
 
-        <ImageView
-            android:id="@+id/status_image_attachment"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:minHeight="200dp"
-            android:visibility="gone"
-            tools:src="@mipmap/ic_rock_climbing2"
-            tools:visibility="visible" />
-
-        <VideoView
-            android:id="@+id/status_video_attachment"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:visibility="gone"
-            tools:visibility="visible" />
+            android:layout_height="match_parent"
+            android:layout_marginTop="10dp">
+
+            <WebView
+                android:id="@+id/status_attachment"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                tools:visibility="visible" />
+        </LinearLayout>
+
+<!--        <ImageView-->
+<!--            android:id="@+id/status_image_attachment"-->
+<!--            android:layout_width="fill_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:minHeight="200dp"-->
+<!--            android:visibility="gone"-->
+<!--            tools:src="@mipmap/ic_rock_climbing2"-->
+<!--            tools:visibility="visible" />-->
+        <!--        <VideoView-->
+<!--            android:id="@+id/status_video_attachment"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:visibility="gone"-->
+<!--            tools:visibility="visible" />-->
     </LinearLayout>
 
 

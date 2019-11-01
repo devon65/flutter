@@ -7,7 +7,8 @@ import java.util.*
 
 class Status(val user: User,
              val messageBody: String,
-             val attachedPhoto: Drawable? = null,
+//             val attachedPhoto: Drawable? = null,
+             val attachmentUrl: String? = null,
              val statusId: String = UUID.randomUUID().toString(),
              val timeStamp: Long = System.currentTimeMillis(),
              var hashtagList: List<String> = listOf()){

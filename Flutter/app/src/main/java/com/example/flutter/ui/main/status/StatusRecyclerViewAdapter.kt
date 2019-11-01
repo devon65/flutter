@@ -6,6 +6,7 @@ import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.webkit.WebView
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
@@ -63,12 +64,14 @@ class StatusRecyclerViewAdapter(
         holder.handle.text = handleText
         holder.handle.movementMethod = LinkMovementMethod.getInstance()
 
-        if(status.attachedPhoto != null){
-            with(holder.statusImageAttachment){
+        if(status.attachmentUrl != null){
+            with(holder.statusAttachment){
                 tag = status
                 visibility = View.VISIBLE
-                setImageDrawable(status.attachedPhoto)
-                setOnClickListener(mOnStatusClickListener)
+                settings.setLoadWithOverviewMode(true);
+                settings.setUseWideViewPort(true);
+                loadUrl(status.attachmentUrl)
+//                setOnClickListener(mOnStatusClickListener)
             }
         }
 
@@ -86,6 +89,6 @@ class StatusRecyclerViewAdapter(
         val handle: TextView = mView.findViewById(R.id.status_handle)
         val profilePic: ImageView = mView.findViewById(R.id.status_profile_pic)
         val statusLayout: LinearLayout = mView.findViewById(R.id.status_layout)
-        val statusImageAttachment: ImageView = mView.findViewById(R.id.status_image_attachment)
+        val statusAttachment: WebView = mView.findViewById(R.id.status_attachment)
     }
 }

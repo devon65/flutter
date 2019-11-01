@@ -109,8 +109,10 @@ object DummyData: DataExtractionInterface {
     private fun makePictureStatus(user: User): Status{
         val messageBody = "This will probably be the best picture you've seen in years! " +
                 fakeUsers.random().alias  + " " + funHashtags.random() + " " + funHashtags.random()
-        val attachment = BlueBird.context.getDrawable(R.mipmap.ic_rock_climbing2)
-        return Status(user, messageBody, attachedPhoto = attachment)
+//        val attachment = BlueBird.context.getDrawable(R.mipmap.ic_rock_climbing2)
+//        val attachmentUrl = "https://www.sierraclub.org/sites/www.sierraclub.org/files/styles/flexslider_full/public/sierra/articles/big/SIERRA%20rock%20climber%20WB.jpg?itok=cDIYu9yi"
+        val attachmentUrl = "https://outdoorgearlab-mvnab3pwrvp3t0.stackpathdns.com/photos/15/81/279616_31645_XXL.jpg"
+        return Status(user, messageBody, attachmentUrl = attachmentUrl)
     }
 
     fun getName(): String{

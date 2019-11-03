@@ -7,7 +7,7 @@ class ClickableAlias(linkText: String, clickListener: ClickableLinkListener? = n
     ClickableLink(linkText, clickListener) {
 
     override fun onClick(widget: View) {
-        val adjustedUserId = userId ?: SessionInfo.getUserIdByAlias(linkText)
+        val adjustedUserId = userId
         clickListener?.onLinkClicked(linkText, adjustedUserId)
     }
 }

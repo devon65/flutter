@@ -56,7 +56,12 @@ class StatusViewActivity : AppCompatActivity(), StatusContract.IStatusActivity {
             statusAttachment.loadUrl(status.attachmentUrl)
         }
 
-        val profilePic: ImageView = findViewById(R.id.status_profile_pic)
+        val profilePic: WebView = findViewById(R.id.status_profile_pic)
+        with(profilePic){
+            settings.setLoadWithOverviewMode(true)
+            settings.setUseWideViewPort(true)
+            loadUrl(status?.user?.profilePicUrl)
+        }
 
     }
 
@@ -73,9 +78,10 @@ class StatusViewActivity : AppCompatActivity(), StatusContract.IStatusActivity {
     }
 
     override fun launchUserStory(userMentionText: String, userId: String?) {
-        if (userId != null) {
+        if (userId != null || userMentionText != null) {
             val intent = Intent(this, UserStoryActivity::class.java).apply {
                 putExtra(UserStoryActivity.USER_ID, userId)
+                putExtra(UserStoryActivity.USER_ALIAS, userMentionText)
                 addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
             }
             startActivity(intent)

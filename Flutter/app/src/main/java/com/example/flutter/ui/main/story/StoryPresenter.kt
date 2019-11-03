@@ -9,11 +9,12 @@ class StoryPresenter(storyActivity: StoryContract.IStoryActivity): StoryContract
     private var storyActivity: StoryContract.IStoryActivity? = storyActivity
 
     override fun onViewCreated(userId: String) {
-        storyActivity?.viewUserStoryFragment(userId)
+//        storyActivity?.viewUserStoryFragment(userId)
     }
 
-    override fun getUser(userId: String?): User? {
-        return SessionInfo.getUserById(userId)
+    override fun getUser(userId: String?, alias: String?): User? {
+        return if (userId != null) SessionInfo.getUserById(userId)
+            else SessionInfo.getUserByAlias(alias)
     }
 
     override fun getUserStory(user: User?): List<Status> {

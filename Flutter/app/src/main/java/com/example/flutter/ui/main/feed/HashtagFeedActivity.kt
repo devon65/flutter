@@ -48,9 +48,10 @@ class HashtagFeedActivity : AppCompatActivity(), FeedContract.IFeedActivity, New
     }
 
     override fun launchUserStory(userMentionText: String, userId: String?) {
-        if (userId != null) {
+        if (userId != null || userMentionText != null) {
             val intent = Intent(this, UserStoryActivity::class.java).apply {
                 putExtra(UserStoryActivity.USER_ID, userId)
+                putExtra(UserStoryActivity.USER_ALIAS, userMentionText)
                 addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
             }
             startActivity(intent)

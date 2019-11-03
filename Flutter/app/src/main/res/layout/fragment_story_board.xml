@@ -13,26 +13,43 @@
     android:layout_height="wrap_content"
     tools:context=".ui.main.story.StoryBoardFragment">
 
-    <ImageView
-        android:id="@+id/story_profile_pic"
-        android:layout_width="150dp"
-        android:layout_height="150dp"
+    <LinearLayout
+        android:id="@+id/pro_pic_holder"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:layout_marginTop="20dp"
-        android:background="@mipmap/ic_flutter_bird_round"
-        android:src="@drawable/picture_frame"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:gravity="center"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <WebView
+            android:id="@+id/story_profile_pic"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:layout_gravity="center_horizontal"
+            android:padding="5dip" />
+    </LinearLayout>
+
+    <!--    <ImageView-->
+<!--        android:id="@+id/story_profile_pic"-->
+<!--        android:layout_width="150dp"-->
+<!--        android:layout_height="150dp"-->
+<!--        android:layout_marginTop="20dp"-->
+<!--        android:background="@mipmap/ic_flutter_bird_round"-->
+<!--        android:src="@drawable/picture_frame"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintTop_toTopOf="parent" />-->
 
     <LinearLayout
         android:id="@+id/story_edit_profile_pic"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
         android:orientation="horizontal"
         android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/story_profile_pic"
+        app:layout_constraintTop_toBottomOf="@+id/pro_pic_holder"
         tools:visibility="visible">
 
         <ImageView
@@ -128,11 +145,55 @@
                 android:layout_weight="1"
                 android:hint="@string/story_update_status" />
 
-            <ImageView
-                android:id="@+id/story_status_attachment"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                tools:src="@mipmap/ic_launcher" />
+                android:orientation="vertical">
+
+                <EditText
+                    android:id="@+id/story_update_status_attachment_url"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone"
+                    tools:visibility="visible"
+                    android:hint="@string/story_update_status_enter_url" />
+
+                <Button
+                    android:id="@+id/story_status_load_attachment_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:backgroundTint="@color/editBlue"
+                    android:text="@string/story_load_status_attachment"
+                    android:textColor="@color/cardview_light_background"
+                    android:textStyle="bold"
+                    android:visibility="gone"
+                    tools:visibility="visible" />
+
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:id="@+id/story_status_attachment_holder"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="20dp"
+                android:gravity="center">
+
+                <WebView
+                    android:id="@+id/story_status_attachment"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:visibility="gone"
+                    tools:visibility="visible" />
+            </LinearLayout>
+
+
+            <!--            <ImageView-->
+<!--                android:id="@+id/story_status_attachment"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                tools:src="@mipmap/ic_launcher" />-->
         </LinearLayout>
 
         <ImageView

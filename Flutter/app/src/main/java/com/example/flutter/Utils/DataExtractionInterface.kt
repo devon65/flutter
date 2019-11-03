@@ -8,11 +8,13 @@ interface DataExtractionInterface {
 
     fun getUserById(userId: String?): User?
 
+    fun getUserByAlias(alias: String?): User?
+
     fun getUserFeed(user: User?): List<Status>
 
     fun getUserStory(user: User?): List<Status>
 
-    fun getUserIdByAlias(alias: String?): String?
+//    fun getUserIdByAlias(alias: String?): String?
 
     fun getCurrentUser(): User
 

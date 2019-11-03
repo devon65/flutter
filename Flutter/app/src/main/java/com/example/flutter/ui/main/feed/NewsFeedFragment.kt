@@ -15,7 +15,7 @@ import com.example.flutter.ui.main.status.OnStatusInteractionListener
 import com.example.flutter.ui.main.status.StatusRecyclerViewAdapter
 import kotlinx.android.synthetic.main.fragment_status_list.*
 
-class NewsFeedFragment : Fragment(), OnStatusInteractionListener {
+class NewsFeedFragment : Fragment() {
 
     private var hashtag: String? = null
     private var listener: OnNewsFeedInteractionListener? = null
@@ -60,18 +60,6 @@ class NewsFeedFragment : Fragment(), OnStatusInteractionListener {
 
     interface OnNewsFeedInteractionListener: OnStatusInteractionListener {
         fun getStatusFeedList(hashtagText: String?): List<Status>
-    }
-
-    override fun launchHashtagFeed(hashtagText: String) {
-        listener?.launchHashtagFeed(hashtagText)
-    }
-
-    override fun launchUserStory(userMentionText: String, userId: String?) {
-        listener?.launchUserStory(userMentionText, userId)
-    }
-
-    override fun launchStatusView(status: Status) {
-        listener?.launchStatusView(status)
     }
 
     companion object {

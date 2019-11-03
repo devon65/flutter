@@ -1,6 +1,7 @@
 package com.example.flutter.ui.main.status
 
 import android.text.SpannableString
+import android.text.format.DateFormat
 import android.text.method.LinkMovementMethod
 import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
@@ -11,14 +12,20 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import com.example.flutter.R
+import com.example.flutter.Utils.BlueBird
 import com.example.flutter.ui.main.status.ClickableLink.ClickableLinkListener
 import com.example.flutter.models.Status
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import java.util.*
 
 
 class StatusRecyclerViewAdapter(
     private val mValues: List<Status>,
     private val statusInteractionListener: OnStatusInteractionListener?) :
     RecyclerView.Adapter<StatusRecyclerViewAdapter.ViewHolder>() {
+
 
     private val mOnStatusClickListener: View.OnClickListener
 
@@ -64,12 +71,21 @@ class StatusRecyclerViewAdapter(
         holder.handle.text = handleText
         holder.handle.movementMethod = LinkMovementMethod.getInstance()
 
-        if(status.attachmentUrl != null){
-            with(holder.statusAttachment){
+        val date = Date(status.timeStamp)
+        holder.statusTimestamp.text = DateFormat.format("MM-dd-yyyy hh:mm a", date)
+
+        with(holder.profilePic) {
+            settings.setLoadWithOverviewMode(true)
+            settings.setUseWideViewPort(true)
+            loadUrl(status.user.profilePicUrl)
+        }
+
+        if(status.attachmentUrl != null) {
+            with(holder.statusAttachment) {
                 tag = status
                 visibility = View.VISIBLE
-                settings.setLoadWithOverviewMode(true);
-                settings.setUseWideViewPort(true);
+                settings.setLoadWithOverviewMode(true)
+                settings.setUseWideViewPort(true)
                 loadUrl(status.attachmentUrl)
 //                setOnClickListener(mOnStatusClickListener)
             }
@@ -87,7 +103,8 @@ class StatusRecyclerViewAdapter(
 
         val messageBody: TextView = mView.findViewById(R.id.status_message_body)
         val handle: TextView = mView.findViewById(R.id.status_handle)
-        val profilePic: ImageView = mView.findViewById(R.id.status_profile_pic)
+        val statusTimestamp: TextView = mView.findViewById(R.id.status_date)
+        val profilePic: WebView = mView.findViewById(R.id.status_profile_pic)
         val statusLayout: LinearLayout = mView.findViewById(R.id.status_layout)
         val statusAttachment: WebView = mView.findViewById(R.id.status_attachment)
     }

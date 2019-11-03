@@ -8,11 +8,11 @@ import com.example.flutter.models.User
 interface StoryContract {
     interface IStoryPresenter : BasePresenter {
         fun onViewCreated(userId: String)
-        fun getUser(userId: String?): User?
+        fun getUser(userId: String?, alias: String?): User?
         fun getUserStory(user: User?): List<Status>
     }
 
     interface IStoryActivity : BaseStatusesView<IStoryPresenter> {
-        fun viewUserStoryFragment(userId: String)
+        fun viewUserStoryFragment(userId: String?, alias: String?)
     }
 }

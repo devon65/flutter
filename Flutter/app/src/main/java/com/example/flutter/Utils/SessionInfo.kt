@@ -47,7 +47,7 @@ object SessionInfo {
         return dataExtractor.getPersonsFollowedByUser(userId)
     }
 
-    fun getUserIdByAlias(alias: String?): String?{
-        return dataExtractor.getUserIdByAlias(alias)
+    fun getUserByAlias(alias: String?): User?{
+        return dataExtractor.getUserByAlias(alias)
     }
 }

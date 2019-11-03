@@ -18,10 +18,12 @@ class UserStoryActivity : AppCompatActivity(), StoryContract.IStoryActivity, Sto
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_user_story)
 
-        val userId = intent.getStringExtra(USER_ID) ?: ""
+        val userId = intent.getStringExtra(USER_ID)
+        val alias = intent.getStringExtra(USER_ALIAS)
 
         setPresenter(StoryPresenter(this))
-        presenter.onViewCreated(userId)
+//        presenter.onViewCreated(userId)
+        viewUserStoryFragment(userId, alias)
     }
 
     override fun setPresenter(presenter: StoryContract.IStoryPresenter) {
@@ -33,8 +35,8 @@ class UserStoryActivity : AppCompatActivity(), StoryContract.IStoryActivity, Sto
         super.onDestroy()
     }
 
-    override fun viewUserStoryFragment(userId: String) {
-        val fragment = StoryBoardFragment.newInstance(userId)
+    override fun viewUserStoryFragment(userId: String?, alias: String?) {
+        val fragment = StoryBoardFragment.newInstance(userId, alias)
         supportFragmentManager.beginTransaction()
             .replace(R.id.user_story_holder, fragment)
             .commit()
@@ -49,7 +51,7 @@ class UserStoryActivity : AppCompatActivity(), StoryContract.IStoryActivity, Sto
     }
 
     override fun launchUserStory(userMentionText: String, userId: String?) {
-        if (userId != null) { viewUserStoryFragment(userId) }
+        if (userId != null || userMentionText != null) { viewUserStoryFragment(userId, userMentionText) }
     }
 
     override fun launchStatusView(status: Status) {
@@ -69,8 +71,8 @@ class UserStoryActivity : AppCompatActivity(), StoryContract.IStoryActivity, Sto
         startActivity(intent)
     }
 
-    override fun getUser(userId: String?): User? {
-        return presenter.getUser(userId)
+    override fun getUser(userId: String?, alias: String?): User? {
+        return presenter.getUser(userId, alias)
     }
 
     override fun getUserStory(user: User?): List<Status> {
@@ -79,5 +81,6 @@ class UserStoryActivity : AppCompatActivity(), StoryContract.IStoryActivity, Sto
 
     companion object{
         const val USER_ID = "user_id"
+        const val USER_ALIAS = "user_alias"
     }
 }

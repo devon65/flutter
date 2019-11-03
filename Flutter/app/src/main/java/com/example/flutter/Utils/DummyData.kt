@@ -97,7 +97,8 @@ object DummyData: DataExtractionInterface {
     private fun makeDinnerStatus(user: User): Status{
         val messageBody = "I like making dinner with " + fakeUsers.random().alias + ". Super fun!"  +
                 " " + funHashtags.random() + " " + funHashtags.random() + " " + funHashtags.random()
-        return Status(user, messageBody)
+        val attachmentUrl = "http://example.com/"
+        return Status(user, messageBody, attachmentUrl = attachmentUrl)
     }
 
     private fun makeRockClimbingStatus(user: User): Status{
@@ -232,8 +233,8 @@ object DummyData: DataExtractionInterface {
         return idToUserMap[userId]
     }
 
-    override fun getUserIdByAlias(alias: String?): String? {
-        return aliasToUserMap[alias]?.userId
+    override fun getUserByAlias(alias: String?): User? {
+        return aliasToUserMap[alias]
     }
 
     override fun getCurrentUser(): User {

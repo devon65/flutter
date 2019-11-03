@@ -28,6 +28,8 @@
     <string name="title_activity_user_list">UserListActivity</string>
     <string name="story_edit_profile_pic">Edit Profile Picture</string>
     <string name="story_update_status">Update Your Status</string>
+    <string name="story_update_status_enter_url">Enter URL of Attachment</string>
+    <string name="story_load_status_attachment">Load</string>
     <string name="story_post_status">Post</string>
     <string name="story_cancel_status">Cancel</string>
     <string name="person_list_title_followers">Followers of %s</string>

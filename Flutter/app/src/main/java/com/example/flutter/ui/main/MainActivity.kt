@@ -101,9 +101,10 @@ class MainActivity : AppCompatActivity(), MainContract.IMainActivity,
     }
 
     override fun launchUserStory(userMentionText: String, userId: String?) {
-        if (userId != null) {
+        if (userId != null || userMentionText != null) {
             val intent = Intent(this, UserStoryActivity::class.java).apply {
                 putExtra(UserStoryActivity.USER_ID, userId)
+                putExtra(UserStoryActivity.USER_ALIAS, userMentionText)
             }
             startActivity(intent)
         }
@@ -129,7 +130,7 @@ class MainActivity : AppCompatActivity(), MainContract.IMainActivity,
         return presenter.getStatusFeedList()
     }
 
-    override fun getUser(userId: String?): User {
+    override fun getUser(userId: String?, alias: String?): User? {
         return presenter.getUser()
     }
 

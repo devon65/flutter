@@ -5,9 +5,8 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.TextView
 import com.example.flutter.R
-import com.example.flutter.Utils.Constants
+import com.example.flutter.utils.Constants
 import com.example.flutter.models.User
-import com.example.flutter.ui.main.story.StoryContract
 import com.example.flutter.ui.main.story.UserStoryActivity
 
 class PersonListActivity : AppCompatActivity(), PersonListFragment.PersonListFragmentListener,

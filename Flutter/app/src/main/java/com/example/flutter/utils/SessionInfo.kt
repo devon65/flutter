@@ -1,11 +1,12 @@
-package com.example.flutter.Utils
+package com.example.flutter.utils
 
 import com.example.flutter.models.Status
 import com.example.flutter.models.User
+import com.example.flutter.utils.awsgateway.AwsApiClient
 
 object SessionInfo {
 
-    private val dataExtractor: DataExtractionInterface = DummyData
+    private val dataExtractor: DataExtractionInterface = AwsApiClient
 
     private var mCurrentUser: User? = null
     val currentUser: User

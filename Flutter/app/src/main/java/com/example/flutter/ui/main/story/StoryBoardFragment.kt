@@ -16,14 +16,14 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.flutter.R
-import com.example.flutter.Utils.SessionInfo
+import com.example.flutter.utils.SessionInfo
 import com.example.flutter.models.Status
 import com.example.flutter.models.User
 import com.example.flutter.ui.main.status.OnStatusInteractionListener
 import com.example.flutter.ui.main.status.StatusRecyclerViewAdapter
 import java.io.FileNotFoundException
 import java.lang.Exception
-import com.example.flutter.Utils.Constants
+import com.example.flutter.utils.Constants
 
 
 /**
@@ -104,6 +104,7 @@ class StoryBoardFragment : Fragment() {
         val statusUpdateAttachmentButton = view.findViewById<ImageView>(R.id.story_update_status_attachment_icon)
         statusUpdateAttachmentButton.setOnClickListener{
             launchEnterAttachmentUrl()
+            enableStatusEditing()
         }
 
         statusText = view.findViewById(R.id.story_update_status_text)
@@ -141,7 +142,6 @@ class StoryBoardFragment : Fragment() {
     private fun loadAttachmentUrl(){
         statusAttachment?.visibility = View.VISIBLE
         statusAttachment?.loadUrl(statusAttachUrlText?.text.toString())
-        enableStatusEditing()
     }
 
     private fun enableStatusEditing(){

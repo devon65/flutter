@@ -2,7 +2,7 @@ package com.example.flutter.ui.main.status
 
 import android.text.SpannableString
 import android.text.Spanned
-import com.example.flutter.Utils.Constants
+import com.example.flutter.utils.Constants
 import java.util.regex.Pattern
 
 

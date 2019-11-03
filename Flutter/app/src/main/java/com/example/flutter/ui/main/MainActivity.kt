@@ -10,7 +10,7 @@ import com.google.android.material.tabs.TabLayout
 import androidx.viewpager.widget.ViewPager
 import androidx.appcompat.app.AppCompatActivity
 import com.example.flutter.R
-import com.example.flutter.Utils.Constants
+import com.example.flutter.utils.Constants
 import com.example.flutter.models.Status
 import com.example.flutter.models.User
 import com.example.flutter.ui.main.feed.HashtagFeedActivity

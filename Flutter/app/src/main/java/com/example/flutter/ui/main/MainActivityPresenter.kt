@@ -1,8 +1,6 @@
 package com.example.flutter.ui.main
 
-import com.example.flutter.Utils.Constants
-import com.example.flutter.Utils.PreferencesUtil
-import com.example.flutter.Utils.SessionInfo
+import com.example.flutter.utils.SessionInfo
 import com.example.flutter.models.Status
 import com.example.flutter.models.User
 

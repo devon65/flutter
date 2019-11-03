@@ -1,8 +1,5 @@
-package com.example.flutter.Utils
+package com.example.flutter.utils
 
-import android.content.res.Resources
-import androidx.core.graphics.drawable.toBitmap
-import com.example.flutter.R
 import com.example.flutter.models.Status
 import com.example.flutter.models.User
 
@@ -176,7 +173,7 @@ object DummyData: DataExtractionInterface {
 
 
     //Getters
-    override fun getStatusesByHashtag(tag: String): List<Status>{
+    override fun getStatusesByHashtag(tag: String, postExecute: (List<Status>) -> Unit) {
         val statusList = ArrayList<Status>()
         for (statusId in hashtagToStatuses[tag] ?: listOf<String>()){
             val taggedStatus = idToStatusMap[statusId]
@@ -184,19 +181,19 @@ object DummyData: DataExtractionInterface {
                 statusList.add(taggedStatus)
             }
         }
-        return statusList
+        postExecute(statusList)
     }
 
-    override fun getUserFeed(user: User?): List<Status>{
+    override fun getUserFeed(user: User?, postExecute: (List<Status>) -> Unit) {
         val friendList = user?.usersFollowed
         val statusesOfFriends = ArrayList<Status>()
         for(userId in friendList ?: listOf()){
             statusesOfFriends.addAll(getUserStory(idToUserMap[userId]))
         }
-        return statusesOfFriends
+        postExecute(statusesOfFriends)
     }
 
-    override fun getUserStory(user: User?): List<Status>{
+    private fun getUserStory(user: User?): List<Status> {
         val storyStatuses = ArrayList<Status>()
         for(statusId in user?.statusList ?: listOf<String>()){
             val status = idToStatusMap[statusId]
@@ -205,7 +202,16 @@ object DummyData: DataExtractionInterface {
         return storyStatuses
     }
 
-    override fun getUserFollowers(userId: String): List<User> {
+    override fun getUserStory(user: User?, postExecute: (List<Status>) -> Unit) {
+        val storyStatuses = ArrayList<Status>()
+        for(statusId in user?.statusList ?: listOf<String>()){
+            val status = idToStatusMap[statusId]
+            if(status != null) { storyStatuses.add(status) }
+        }
+        postExecute(storyStatuses)
+    }
+
+    override fun getUserFollowers(userId: String, postExecute: (List<User>) -> Unit) {
         val followerIds = getUserById(userId)?.followers ?: listOf()
         val result = mutableListOf<User>()
         for (id in followerIds){
@@ -214,10 +220,10 @@ object DummyData: DataExtractionInterface {
                 result.add(user)
             }
         }
-        return result
+        postExecute(result)
     }
 
-    override fun getPersonsFollowedByUser(userId: String): List<User> {
+    override fun getPersonsFollowedByUser(userId: String, postExecute: (List<User>) -> Unit) {
         val followerIds = getUserById(userId)?.usersFollowed ?: listOf()
         val result = mutableListOf<User>()
         for (id in followerIds){
@@ -226,22 +232,26 @@ object DummyData: DataExtractionInterface {
                 result.add(user)
             }
         }
-        return result
+        postExecute(result)
     }
 
-    override fun getUserById(userId: String?): User? {
+    private fun getUserById(userId: String): User?{
         return idToUserMap[userId]
     }
 
-    override fun getUserByAlias(alias: String?): User? {
-        return aliasToUserMap[alias]
+    override fun getUserById(userId: String?, postExecute: (User?) -> Unit) {
+        postExecute(idToUserMap[userId])
     }
 
-    override fun getCurrentUser(): User {
-        return superUser
+    override fun getUserByAlias(alias: String?, postExecute: (User?) -> Unit) {
+        postExecute(aliasToUserMap[alias])
     }
 
-    override fun getStatusById(statusId: String?): Status? {
-        return idToStatusMap[statusId]
+    override fun getCurrentUser(postExecute: (User?) -> Unit) {
+        postExecute(superUser)
+    }
+
+    override fun getStatusById(statusId: String?, postExecute: (Status?) -> Unit) {
+        postExecute(idToStatusMap[statusId])
     }
 }

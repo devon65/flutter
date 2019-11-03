@@ -1,6 +1,6 @@
-package com.example.flutter.Utils.awsgateway
+package com.example.flutter.utils.awsgateway
 
-import com.example.flutter.Utils.DataExtractionInterface
+import com.example.flutter.utils.DataExtractionInterface
 import com.example.flutter.models.Status
 import com.example.flutter.models.User
 

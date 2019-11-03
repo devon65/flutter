@@ -6,7 +6,7 @@ import android.text.style.ClickableSpan
 import android.view.View
 import android.text.TextPaint
 import com.example.flutter.R
-import com.example.flutter.Utils.BlueBird
+import com.example.flutter.utils.BlueBird
 
 
 open class ClickableLink(val linkText: String, val clickListener: ClickableLinkListener? = null): ClickableSpan() {

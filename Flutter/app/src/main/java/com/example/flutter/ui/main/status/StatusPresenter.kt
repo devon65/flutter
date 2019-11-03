@@ -1,6 +1,6 @@
 package com.example.flutter.ui.main.status
 
-import com.example.flutter.Utils.SessionInfo
+import com.example.flutter.utils.SessionInfo
 import com.example.flutter.models.Status
 
 class StatusPresenter(statusActivity: StatusContract.IStatusActivity): StatusContract.IStatusPresenter {

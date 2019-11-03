@@ -1,6 +1,4 @@
-package com.example.flutter.Utils
-
-import android.graphics.Color
+package com.example.flutter.utils
 
 object Constants {
     //startActivityForResults

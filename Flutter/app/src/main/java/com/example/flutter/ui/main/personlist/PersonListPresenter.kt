@@ -1,7 +1,7 @@
 package com.example.flutter.ui.main.personlist
 
-import com.example.flutter.Utils.Constants
-import com.example.flutter.Utils.SessionInfo
+import com.example.flutter.utils.Constants
+import com.example.flutter.utils.SessionInfo
 import com.example.flutter.models.User
 
 class PersonListPresenter(personListActivity: PersonListContract.IPersonListActivity): PersonListContract.IPersonListPresenter {

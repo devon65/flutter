@@ -1,4 +1,4 @@
-package com.example.flutter.Utils
+package com.example.flutter.utils
 
 import android.app.Application
 import android.content.Context

@@ -1,6 +1,6 @@
 package com.example.flutter.ui.main.story
 
-import com.example.flutter.Utils.SessionInfo
+import com.example.flutter.utils.SessionInfo
 import com.example.flutter.models.Status
 import com.example.flutter.models.User
 

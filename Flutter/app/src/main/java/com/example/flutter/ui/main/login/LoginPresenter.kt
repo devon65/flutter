@@ -1,8 +1,7 @@
 package com.example.flutter.ui.main.login
 
-import android.widget.Toast
-import com.example.flutter.Utils.Constants
-import com.example.flutter.Utils.PreferencesUtil
+import com.example.flutter.utils.Constants
+import com.example.flutter.utils.PreferencesUtil
 
 class LoginPresenter(loginActivity: LoginContract.ILoginActivity) : LoginContract.ILoginPresenter {
     var loginActivity : LoginContract.ILoginActivity? = loginActivity

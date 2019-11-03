@@ -8,16 +8,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.webkit.WebView
-import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import com.example.flutter.R
-import com.example.flutter.Utils.BlueBird
 import com.example.flutter.ui.main.status.ClickableLink.ClickableLinkListener
 import com.example.flutter.models.Status
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
 import java.util.*
 
 

@@ -1,6 +1,6 @@
 package com.example.flutter.ui.main.feed
 
-import com.example.flutter.Utils.SessionInfo
+import com.example.flutter.utils.SessionInfo
 import com.example.flutter.models.Status
 
 class FeedPresenter(feedActivity: FeedContract.IFeedActivity): FeedContract.IFeedPresenter {

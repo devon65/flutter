@@ -37,6 +37,12 @@
     <string name="person_list_has_no_friends">%s has no friends :(</string>
     <string name="person_list_my_peeps">MY PEEPS!</string>
 
+    <!--Statuses-->
+    <string name="status_could_not_retrieve_next_page">Could not retrieve next page of statuses</string>
+
+    <!--Users-->
+    <string name="user_could_not_retrieve_next_page">Could not retrieve next page of users</string>
+
     <string name="action_settings">Settings</string>
 
 </resources>

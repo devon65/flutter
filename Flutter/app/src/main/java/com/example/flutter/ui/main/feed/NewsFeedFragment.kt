@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import com.example.flutter.R
 import com.example.flutter.models.Status
 import com.example.flutter.ui.main.status.OnStatusInteractionListener
@@ -19,6 +20,7 @@ class NewsFeedFragment : Fragment() {
 
     private var hashtag: String? = null
     private var listener: OnNewsFeedInteractionListener? = null
+    private val feedList: ArrayList<Status> = ArrayList()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,7 +36,11 @@ class NewsFeedFragment : Fragment() {
         val view = inflater.inflate(R.layout.fragment_news_feed, container, false)
 
         val statusList = view.findViewById<RecyclerView>(R.id.feed_status_list)
-        val feedList = listener?.getStatusFeedList(hashtag) ?: listOf()
+        listener?.getStatusFeedList(hashtag,
+            {feedList.addAll(it)
+            statusList.adapter?.notifyDataSetChanged()},
+            { Toast.makeText(context, getText(R.string.status_could_not_retrieve_next_page), Toast.LENGTH_LONG).show() })
+
         // Set the adapter
         with(statusList) {
             layoutManager = LinearLayoutManager(context)
@@ -59,7 +65,7 @@ class NewsFeedFragment : Fragment() {
     }
 
     interface OnNewsFeedInteractionListener: OnStatusInteractionListener {
-        fun getStatusFeedList(hashtagText: String?): List<Status>
+        fun getStatusFeedList(hashtagText: String?, onSuccess: (List<Status>) -> Unit, onFailure: () -> Unit)
     }
 
     companion object {

@@ -30,13 +30,22 @@ import com.example.flutter.utils.Constants
  * A placeholder fragment containing a simple view.
  */
 class StoryBoardFragment : Fragment() {
+    private val storyFeed = ArrayList<Status>()
 
+    private var userId: String? = null
     private var displayedUser: User? = null
     private var listener: OnStoryBoardInteractionListener? = null
     private var statusAttachment: WebView? = null
     private var statusAttachUrlText: EditText? = null
     private var statusLoadAttachedUrlButton: Button? = null
-    private var profilePicture: WebView? = null
+
+    private lateinit var profilePicture: WebView
+    private lateinit var userNameView: TextView
+    private lateinit var userAliasView: TextView
+    private lateinit var followersButton: Button
+    private lateinit var usersFollowedButton: Button
+    private lateinit var statusList: RecyclerView
+
     private var updateStatusLayout: LinearLayout? = null
     private var statusText: EditText? = null
     private var postStatusButton: Button? = null
@@ -46,9 +55,48 @@ class StoryBoardFragment : Fragment() {
         super.onCreate(savedInstanceState)
 
         arguments?.let {
-            val userId = it.getString(USER_ID)
+            userId = it.getString(USER_ID)
             val alias = it.getString(USER_ALIAS)
-            this.displayedUser = listener?.getUser(userId, alias)
+
+            if (userId == SessionInfo.currentUser.userId){
+                displayedUser = SessionInfo.currentUser
+            }
+            else {
+                listener?.getUser(userId, alias,
+                    {
+                        this.displayedUser = it
+                        loadUserInfo()
+                    },
+                    {})
+            }
+        }
+    }
+
+    private fun loadUserInfo(){
+        profilePicture.settings?.setLoadWithOverviewMode(true)
+        profilePicture.settings?.setUseWideViewPort(true)
+        profilePicture.loadUrl(displayedUser?.profilePicUrl)
+
+        userNameView.text = displayedUser?.name
+        userAliasView.text = displayedUser?.alias
+
+        followersButton.setOnClickListener{
+            listener?.launchPersonList(Constants.FOLLOWERS, displayedUser?.userId, displayedUser?.name)
+        }
+        usersFollowedButton.setOnClickListener{
+            listener?.launchPersonList(Constants.USERS_FOLLOWED, displayedUser?.userId, displayedUser?.name)
+        }
+
+        listener?.getUserStory(displayedUser,
+            {
+                storyFeed.addAll(it)
+                statusList.adapter?.notifyDataSetChanged()
+            },  { Toast.makeText(context, getText(R.string.status_could_not_retrieve_next_page), Toast.LENGTH_LONG).show() })
+
+        // Set the adapter
+        with(statusList) {
+            layoutManager = LinearLayoutManager(context)
+            adapter = StatusRecyclerViewAdapter(storyFeed, listener)
         }
     }
 
@@ -59,32 +107,16 @@ class StoryBoardFragment : Fragment() {
         val view = inflater.inflate(R.layout.fragment_story_board, container, false)
 
         profilePicture = view.findViewById(R.id.story_profile_pic)
-        profilePicture?.settings?.setLoadWithOverviewMode(true)
-        profilePicture?.settings?.setUseWideViewPort(true)
-        profilePicture?.loadUrl(displayedUser?.profilePicUrl)
 
-        val userName = view.findViewById<TextView>(R.id.user_name)
-        userName.text = displayedUser?.name
-        val userAlias = view.findViewById<TextView>(R.id.user_alias)
-        userAlias.text = displayedUser?.alias
+        userNameView = view.findViewById(R.id.user_name)
+        userAliasView = view.findViewById(R.id.user_alias)
 
-        val followersButton = view.findViewById<Button>(R.id.followers_button)
-        followersButton.setOnClickListener{
-            listener?.launchPersonList(Constants.FOLLOWERS, displayedUser?.userId, displayedUser?.name)
-        }
-        val usersFollowedButton = view.findViewById<Button>(R.id.users_followed_button)
-        usersFollowedButton.setOnClickListener{
-            listener?.launchPersonList(Constants.USERS_FOLLOWED, displayedUser?.userId, displayedUser?.name)}
+        followersButton = view.findViewById(R.id.followers_button)
+        usersFollowedButton = view.findViewById(R.id.users_followed_button)
 
-        val statusList = view.findViewById<RecyclerView>(R.id.story_status_list)
-        val storyFeed = listener?.getUserStory(displayedUser) ?: listOf()
-        // Set the adapter
-        with(statusList) {
-            layoutManager = LinearLayoutManager(context)
-            adapter = StatusRecyclerViewAdapter(storyFeed, listener)
-        }
+        statusList = view.findViewById(R.id.story_status_list)
 
-        if (displayedUser?.userId == SessionInfo.currentUser.userId){
+        if (userId == SessionInfo.currentUser.userId){
             initializeCurrentUserEditing(view)
         }
 
@@ -201,8 +233,8 @@ class StoryBoardFragment : Fragment() {
     }
 
     interface OnStoryBoardInteractionListener: OnStatusInteractionListener {
-        fun getUser(userId: String?, alias: String?): User?
-        fun getUserStory(user: User?): List<Status>
+        fun getUser(userId: String?, alias: String?, onSuccess: (User) -> Unit, onFailure: () -> Unit)
+        fun getUserStory(user: User?, onSuccess: (List<Status>) -> Unit, onFailure: () -> Unit)
         fun launchPersonList(personListType: String, userId: String?, usersName: String?)
     }
 

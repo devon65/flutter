@@ -15,7 +15,7 @@ class FeedPresenter(feedActivity: FeedContract.IFeedActivity): FeedContract.IFee
         this.feedActivity = null
     }
 
-    override fun getStatusFeedList(hashtagText: String?): List<Status> {
-        return SessionInfo.getStatusesByHashtag(hashtagText ?: "")
+    override fun getStatusFeedList(hashtagText: String?, onSuccess: (List<Status>) -> Unit, onFailure: () -> Unit) {
+        SessionInfo.getStatusesByHashtag(hashtagText ?: "", onSuccess, onFailure)
     }
 }

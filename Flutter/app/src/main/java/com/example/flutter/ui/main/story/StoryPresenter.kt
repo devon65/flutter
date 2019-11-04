@@ -12,13 +12,13 @@ class StoryPresenter(storyActivity: StoryContract.IStoryActivity): StoryContract
 //        storyActivity?.viewUserStoryFragment(userId)
     }
 
-    override fun getUser(userId: String?, alias: String?): User? {
-        return if (userId != null) SessionInfo.getUserById(userId)
-            else SessionInfo.getUserByAlias(alias)
+    override fun getUser(userId: String?, alias: String?, onSuccess: (User) -> Unit, onFailure: () -> Unit) {
+        if (userId != null) SessionInfo.getUserById(userId, onSuccess, onFailure)
+            else SessionInfo.getUserByAlias(alias, onSuccess, onFailure)
     }
 
-    override fun getUserStory(user: User?): List<Status> {
-        return SessionInfo.getUserStory(user)
+    override fun getUserStory(user: User?, onSuccess: (List<Status>) -> Unit, onFailure: () -> Unit) {
+        SessionInfo.getUserStory(user, onSuccess, onFailure)
     }
 
     override fun onDestroy() {

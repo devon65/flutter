@@ -9,8 +9,8 @@ import com.example.flutter.models.User
 interface MainContract {
     interface IMainPresenter : BasePresenter {
         fun onViewCreated()
-        fun getStatusFeedList(): List<Status>
-        fun getUserStory(): List<Status>
+        fun getStatusFeedList(onSuccess: (List<Status>) -> Unit, onFailure: () -> Unit)
+        fun getUserStory(onSuccess: (List<Status>) -> Unit, onFailure: () -> Unit)
         fun getUser(): User
     }
 

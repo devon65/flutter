@@ -15,12 +15,12 @@ class MainActivityPresenter(mainActivity: MainContract.IMainActivity) :
         }
     }
 
-    override fun getStatusFeedList(): List<Status> {
-        return SessionInfo.getUserFeed(SessionInfo.currentUser)
+    override fun getStatusFeedList(onSuccess: (List<Status>) -> Unit, onFailure: () -> Unit) {
+        return SessionInfo.getUserFeed(SessionInfo.currentUser, onSuccess, onFailure)
     }
 
-    override fun getUserStory(): List<Status> {
-        return SessionInfo.getUserStory(SessionInfo.currentUser)
+    override fun getUserStory(onSuccess: (List<Status>) -> Unit, onFailure: () -> Unit) {
+        return SessionInfo.getUserStory(SessionInfo.currentUser, onSuccess, onFailure)
     }
 
     override fun getUser(): User {

@@ -8,11 +8,13 @@ import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import com.example.flutter.R
 import com.example.flutter.models.User
 
 class PersonListFragment : Fragment() {
-    private lateinit var userIdList: List<String>
+    private var userList = ArrayList<User>()
+    private lateinit var userRecyclerView: RecyclerView
 
     private var listener: PersonListFragmentListener? = null
 
@@ -28,14 +30,20 @@ class PersonListFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_personview_list, container, false)
-        val userList = listener?.getPersonList() ?: listOf()
+
         // Set the adapter
         if (view is RecyclerView) {
-            with(view) {
+            userRecyclerView = view
+            with(userRecyclerView) {
                 layoutManager = LinearLayoutManager(context)
                 adapter = PersonListRecyclerViewAdapter(userList, listener)
             }
         }
+
+        listener?.getPersonList({
+            userList.addAll(it)
+            userRecyclerView.adapter?.notifyDataSetChanged()
+        }, { Toast.makeText(context, getText(R.string.user_could_not_retrieve_next_page), Toast.LENGTH_LONG).show() })
         return view
     }
 
@@ -55,7 +63,7 @@ class PersonListFragment : Fragment() {
 
     interface PersonListFragmentListener {
         fun onPersonClicked(person: User?)
-        fun getPersonList(): List<User>
+        fun getPersonList(onSuccess: (List<User>) -> Unit, onFailure: () -> Unit)
     }
 
     companion object {

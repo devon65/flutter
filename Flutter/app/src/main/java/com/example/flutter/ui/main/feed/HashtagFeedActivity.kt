@@ -66,8 +66,8 @@ class HashtagFeedActivity : AppCompatActivity(), FeedContract.IFeedActivity, New
         startActivity(intent)
     }
 
-    override fun getStatusFeedList(hashtagText: String?): List<Status> {
-        return presenter.getStatusFeedList(hashtagText)
+    override fun getStatusFeedList(hashtagText: String?, onSuccess: (List<Status>) -> Unit, onFailure: () -> Unit) {
+        presenter.getStatusFeedList(hashtagText, onSuccess, onFailure)
     }
 
     companion object {

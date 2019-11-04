@@ -71,12 +71,12 @@ class UserStoryActivity : AppCompatActivity(), StoryContract.IStoryActivity, Sto
         startActivity(intent)
     }
 
-    override fun getUser(userId: String?, alias: String?): User? {
-        return presenter.getUser(userId, alias)
+    override fun getUser(userId: String?, alias: String?, onSuccess: (User) -> Unit, onFailure: () -> Unit) {
+        presenter.getUser(userId, alias, onSuccess, onFailure)
     }
 
-    override fun getUserStory(user: User?): List<Status> {
-        return presenter.getUserStory(user)
+    override fun getUserStory(user: User?, onSuccess: (List<Status>) -> Unit, onFailure: () -> Unit) {
+        return presenter.getUserStory(user, onSuccess, onFailure)
     }
 
     companion object{

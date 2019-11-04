@@ -126,15 +126,20 @@ class MainActivity : AppCompatActivity(), MainContract.IMainActivity,
         startActivity(intent)
     }
 
-    override fun getStatusFeedList(hashtagText: String?): List<Status> {
-        return presenter.getStatusFeedList()
+    override fun getStatusFeedList(hashtagText: String?, onSuccess: (List<Status>) -> Unit, onFailure: () -> Unit) {
+        return presenter.getStatusFeedList(onSuccess, onFailure)
     }
 
-    override fun getUser(userId: String?, alias: String?): User? {
-        return presenter.getUser()
+    override fun getUser(
+        userId: String?,
+        alias: String?,
+        onSuccess: (User) -> Unit,
+        onFailure: () -> Unit
+    ) {
+        presenter.getUser()
     }
 
-    override fun getUserStory(user: User?): List<Status> {
-        return presenter.getUserStory()
+    override fun getUserStory(user: User?, onSuccess: (List<Status>) -> Unit, onFailure: () -> Unit) {
+        return presenter.getUserStory(onSuccess, onFailure)
     }
 }

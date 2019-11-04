@@ -15,64 +15,47 @@ object AwsApiClient: DataExtractionInterface {
     val awsClient: FlutterAppEndpointsClient =
         ApiClientFactory().build(FlutterAppEndpointsClient::class.java)
 
-    override fun getStatusesByHashtag(tag: String, postExecute: (List<Status>) -> Unit) {
-        GlobalScope.launch(Dispatchers.IO) {
-            val response = awsClient.hashtagHashtagGet(tag)
-            postExecute(getStatusListFromResponse(response))
-        }
+    override fun getStatusesByHashtag(tag: String): List<Status> {
+        val response = awsClient.hashtagHashtagGet(tag)
+        return getStatusListFromResponse(response)
     }
 
-    override fun getUserById(userId: String?, postExecute: (User?) -> Unit) {
-        GlobalScope.launch(Dispatchers.IO) {
-            val response = awsClient.userCurrentuserGet(userId)
-            postExecute(User(response))
-
-        }
+    override fun getUserById(userId: String?): User? {
+        val response = awsClient.userCurrentuserGet(userId)
+        return User(response)
     }
 
-    override fun getUserByAlias(alias: String?, postExecute: (User?) -> Unit) {
-        GlobalScope.launch(Dispatchers.IO) {
-            val response = awsClient.userAliasAliasGet(alias)
-            postExecute(User(response))
-        }
+    override fun getUserByAlias(alias: String?): User? {
+        val response = awsClient.userAliasAliasGet(alias)
+        return User(response)
     }
 
-    override fun getUserFeed(user: User?, postExecute: (List<Status>) -> Unit) {
-        GlobalScope.launch(Dispatchers.IO) {
-            val response = awsClient.userCurrentuserFeedGet(user?.userId)
-            postExecute(getStatusListFromResponse(response))
-        }
+    override fun getUserFeed(user: User?): List<Status> {
+        val response = awsClient.userCurrentuserFeedGet(user?.userId)
+        return getStatusListFromResponse(response)
     }
 
-    override fun getUserStory(user: User?, postExecute: (List<Status>) -> Unit) {
-        GlobalScope.launch(Dispatchers.IO) {
-            val response = awsClient.userCurrentuserStoryGet(user?.userId)
-            postExecute( getStatusListFromResponse(response))
-        }
+    override fun getUserStory(user: User?): List<Status> {
+        val response = awsClient.userCurrentuserStoryGet(user?.userId)
+        return getStatusListFromResponse(response)
     }
 
-    override fun getCurrentUser(postExecute: (User?) -> Unit) {
-         this.getUserById("0", postExecute)
+    override fun getCurrentUser(): User {
+         return this.getUserById("0") ?: User("0", "Joe Cool", "jcool")
     }
 
-    override fun getUserFollowers(userId: String, postExecute: (List<User>) -> Unit) {
-        GlobalScope.launch(Dispatchers.IO) {
-            val response = awsClient.userCurrentuserFollowersGet(userId)
-            postExecute(getUserListFromResponse(response))
-        }
+    override fun getUserFollowers(userId: String): List<User> {
+        val response = awsClient.userCurrentuserFollowersGet(userId)
+        return getUserListFromResponse(response)
     }
 
-    override fun getPersonsFollowedByUser(userId: String, postExecute: (List<User>) -> Unit) {
-        GlobalScope.launch(Dispatchers.IO) {
-            val response = awsClient.userCurrentuserUsersfollowedGet(userId)
-            postExecute(getUserListFromResponse(response))
-        }
+    override fun getPersonsFollowedByUser(userId: String): List<User> {
+        val response = awsClient.userCurrentuserUsersfollowedGet(userId)
+        return getUserListFromResponse(response)
     }
 
-    override fun getStatusById(statusId: String?, postExecute: (Status?) -> Unit) {
-        GlobalScope.launch(Dispatchers.IO) {
-            postExecute(null)
-        }
+    override fun getStatusById(statusId: String?): Status? {
+        return null
     }
 
 

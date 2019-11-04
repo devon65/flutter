@@ -54,15 +54,17 @@ class PersonListActivity : AppCompatActivity(), PersonListFragment.PersonListFra
         }
     }
 
-    override fun getPersonList(): List<User> {
-        val personList = presenter.getPersonList(personListType, displayedUserId)
-        titleView.text = when {
-            personList.isNullOrEmpty() -> String.format(getString(R.string.person_list_has_no_friends), displayedUsersName)
-            personListType == Constants.FOLLOWERS -> String.format(getString(R.string.person_list_title_followers), displayedUsersName)
-            personListType == Constants.USERS_FOLLOWED -> String.format(getString(R.string.person_list_title_users_followed), displayedUsersName)
-            else -> "My Peeps!"
-        }
-        return personList
+    override fun getPersonList(onSuccess: (List<User>) -> Unit, onFailure: () -> Unit) {
+        presenter.getPersonList(personListType, displayedUserId,
+        {
+            titleView.text = when {
+                it.isNullOrEmpty() -> String.format(getString(R.string.person_list_has_no_friends), displayedUsersName)
+                personListType == Constants.FOLLOWERS -> String.format(getString(R.string.person_list_title_followers), displayedUsersName)
+                personListType == Constants.USERS_FOLLOWED -> String.format(getString(R.string.person_list_title_users_followed), displayedUsersName)
+                else -> "My Peeps!"
+            }
+            onFailure
+        }, onFailure)
     }
 
     companion object{

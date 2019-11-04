@@ -6,7 +6,7 @@ import com.example.flutter.models.User
 
 interface PersonListContract {
     interface IPersonListPresenter: BasePresenter{
-        fun getPersonList(personListType: String, userId: String): List<User>
+        fun getPersonList(personListType: String, userId: String, onSuccess: (List<User>) -> Unit, onFailure: () -> Unit)
     }
 
     interface IPersonListActivity: BaseView<IPersonListPresenter>

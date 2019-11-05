@@ -152,4 +152,12 @@ class MainActivity : AppCompatActivity(), MainContract.IMainActivity,
     override fun getUserStory(user: User?, onSuccess: (List<Status>) -> Unit, onFailure: () -> Unit) {
         return presenter.getUserStory(onSuccess, onFailure)
     }
+
+    override fun followUser(userId: String, onSuccess: () -> Unit, onFailure: () -> Unit) {
+        //can't follow self
+    }
+
+    override fun unfollowUser(userId: String, onSuccess: () -> Unit, onFailure: () -> Unit) {
+        //can't unfollow self
+    }
 }

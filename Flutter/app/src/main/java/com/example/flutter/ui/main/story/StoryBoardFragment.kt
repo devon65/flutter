@@ -34,6 +34,7 @@ class StoryBoardFragment : Fragment() {
     private var userId: String? = null
     private var alias: String? = null
     private var loadUponCreation: Boolean? = null
+    private var isAlreadyFollowing: Boolean = true
 
     private var displayedUser: User? = null
     private var listener: OnStoryBoardInteractionListener? = null
@@ -42,6 +43,7 @@ class StoryBoardFragment : Fragment() {
     private lateinit var profilePicture: WebView
     private lateinit var userNameView: TextView
     private lateinit var userAliasView: TextView
+    private lateinit var followButton: Button
     private lateinit var followersButton: Button
     private lateinit var usersFollowedButton: Button
     private lateinit var statusList: RecyclerView
@@ -76,6 +78,7 @@ class StoryBoardFragment : Fragment() {
         userNameView = view.findViewById(R.id.user_name)
         userAliasView = view.findViewById(R.id.user_alias)
 
+        followButton = view.findViewById(R.id.follow_button)
         followersButton = view.findViewById(R.id.followers_button)
         usersFollowedButton = view.findViewById(R.id.users_followed_button)
 
@@ -143,6 +146,7 @@ class StoryBoardFragment : Fragment() {
                 if (displayedUser?.userId == SessionInfo.currentUser.userId){
                     initializeCurrentUserEditing()
                 }
+                else{ initializeOtherUser() }
                 loadUserInfo()
             },
             {})
@@ -183,6 +187,28 @@ class StoryBoardFragment : Fragment() {
         postStatusButton?.setOnClickListener{onPostStatusClicked()}
         cancelStatusButton = view?.findViewById(R.id.story_cancel_status_button)
         cancelStatusButton?.setOnClickListener{clearOutStatusEdit()}
+    }
+
+    private fun initializeOtherUser(){
+        followButton.visibility = View.VISIBLE
+        followButton.text = if (isAlreadyFollowing) getText(R.string.story_unfollow)
+                            else getText(R.string.story_follow)
+        val displayedUser = displayedUser
+        if(displayedUser != null) {
+            followButton.setOnClickListener {
+                if (isAlreadyFollowing) listener?.unfollowUser(displayedUser.userId, {
+                    followButton.text = getText(R.string.story_unfollow)
+                },{
+                    Toast.makeText(context, getText(R.string.story_unfollow_fail_message), Toast.LENGTH_LONG).show()
+                })
+
+                else listener?.followUser(displayedUser.userId, {
+                    followButton.text = getText(R.string.story_follow)
+                },{
+                    Toast.makeText(context, getText(R.string.story_follow_fail_message), Toast.LENGTH_LONG).show()
+                })
+            }
+        }
     }
 
     private fun launchSelectPhoto(requestCode: Int){
@@ -261,6 +287,8 @@ class StoryBoardFragment : Fragment() {
         fun getUser(userId: String?, alias: String?, onSuccess: (User) -> Unit, onFailure: () -> Unit)
         fun getUserStory(user: User?, onSuccess: (List<Status>) -> Unit, onFailure: () -> Unit)
         fun launchPersonList(personListType: String, userId: String?, usersName: String?)
+        fun followUser(userId: String, onSuccess: () -> Unit, onFailure: () -> Unit)
+        fun unfollowUser(userId: String, onSuccess: () -> Unit, onFailure: () -> Unit)
     }
 
     companion object {

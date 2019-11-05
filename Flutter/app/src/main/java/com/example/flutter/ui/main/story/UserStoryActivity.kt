@@ -79,6 +79,14 @@ class UserStoryActivity : AppCompatActivity(), StoryContract.IStoryActivity, Sto
         return presenter.getUserStory(user, onSuccess, onFailure)
     }
 
+    override fun followUser(userId: String, onSuccess: () -> Unit, onFailure: () -> Unit) {
+        presenter.followUser(userId, onSuccess, onFailure)
+    }
+
+    override fun unfollowUser(userId: String, onSuccess: () -> Unit, onFailure: () -> Unit) {
+        presenter.unfollowUser(userId, onSuccess, onFailure)
+    }
+
     companion object{
         const val USER_ID = "user_id"
         const val USER_ALIAS = "user_alias"

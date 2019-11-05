@@ -25,6 +25,9 @@
     <string name="story_users_followed">Users Followed</string>
     <string name="story_following">Following</string>
     <string name="story_follow">Follow</string>
+    <string name="story_follow_fail_message">Failed to follow %s</string>
+    <string name="story_unfollow">UnFollow</string>
+    <string name="story_unfollow_fail_message">Failed to unfollow %s</string>
     <string name="title_activity_user_list">UserListActivity</string>
     <string name="story_edit_profile_pic">Edit Profile Picture</string>
     <string name="story_update_status">Update Your Status</string>

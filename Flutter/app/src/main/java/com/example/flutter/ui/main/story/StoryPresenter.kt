@@ -3,6 +3,7 @@ package com.example.flutter.ui.main.story
 import com.example.flutter.utils.SessionInfo
 import com.example.flutter.models.Status
 import com.example.flutter.models.User
+import com.example.flutter.utils.SendInfo
 
 class StoryPresenter(storyActivity: StoryContract.IStoryActivity): StoryContract.IStoryPresenter {
 
@@ -23,5 +24,13 @@ class StoryPresenter(storyActivity: StoryContract.IStoryActivity): StoryContract
 
     override fun onDestroy() {
         this.storyActivity = null
+    }
+
+    override fun followUser(userId: String, onSuccess: () -> Unit, onFailure: () -> Unit) {
+        SendInfo.followUser(userId, SessionInfo.currentUser.userId, onSuccess, onFailure)
+    }
+
+    override fun unfollowUser(userId: String, onSuccess: () -> Unit, onFailure: () -> Unit) {
+        SendInfo.unfollowUser(userId, SessionInfo.currentUser.userId, onSuccess, onFailure)
     }
 }

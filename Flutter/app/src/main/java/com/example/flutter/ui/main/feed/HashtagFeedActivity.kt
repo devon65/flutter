@@ -37,7 +37,7 @@ class HashtagFeedActivity : AppCompatActivity(), FeedContract.IFeedActivity, New
 
     override fun viewHashtagFeedFragment(hashtagText: String) {
         hashtagTitle.text = String.format(getString(R.string.hashtag_feed_title), hashtagText)
-        val fragment = NewsFeedFragment.newInstance(hashtagText)
+        val fragment = NewsFeedFragment.newInstance(hashtagText, loadUponCreation = true)
         supportFragmentManager.beginTransaction()
             .replace(R.id.feed_fragment_holder, fragment)
             .commit()

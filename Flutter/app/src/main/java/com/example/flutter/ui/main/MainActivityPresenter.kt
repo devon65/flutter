@@ -3,15 +3,20 @@ package com.example.flutter.ui.main
 import com.example.flutter.utils.SessionInfo
 import com.example.flutter.models.Status
 import com.example.flutter.models.User
+import com.example.flutter.utils.Constants
+import com.example.flutter.utils.PreferencesUtil
 
 class MainActivityPresenter(mainActivity: MainContract.IMainActivity) :
     MainContract.IMainPresenter {
     private var mainActivity : MainContract.IMainActivity? = mainActivity
 
     override fun onViewCreated() {
-//        if(!PreferencesUtil.getBoolean(mainActivity?.getContext(), Constants.IS_LOGGED_IN_PREF, false)){
-        if(true){
+        val isLoggedIn = false //PreferencesUtil.getBoolean(mainActivity?.getContext(), Constants.IS_LOGGED_IN_PREF, false)){
+        if(!isLoggedIn){
             mainActivity?.launchLoginActivity()
+        }
+        else{
+            mainActivity?.loadUserHomepage()
         }
     }
 

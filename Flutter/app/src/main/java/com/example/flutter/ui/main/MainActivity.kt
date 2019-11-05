@@ -25,13 +25,14 @@ class MainActivity : AppCompatActivity(), MainContract.IMainActivity,
     NewsFeedFragment.OnNewsFeedInteractionListener, StoryBoardFragment.OnStoryBoardInteractionListener {
 
     internal lateinit var presenter: MainContract.IMainPresenter
+    private lateinit var viewPager: ViewPager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
         val sectionsPagerAdapter = HomePagerAdapter(this, supportFragmentManager)
-        val viewPager: ViewPager = findViewById(R.id.view_pager)
+        viewPager = findViewById(R.id.view_pager)
         viewPager.adapter = sectionsPagerAdapter
         val tabs: TabLayout = findViewById(R.id.tabs)
         tabs.setupWithViewPager(viewPager)
@@ -84,9 +85,18 @@ class MainActivity : AppCompatActivity(), MainContract.IMainActivity,
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == Constants.ON_LOGIN_COMPLETE) {
             if (resultCode == Activity.RESULT_OK) {
-                //TODO: Do something if necessary
+                loadUserHomepage()
             }
         }
+    }
+
+    override fun loadUserHomepage(){
+        val newsFeedFragment = supportFragmentManager.findFragmentByTag(
+            "android:switcher:" + R.id.view_pager + ":" + HomePagerAdapter.FEED_FRAGMENT) as NewsFeedFragment
+        newsFeedFragment.loadNewsFeed()
+        val storyFragment = supportFragmentManager.findFragmentByTag(
+            "android:switcher:" + R.id.view_pager + ":" + HomePagerAdapter.STORY_FRAGMENT) as StoryBoardFragment
+        storyFragment.loadStoryBoard()
     }
 
     override fun getContext(): Context {
@@ -136,7 +146,7 @@ class MainActivity : AppCompatActivity(), MainContract.IMainActivity,
         onSuccess: (User) -> Unit,
         onFailure: () -> Unit
     ) {
-        presenter.getUser()
+        onSuccess(presenter.getUser())
     }
 
     override fun getUserStory(user: User?, onSuccess: (List<Status>) -> Unit, onFailure: () -> Unit) {

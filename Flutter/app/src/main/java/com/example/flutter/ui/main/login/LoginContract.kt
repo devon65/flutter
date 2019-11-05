@@ -8,6 +8,7 @@ interface LoginContract {
     interface ILoginPresenter : BasePresenter {
         fun onViewCreated()
         fun onLoginPressed(username: String, password: String)
+        fun onSignupPressed(name: String, alias: String, password: String)
     }
 
     interface ILoginActivity : BaseView<ILoginPresenter> {

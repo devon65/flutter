@@ -30,11 +30,11 @@ class LoginActivity : AppCompatActivity(), LoginContract.ILoginActivity,
     }
 
     override fun onLoginClicked(username: String, password: String) {
-        onLoginSuccess()
+        loginPresenter.onLoginPressed(username, password)
     }
 
     override fun onSignUpPressed(nameOfUser: String, userAlias: String, password: String) {
-        onLoginSuccess()
+        loginPresenter.onSignupPressed(nameOfUser, userAlias, password)
     }
 
     override fun selectProfilePicture(callback: (bitmap: Bitmap) -> Unit) {

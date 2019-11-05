@@ -14,7 +14,7 @@ object DummyData: DataExtractionInterface {
     private var mfakeUsers: ArrayList<User>? = null
     val fakeUsers: ArrayList<User>
         get() {
-            return mfakeUsers ?: makeFakeUsers(Constants.NUM_FAKE_USERS)
+            return mfakeUsers ?: makeFakeUsers()
         }
 
     private var mFakeStatuses: ArrayList<Status>? = null
@@ -55,9 +55,9 @@ object DummyData: DataExtractionInterface {
 
 
     //Fake Data Creators
-    private fun makeFakeUsers(numUsers: Int): ArrayList<User>{
+    private fun makeFakeUsers(): ArrayList<User>{
         val users = ArrayList<User>()
-        for (id in 1..numUsers){
+        for (id in 1..Constants.NUM_FAKE_USERS){
             val name = getName()
             val friends = listOf("0", (id + 1).toString())
             val alias = Constants.CALLOUT + name.replace(" ", "_") + id
@@ -94,7 +94,7 @@ object DummyData: DataExtractionInterface {
     private fun makeDinnerStatus(user: User): Status{
         val messageBody = "I like making dinner with " + fakeUsers.random().alias + ". Super fun!"  +
                 " " + funHashtags.random() + " " + funHashtags.random() + " " + funHashtags.random()
-        val attachmentUrl = "http://example.com/"
+        val attachmentUrl = "https://example.com/"
         return Status(user, messageBody, attachmentUrl = attachmentUrl)
     }
 
@@ -113,7 +113,7 @@ object DummyData: DataExtractionInterface {
         return Status(user, messageBody, attachmentUrl = attachmentUrl)
     }
 
-    fun getName(): String{
+    private fun getName(): String{
        return names.random() + " " + names.random() + "son"
     }
 
@@ -136,6 +136,7 @@ object DummyData: DataExtractionInterface {
     }
 
     private fun makeSuperUser(): User{
+        makeFakeUsers()
         val newSuperUser = User(userId = "0", name = "Joe Cool", alias = "@JCool",
             usersFollowed = idToUserMap.keys.toList(), followers = idToUserMap.keys.toList()
         )

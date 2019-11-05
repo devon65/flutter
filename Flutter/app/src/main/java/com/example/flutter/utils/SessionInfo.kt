@@ -4,7 +4,10 @@ import com.example.flutter.models.Status
 import com.example.flutter.models.User
 import com.example.flutter.utils.awsgateway.AwsApiClient
 import kotlinx.coroutines.Dispatchers.IO
+import kotlinx.coroutines.Dispatchers.Main
 import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.android.UI
+import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 
 object SessionInfo {
@@ -40,11 +43,11 @@ object SessionInfo {
         }
     }
 
-    var currentUser: User = User("0", "Joe Cool", "jcool")
+    var currentUser: User = User("0", "Lame O", "noWorky")
 
     fun getStatusesByHashtag(tag: String, onSuccess: (List<Status>) -> Unit, onFailure: () -> Unit){ //done
-        GlobalScope.launch(IO) {
-            val statuses = dataExtractor.getStatusesByHashtag(tag)
+        GlobalScope.launch(Main) {
+            val statuses = async {dataExtractor.getStatusesByHashtag(tag)}.await()
             if (statuses.isNullOrEmpty()) onFailure()
             else {
                 onSuccess(statuses)
@@ -58,16 +61,16 @@ object SessionInfo {
     }
 
     fun getUserById(userId: String?, onSuccess: (User) -> Unit, onFailure: () -> Unit){ //done
-        GlobalScope.launch(IO) {
-            val user = dataExtractor.getUserById(userId)
+        GlobalScope.launch(Main) {
+            val user = async {dataExtractor.getUserById(userId)}.await()
             if (user == null) onFailure()
             else onSuccess(user)
         }
     }
 
     fun getUserFeed(user: User?, onSuccess: (List<Status>) -> Unit, onFailure: () -> Unit){ //done
-        GlobalScope.launch(IO) {
-            val statuses = dataExtractor.getUserFeed(user)
+        GlobalScope.launch(Main) {
+            val statuses = async {dataExtractor.getUserFeed(user)}.await()
             if (statuses.isNullOrEmpty()) onFailure()
             else{
                 onSuccess(statuses)
@@ -77,8 +80,8 @@ object SessionInfo {
     }
 
     fun getUserStory(user: User?, onSuccess: (List<Status>) -> Unit, onFailure: () -> Unit){ //done
-        GlobalScope.launch(IO) {
-            val statuses = dataExtractor.getUserStory(user)
+        GlobalScope.launch(Main) {
+            val statuses = async {dataExtractor.getUserStory(user)}.await()
             if (statuses.isNullOrEmpty()) onFailure()
             else {
                 onSuccess(statuses)
@@ -88,8 +91,8 @@ object SessionInfo {
     }
 
     fun getUserFollowers(userId: String, onSuccess: (List<User>) -> Unit, onFailure: () -> Unit){ //done
-        GlobalScope.launch(IO) {
-            val users = dataExtractor.getUserFollowers(userId)
+        GlobalScope.launch(Main) {
+            val users = async {dataExtractor.getUserFollowers(userId)}.await()
             if (users.isNullOrEmpty()) onFailure()
             else{
                 onSuccess(users)
@@ -99,8 +102,8 @@ object SessionInfo {
     }
 
     fun getPersonsFollowedByUser(userId: String, onSuccess: (List<User>) -> Unit, onFailure: () -> Unit){ //done
-        GlobalScope.launch(IO) {
-            val users = dataExtractor.getPersonsFollowedByUser(userId)
+        GlobalScope.launch(Main) {
+            val users = async {dataExtractor.getPersonsFollowedByUser(userId)}.await()
             if (users.isNullOrEmpty()) onFailure()
             else {
                 onSuccess(users)
@@ -110,8 +113,8 @@ object SessionInfo {
     }
 
     fun getUserByAlias(alias: String?, onSuccess: (User) -> Unit, onFailure: () -> Unit){
-        GlobalScope.launch(IO) {
-            val user = dataExtractor.getUserByAlias(alias)
+        GlobalScope.launch(Main) {
+            val user = async {dataExtractor.getUserByAlias(alias)}.await()
             if (user == null) onFailure()
             else onSuccess(user)
         }

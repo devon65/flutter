@@ -31,14 +31,14 @@ import com.example.flutter.utils.Constants
  */
 class StoryBoardFragment : Fragment() {
     private val storyFeed = ArrayList<Status>()
-
     private var userId: String? = null
+    private var alias: String? = null
+    private var loadUponCreation: Boolean? = null
+
     private var displayedUser: User? = null
     private var listener: OnStoryBoardInteractionListener? = null
-    private var statusAttachment: WebView? = null
-    private var statusAttachUrlText: EditText? = null
-    private var statusLoadAttachedUrlButton: Button? = null
 
+    //user profile views
     private lateinit var profilePicture: WebView
     private lateinit var userNameView: TextView
     private lateinit var userAliasView: TextView
@@ -46,30 +46,66 @@ class StoryBoardFragment : Fragment() {
     private lateinit var usersFollowedButton: Button
     private lateinit var statusList: RecyclerView
 
+    //post status views
     private var updateStatusLayout: LinearLayout? = null
     private var statusText: EditText? = null
     private var postStatusButton: Button? = null
     private var cancelStatusButton: Button? = null
+    private var statusAttachment: WebView? = null
+    private var statusAttachUrlText: EditText? = null
+    private var statusLoadAttachedUrlButton: Button? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         arguments?.let {
             userId = it.getString(USER_ID)
-            val alias = it.getString(USER_ALIAS)
-
-            if (userId == SessionInfo.currentUser.userId){
-                displayedUser = SessionInfo.currentUser
-            }
-            else {
-                listener?.getUser(userId, alias,
-                    {
-                        this.displayedUser = it
-                        loadUserInfo()
-                    },
-                    {})
-            }
+            alias = it.getString(USER_ALIAS)
+            loadUponCreation = it.getBoolean(LOAD_UPON_CREATION)
         }
+    }
+
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?): View? {
+
+        val view = inflater.inflate(R.layout.fragment_story_board, container, false)
+
+        profilePicture = view.findViewById(R.id.story_profile_pic)
+
+        userNameView = view.findViewById(R.id.user_name)
+        userAliasView = view.findViewById(R.id.user_alias)
+
+        followersButton = view.findViewById(R.id.followers_button)
+        usersFollowedButton = view.findViewById(R.id.users_followed_button)
+
+        statusList = view.findViewById(R.id.story_status_list)
+
+
+//        //user profile views
+//        profilePicture = view.findViewById(R.id.story_profile_pic)
+//        profPicHolder = view.findViewById(R.id.pro_pic_holder)
+//        editProfileButton = view.findViewById(R.id.story_edit_profile_pic)
+//        userNameView = view.findViewById(R.id.user_name)
+//        userAliasView = view.findViewById(R.id.user_alias)
+//        followersButton = view.findViewById(R.id.followers_button)
+//        usersFollowedButton = view.findViewById(R.id.users_followed_button)
+//        statusList = view.findViewById(R.id.story_status_list)
+//
+//        //post status views
+//        updateStatusLayout = view.findViewById(R.id.story_update_status_layout)
+//        statusUpdateAttachmentButton = view.findViewById(R.id.story_update_status_attachment_icon)
+//        statusAttachment = view.findViewById(R.id.story_status_attachment)
+//        statusAttachUrlText = view.findViewById(R.id.story_update_status_attachment_url)
+//        statusLoadAttachedUrlButton = view.findViewById(R.id.story_status_load_attachment_button)
+//        postStatusButton = view.findViewById(R.id.story_post_status_button)
+//        cancelStatusButton = view.findViewById(R.id.story_cancel_status_button)
+//
+        if (loadUponCreation == true){
+            loadStoryBoard()
+        }
+
+        return view
     }
 
     private fun loadUserInfo(){
@@ -100,63 +136,52 @@ class StoryBoardFragment : Fragment() {
         }
     }
 
-    override fun onCreateView(
-            inflater: LayoutInflater, container: ViewGroup?,
-            savedInstanceState: Bundle?): View? {
-
-        val view = inflater.inflate(R.layout.fragment_story_board, container, false)
-
-        profilePicture = view.findViewById(R.id.story_profile_pic)
-
-        userNameView = view.findViewById(R.id.user_name)
-        userAliasView = view.findViewById(R.id.user_alias)
-
-        followersButton = view.findViewById(R.id.followers_button)
-        usersFollowedButton = view.findViewById(R.id.users_followed_button)
-
-        statusList = view.findViewById(R.id.story_status_list)
-
-        if (userId == SessionInfo.currentUser.userId){
-            initializeCurrentUserEditing(view)
-        }
-
-        return view
+    fun loadStoryBoard(){
+        listener?.getUser(userId, alias,
+            {
+                this.displayedUser = it
+                if (displayedUser?.userId == SessionInfo.currentUser.userId){
+                    initializeCurrentUserEditing()
+                }
+                loadUserInfo()
+            },
+            {})
     }
 
-    private fun initializeCurrentUserEditing(view: View){
-        val profPicHolder = view.findViewById<LinearLayout>(R.id.pro_pic_holder)
-        profPicHolder.setOnClickListener{launchSelectPhoto(EDIT_PROFILE_PIC_REQUEST_CODE)}
-        val editProfileButton = view.findViewById<LinearLayout>(R.id.story_edit_profile_pic)
-        editProfileButton.visibility = View.VISIBLE
-        editProfileButton.setOnClickListener{launchSelectPhoto(EDIT_PROFILE_PIC_REQUEST_CODE)}
+    private fun initializeCurrentUserEditing(){
+        val profPicHolder = view?.findViewById<LinearLayout>(R.id.pro_pic_holder)
+        profPicHolder?.setOnClickListener{launchSelectPhoto(EDIT_PROFILE_PIC_REQUEST_CODE)}
+        val editProfileButton = view?.findViewById<LinearLayout>(R.id.story_edit_profile_pic)
+        editProfileButton?.visibility = View.VISIBLE
+        editProfileButton?.setOnClickListener{launchSelectPhoto(EDIT_PROFILE_PIC_REQUEST_CODE)}
 
-        updateStatusLayout = view.findViewById(R.id.story_update_status_layout)
+        updateStatusLayout = view?.findViewById(R.id.story_update_status_layout)
         updateStatusLayout?.visibility = View.VISIBLE
 
-        val statusUpdateAttachmentButton = view.findViewById<ImageView>(R.id.story_update_status_attachment_icon)
-        statusUpdateAttachmentButton.setOnClickListener{
+        val statusUpdateAttachmentButton = view?.findViewById<ImageView>(R.id.story_update_status_attachment_icon)
+        statusUpdateAttachmentButton?.setOnClickListener{
             launchEnterAttachmentUrl()
             enableStatusEditing()
         }
 
-        statusText = view.findViewById(R.id.story_update_status_text)
+        statusText = view?.findViewById(R.id.story_update_status_text)
         statusText?.setOnFocusChangeListener{ v, hasFocus ->
             if (hasFocus){
                 enableStatusEditing()
             }
         }
         statusText?.setOnClickListener{enableStatusEditing()}
-        statusAttachment = view.findViewById(R.id.story_status_attachment)
+        statusAttachment = view?.findViewById(R.id.story_status_attachment)
         statusAttachment?.settings?.setLoadWithOverviewMode(true)
         statusAttachment?.settings?.setUseWideViewPort(true)
 
-        statusAttachUrlText = view.findViewById(R.id.story_update_status_attachment_url)
-        statusLoadAttachedUrlButton = view.findViewById(R.id.story_status_load_attachment_button)
+        statusAttachUrlText = view?.findViewById(R.id.story_update_status_attachment_url)
+        statusLoadAttachedUrlButton = view?.findViewById(R.id.story_status_load_attachment_button)
         statusLoadAttachedUrlButton?.setOnClickListener{ loadAttachmentUrl() }
 
-        postStatusButton = view.findViewById(R.id.story_post_status_button)
+        postStatusButton = view?.findViewById(R.id.story_post_status_button)
         postStatusButton?.setOnClickListener{onPostStatusClicked()}
-        cancelStatusButton = view.findViewById(R.id.story_cancel_status_button)
+        cancelStatusButton = view?.findViewById(R.id.story_cancel_status_button)
         cancelStatusButton?.setOnClickListener{clearOutStatusEdit()}
     }
 
@@ -242,15 +267,17 @@ class StoryBoardFragment : Fragment() {
         private const val TAG = "StoryBoardFragment"
         private const val USER_ID = "userId"
         private const val USER_ALIAS = "userAlias"
+        private const val LOAD_UPON_CREATION = "loadUponCreation"
         private const val EDIT_PROFILE_PIC_REQUEST_CODE = 0
         private const val ADD_ATTACHMENT_REQUEST_CODE = 1
 
         @JvmStatic
-        fun newInstance(userId: String? = null, alias: String? = null): StoryBoardFragment {
+        fun newInstance(userId: String? = null, alias: String? = null, loadUponCreation: Boolean = false): StoryBoardFragment {
             return StoryBoardFragment().apply {
                 arguments = Bundle().apply {
                     putString(USER_ID, userId)
                     putString(USER_ALIAS, alias)
+                    putBoolean(LOAD_UPON_CREATION, loadUponCreation)
                 }
             }
         }

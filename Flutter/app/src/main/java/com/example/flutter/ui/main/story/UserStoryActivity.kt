@@ -36,7 +36,7 @@ class UserStoryActivity : AppCompatActivity(), StoryContract.IStoryActivity, Sto
     }
 
     override fun viewUserStoryFragment(userId: String?, alias: String?) {
-        val fragment = StoryBoardFragment.newInstance(userId, alias)
+        val fragment = StoryBoardFragment.newInstance(userId, alias, loadUponCreation = true)
         supportFragmentManager.beginTransaction()
             .replace(R.id.user_story_holder, fragment)
             .commit()

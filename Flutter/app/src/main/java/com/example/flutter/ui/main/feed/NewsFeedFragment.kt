@@ -19,14 +19,18 @@ import kotlinx.android.synthetic.main.fragment_status_list.*
 class NewsFeedFragment : Fragment() {
 
     private var hashtag: String? = null
+    private var loadUponCreation: Boolean? = null
+
     private var listener: OnNewsFeedInteractionListener? = null
     private val feedList: ArrayList<Status> = ArrayList()
+    private lateinit var statusListView: RecyclerView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         arguments?.let {
             hashtag = it.getString(HASHTAG_ID)
+            loadUponCreation = it.getBoolean(LOAD_UPON_CREATION)
         }
     }
 
@@ -35,19 +39,25 @@ class NewsFeedFragment : Fragment() {
         savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_news_feed, container, false)
 
-        val statusList = view.findViewById<RecyclerView>(R.id.feed_status_list)
+        statusListView = view.findViewById(R.id.feed_status_list)
+
+        if (loadUponCreation == true){
+            loadNewsFeed()
+        }
+        return view
+    }
+
+    fun loadNewsFeed(){
         listener?.getStatusFeedList(hashtag,
             {feedList.addAll(it)
-            statusList.adapter?.notifyDataSetChanged()},
+                statusListView.adapter?.notifyDataSetChanged()},
             { Toast.makeText(context, getText(R.string.status_could_not_retrieve_next_page), Toast.LENGTH_LONG).show() })
 
         // Set the adapter
-        with(statusList) {
+        with(statusListView) {
             layoutManager = LinearLayoutManager(context)
             adapter = StatusRecyclerViewAdapter(feedList, listener)
         }
-
-        return view
     }
 
     override fun onAttach(context: Context) {
@@ -71,12 +81,14 @@ class NewsFeedFragment : Fragment() {
     companion object {
 
         const val HASHTAG_ID = "hashtagId"
+        const val LOAD_UPON_CREATION = "loadUponCreation"
 
         @JvmStatic
-        fun newInstance(hashtag: String? = null) =
+        fun newInstance(hashtag: String? = null, loadUponCreation: Boolean = false) =
             NewsFeedFragment().apply {
                 arguments = Bundle().apply {
                     putString(HASHTAG_ID, hashtag)
+                    putBoolean(LOAD_UPON_CREATION, loadUponCreation)
                 }
             }
     }

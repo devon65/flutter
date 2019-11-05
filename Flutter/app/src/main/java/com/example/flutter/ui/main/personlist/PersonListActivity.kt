@@ -63,7 +63,7 @@ class PersonListActivity : AppCompatActivity(), PersonListFragment.PersonListFra
                 personListType == Constants.USERS_FOLLOWED -> String.format(getString(R.string.person_list_title_users_followed), displayedUsersName)
                 else -> "My Peeps!"
             }
-            onFailure
+            onSuccess(it)
         }, onFailure)
     }
 

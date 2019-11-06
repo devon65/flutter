@@ -10,7 +10,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import com.example.flutter.R
-import com.example.flutter.models.Status
 import com.example.flutter.models.User
 
 class PersonListFragment : Fragment(), PersonListRecyclerViewAdapter.OnFetchMorePeopleListener {
@@ -41,11 +40,11 @@ class PersonListFragment : Fragment(), PersonListRecyclerViewAdapter.OnFetchMore
             }
         }
 
-        listener?.getPersonList({ appendStatuses(it) }, { showFailedToGetUsers() })
+        listener?.getPersonList({ appendUsers(it) }, { showFailedToGetUsers() })
         return view
     }
 
-    private fun appendStatuses(users: List<User>){
+    private fun appendUsers(users: List<User>){
         val startIndex = if(userList.isEmpty()) 0
                         else userList.lastIndex + 1
         userList.addAll(users)
@@ -71,7 +70,7 @@ class PersonListFragment : Fragment(), PersonListRecyclerViewAdapter.OnFetchMore
     }
 
     override fun fetchMorePeople(nextIndex: Int) {
-
+        listener?.getPersonList({appendUsers(it)}, {showFailedToGetUsers()})
     }
 
     interface PersonListFragmentListener {

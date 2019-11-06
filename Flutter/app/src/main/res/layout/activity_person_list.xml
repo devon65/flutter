@@ -13,7 +13,7 @@ tools:context=".ui.main.feed.HashtagFeedActivity">
     android:layout_margin="10dp"
     android:layout_gravity="center"
     android:textAlignment="center"
-    android:text="@string/person_list_title_followers"
+    android:text="@string/person_list_my_peeps"
     android:textSize="25sp" />
 
 <LinearLayout

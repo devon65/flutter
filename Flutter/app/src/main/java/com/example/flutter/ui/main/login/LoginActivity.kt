@@ -60,7 +60,6 @@ class LoginActivity : AppCompatActivity(), LoginContract.ILoginActivity,
     }
 
     override fun onLoginSuccess() {
-        loadingSpinner.visibility = View.GONE
         setResult(Activity.RESULT_OK)
         finish()
     }
@@ -71,7 +70,6 @@ class LoginActivity : AppCompatActivity(), LoginContract.ILoginActivity,
     }
 
     override fun onSignupSuccess() {
-        loadingSpinner.visibility = View.GONE
         setResult(Activity.RESULT_OK)
         finish()
     }

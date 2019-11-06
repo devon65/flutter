@@ -4,10 +4,14 @@ import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.webkit.WebView
 import android.widget.ImageView
 import android.widget.TextView
 import com.example.flutter.R
 import com.example.flutter.models.User
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 
 class PersonListRecyclerViewAdapter(
@@ -36,10 +40,21 @@ class PersonListRecyclerViewAdapter(
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        GlobalScope.launch (Dispatchers.IO){
+            if(position == mValues.lastIndex) {
+                onFetchMorePeopleListener.fetchMorePeople(mValues.lastIndex + 1)
+            }
+        }
         val person = mValues[position]
         holder.nameOfUser.text = person.name
         holder.userAlias.text = person.alias
 //        holder.profilePic.background =
+
+        with(holder.profilePic) {
+            settings.setLoadWithOverviewMode(true)
+            settings.setUseWideViewPort(true)
+            loadUrl(person.profilePicUrl)
+        }
 
         with(holder.mView) {
             tag = person
@@ -50,7 +65,7 @@ class PersonListRecyclerViewAdapter(
     override fun getItemCount(): Int = mValues.size
 
     inner class ViewHolder(val mView: View) : RecyclerView.ViewHolder(mView) {
-        val profilePic: ImageView = mView.findViewById(R.id.person_profile_pic)
+        val profilePic: WebView = mView.findViewById(R.id.peep_list_profile_pic)
         val nameOfUser: TextView = mView.findViewById(R.id.person_name)
         val userAlias: TextView = mView.findViewById(R.id.person_alias)
 

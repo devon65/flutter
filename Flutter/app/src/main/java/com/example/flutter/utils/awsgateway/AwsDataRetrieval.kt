@@ -21,11 +21,11 @@ object AwsDataRetrieval: DataExtractionInterface {
         FuelManager.instance.baseHeaders = mapOf("Content-Type" to "application/json")
     }
 
-    override fun getStatusesByHashtag(tag: String): List<Status> {
+    override fun getStatusesByHashtag(tag: String, nextIndex: Int): List<Status> {
         val hashtag = tag.replace("#", "")
         val requestPath = "/hashtag/" + hashtag
         val (request, response, result) = requestPath
-            .httpGet(listOf("nextindex" to 0, "pagesize" to Constants.STATUS_PAGE_SIZE))
+            .httpGet(listOf("nextindex" to nextIndex, "pagesize" to Constants.STATUS_PAGE_SIZE))
             .responseObject<StatusListResponse>()
 
         return if (response.statusCode == 200) {
@@ -70,11 +70,11 @@ object AwsDataRetrieval: DataExtractionInterface {
 //        return User(response)
     }
 
-    override fun getUserFeed(user: User?): List<Status> {
+    override fun getUserFeed(user: User?, nextIndex: Int): List<Status> {
         if (user == null) return listOf()
         val requestPath = "/user/" + user.userId + "/feed"
         val (request, response, result) = requestPath
-            .httpGet(listOf("nextindex" to 0, "pagesize" to Constants.STATUS_PAGE_SIZE))
+            .httpGet(listOf("nextindex" to nextIndex, "pagesize" to Constants.STATUS_PAGE_SIZE))
             .responseObject<StatusListResponse>()
 
         return if (response.statusCode == 200) {
@@ -87,11 +87,11 @@ object AwsDataRetrieval: DataExtractionInterface {
 //        return getStatusListFromResponse(response)
     }
 
-    override fun getUserStory(user: User?): List<Status> {
+    override fun getUserStory(user: User?, nextIndex: Int): List<Status> {
         if (user?.userId == null) return listOf()
         val requestPath = "/user/" + user.userId + "/story"
         val (request, response, result) = requestPath
-            .httpGet(listOf("nextindex" to 0, "pagesize" to Constants.STATUS_PAGE_SIZE))
+            .httpGet(listOf("nextindex" to nextIndex, "pagesize" to Constants.STATUS_PAGE_SIZE))
             .responseObject<StatusListResponse>()
 
         return if (response.statusCode == 200) {
@@ -107,10 +107,10 @@ object AwsDataRetrieval: DataExtractionInterface {
          return this.getUserById("0") ?: User("0", "Joe Cool", "jcool")
     }
 
-    override fun getUserFollowers(userId: String): List<User> {
+    override fun getUserFollowers(userId: String, nextIndex: Int): List<User> {
         val requestPath = "/user/" + userId + "/followers"
         val (request, response, result) = requestPath
-            .httpGet(listOf("nextindex" to 0, "pagesize" to Constants.USER_PAGE_SIZE))
+            .httpGet(listOf("nextindex" to nextIndex, "pagesize" to Constants.USER_PAGE_SIZE))
             .responseObject<UserListResponse>()
 
         return if (response.statusCode == 200) {
@@ -122,10 +122,10 @@ object AwsDataRetrieval: DataExtractionInterface {
 //        return getUserListFromResponse(response)
     }
 
-    override fun getPersonsFollowedByUser(userId: String): List<User> {
+    override fun getPersonsFollowedByUser(userId: String, nextIndex: Int): List<User> {
         val requestPath = "/user/" + userId + "/usersfollowed"
         val (request, response, result) = requestPath
-            .httpGet(listOf("nextindex" to 0, "pagesize" to Constants.USER_PAGE_SIZE))
+            .httpGet(listOf("nextindex" to nextIndex, "pagesize" to Constants.USER_PAGE_SIZE))
             .responseObject<UserListResponse>()
 
         return if (response.statusCode == 200) {

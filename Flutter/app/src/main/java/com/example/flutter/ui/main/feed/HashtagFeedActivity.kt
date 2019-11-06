@@ -4,6 +4,7 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.TextView
+import android.widget.Toast
 import com.example.flutter.R
 import com.example.flutter.models.Status
 import com.example.flutter.ui.main.status.StatusViewActivity
@@ -13,6 +14,7 @@ class HashtagFeedActivity : AppCompatActivity(), FeedContract.IFeedActivity, New
 
     internal lateinit var presenter: FeedContract.IFeedPresenter
     lateinit var hashtagTitle: TextView
+    private var currentHashtag: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,6 +38,7 @@ class HashtagFeedActivity : AppCompatActivity(), FeedContract.IFeedActivity, New
     }
 
     override fun viewHashtagFeedFragment(hashtagText: String) {
+        currentHashtag = hashtagText
         hashtagTitle.text = String.format(getString(R.string.hashtag_feed_title), hashtagText)
         val fragment = NewsFeedFragment.newInstance(hashtagText, loadUponCreation = true)
         supportFragmentManager.beginTransaction()

@@ -1,29 +1,27 @@
 package com.example.flutter.models
 
-import android.graphics.drawable.BitmapDrawable
-import android.graphics.drawable.Drawable
 import com.example.flutter.ui.main.status.StatusHelper
-import com.example.flutter.utils.awsgateway.model.StatusListResponseItem
+import com.google.gson.annotations.SerializedName
 import java.util.*
 
-class Status(val user: User,
-             val messageBody: String,
+data class Status(@SerializedName("user") val user: User,
+                  @SerializedName("messageBody") val messageBody: String,
 //             val attachedPhoto: Drawable? = null,
-             val attachmentUrl: String? = null,
-             val statusId: String = UUID.randomUUID().toString(),
-             val timeStamp: Long = System.currentTimeMillis(),
-             var hashtagList: List<String> = listOf()){
+                  @SerializedName("attachmentUrl") val attachmentUrl: String? = null,
+                  @SerializedName("statusId") val statusId: String = UUID.randomUUID().toString(),
+                  @SerializedName("timeStamp") val timeStamp: Long = System.currentTimeMillis(),
+                  var hashtagList: List<String> = listOf()){
 
     init {
         hashtagList = StatusHelper.findAllHashtags(messageBody)
     }
 
-    constructor(responseItem: StatusListResponseItem) : this(
-        user = User(responseItem.user),
-        messageBody = responseItem.messageBody,
-        attachmentUrl = responseItem.attachmentUrl,
-        statusId = responseItem.statusId,
-        timeStamp = responseItem.timeStamp.toLong()
-    )
+//    constructor(responseItem: StatusListResponseBodyItem) : this(
+//        user = User(responseItem.user),
+//        messageBody = responseItem.messageBody,
+//        attachmentUrl = responseItem.attachmentUrl,
+//        statusId = responseItem.statusId,
+//        timeStamp = responseItem.timeStamp.toLong()
+//    )
 
 }

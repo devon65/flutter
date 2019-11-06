@@ -13,13 +13,22 @@ import android.widget.TextView
 import com.example.flutter.R
 import com.example.flutter.ui.main.status.ClickableLink.ClickableLinkListener
 import com.example.flutter.models.Status
+import com.example.flutter.utils.Constants
+import kotlinx.coroutines.Dispatchers.IO
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import java.util.*
 
 
 class StatusRecyclerViewAdapter(
-    private val mValues: List<Status>,
-    private val statusInteractionListener: OnStatusInteractionListener?) :
+    private val mValues: MutableList<Status>,
+    private val statusListListener: OnStatusInteractionListener?,
+    private val onFetchStatusesListener: OnFetchStatusesListener) :
     RecyclerView.Adapter<StatusRecyclerViewAdapter.ViewHolder>() {
+
+    interface OnFetchStatusesListener {
+        fun fetchMoreStatuses(nextStatusIndex: Int)
+    }
 
 
     private val mOnStatusClickListener: View.OnClickListener
@@ -28,19 +37,19 @@ class StatusRecyclerViewAdapter(
         mOnStatusClickListener = View.OnClickListener { v ->
             if (v.tag != null) {
                 val item = v.tag as Status
-                statusInteractionListener?.launchStatusView(item)
+                statusListListener?.launchStatusView(item)
             }
         }
     }
 
     private val hashtagListener = object: ClickableLinkListener {
         override fun onLinkClicked(linkText: String, id: String?) {
-            statusInteractionListener?.launchHashtagFeed(linkText)
+            statusListListener?.launchHashtagFeed(linkText)
         }
     }
     private val userMentionListener = object: ClickableLinkListener {
         override fun onLinkClicked(linkText: String, id: String?) {
-            statusInteractionListener?.launchUserStory(linkText, id)
+            statusListListener?.launchUserStory(linkText, id)
         }
     }
 
@@ -51,6 +60,11 @@ class StatusRecyclerViewAdapter(
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        GlobalScope.launch (IO){
+            if(position == mValues.lastIndex) {
+                onFetchStatusesListener.fetchMoreStatuses(mValues.lastIndex + 1)
+            }
+        }
         val status = mValues[position]
 
         val linkifiedMessage = SpannableString(status.messageBody)
@@ -66,7 +80,7 @@ class StatusRecyclerViewAdapter(
         holder.handle.text = handleText
         holder.handle.movementMethod = LinkMovementMethod.getInstance()
 
-        val date = Date(status.timeStamp)
+        val date = Date(status.timeStamp * Constants.MILLISEC_IN_SEC)
         holder.statusTimestamp.text = DateFormat.format("MM-dd-yyyy hh:mm a", date)
 
         with(holder.profilePic) {
@@ -102,5 +116,10 @@ class StatusRecyclerViewAdapter(
         val profilePic: WebView = mView.findViewById(R.id.status_profile_pic)
         val statusLayout: LinearLayout = mView.findViewById(R.id.status_layout)
         val statusAttachment: WebView = mView.findViewById(R.id.status_attachment)
+    }
+
+    companion object{
+        const val STORY = "story"
+        const val FEED = "feed"
     }
 }

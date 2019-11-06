@@ -20,6 +20,7 @@ import com.example.flutter.ui.main.status.StatusViewActivity
 import com.example.flutter.ui.main.story.StoryBoardFragment
 import com.example.flutter.ui.main.story.UserStoryActivity
 import com.example.flutter.ui.main.personlist.PersonListActivity
+import com.example.flutter.ui.main.status.StatusRecyclerViewAdapter
 
 class MainActivity : AppCompatActivity(), MainContract.IMainActivity,
     NewsFeedFragment.OnNewsFeedInteractionListener, StoryBoardFragment.OnStoryBoardInteractionListener {

@@ -10,6 +10,8 @@ object Constants {
     //Status
     const val HASHTAG = "#"
     const val CALLOUT = "@"
+    const val STATUS_PAGE_SIZE = 20
+    const val MILLISEC_IN_SEC = 1000
 
     //DummyData
     const val NUM_FAKE_USERS = 5
@@ -17,5 +19,6 @@ object Constants {
     //Users
     const val FOLLOWERS = "followers"
     const val USERS_FOLLOWED = "users_followed"
+    const val USER_PAGE_SIZE = 20
 
 }

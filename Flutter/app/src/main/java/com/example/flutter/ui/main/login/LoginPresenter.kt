@@ -14,15 +14,13 @@ class LoginPresenter(loginActivity: LoginContract.ILoginActivity) : LoginContrac
     }
 
     override fun onLoginPressed(username: String, password: String) {
-        val success = true
-        if(success){
-            PreferencesUtil.setBoolean(loginActivity?.getContext(), Constants.IS_LOGGED_IN_PREF, true)
-            SessionInfo.currentUser = DummyData.getCurrentUser()!!
+        SessionInfo.getUserById("0", {
+//            PreferencesUtil.setBoolean(loginActivity?.getContext(), Constants.IS_LOGGED_IN_PREF, true)
+            SessionInfo.currentUser = it
             loginActivity?.onLoginSuccess()
-        }
-        else{
+        },{
             loginActivity?.onLoginFailure()
-        }
+        })
     }
 
     override fun onSignupPressed(name: String, alias: String, password: String) {

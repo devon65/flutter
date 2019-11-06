@@ -10,9 +10,10 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import com.example.flutter.R
+import com.example.flutter.models.Status
 import com.example.flutter.models.User
 
-class PersonListFragment : Fragment() {
+class PersonListFragment : Fragment(), PersonListRecyclerViewAdapter.OnFetchMorePeopleListener {
     private var userList = ArrayList<User>()
     private lateinit var userRecyclerView: RecyclerView
 
@@ -36,15 +37,23 @@ class PersonListFragment : Fragment() {
             userRecyclerView = view
             with(userRecyclerView) {
                 layoutManager = LinearLayoutManager(context)
-                adapter = PersonListRecyclerViewAdapter(userList, listener)
+                adapter = PersonListRecyclerViewAdapter(userList, listener, this@PersonListFragment)
             }
         }
 
-        listener?.getPersonList({
-            userList.addAll(it)
-            userRecyclerView.adapter?.notifyDataSetChanged()
-        }, { Toast.makeText(context, getText(R.string.user_could_not_retrieve_next_page), Toast.LENGTH_LONG).show() })
+        listener?.getPersonList({ appendStatuses(it) }, { showFailedToGetUsers() })
         return view
+    }
+
+    private fun appendStatuses(users: List<User>){
+        val startIndex = if(userList.isEmpty()) 0
+                        else userList.lastIndex + 1
+        userList.addAll(users)
+        userRecyclerView.adapter?.notifyItemRangeChanged(startIndex, users.size)
+    }
+
+    private fun showFailedToGetUsers(){
+        Toast.makeText(context, getText(R.string.user_could_not_retrieve_next_page), Toast.LENGTH_LONG).show()
     }
 
     override fun onAttach(context: Context) {
@@ -59,6 +68,10 @@ class PersonListFragment : Fragment() {
     override fun onDetach() {
         super.onDetach()
         listener = null
+    }
+
+    override fun fetchMorePeople(nextIndex: Int) {
+
     }
 
     interface PersonListFragmentListener {

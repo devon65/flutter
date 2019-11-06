@@ -14,9 +14,12 @@ import com.example.flutter.models.Status
 import com.example.flutter.ui.main.status.OnStatusInteractionListener
 
 import com.example.flutter.ui.main.status.StatusRecyclerViewAdapter
-import kotlinx.android.synthetic.main.fragment_status_list.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.IO
+import kotlinx.coroutines.launch
 
-class NewsFeedFragment : Fragment() {
+class NewsFeedFragment : Fragment(), StatusRecyclerViewAdapter.OnFetchStatusesListener {
 
     private var hashtag: String? = null
     private var loadUponCreation: Boolean? = null
@@ -48,15 +51,29 @@ class NewsFeedFragment : Fragment() {
     }
 
     fun loadNewsFeed(){
-        listener?.getStatusFeedList(hashtag,
-            {feedList.addAll(it)
-                statusListView.adapter?.notifyDataSetChanged()},
-            { Toast.makeText(context, getText(R.string.status_could_not_retrieve_next_page), Toast.LENGTH_LONG).show() })
+        listener?.getStatusFeedList(hashtag, { appendStatuses(it) }, { showFailedToGetStatuses() })
 
         // Set the adapter
         with(statusListView) {
             layoutManager = LinearLayoutManager(context)
-            adapter = StatusRecyclerViewAdapter(feedList, listener)
+            adapter = StatusRecyclerViewAdapter(feedList, listener, this@NewsFeedFragment)
+        }
+    }
+
+    fun appendStatuses(statuses: List<Status>){
+        val startIndex = if(feedList.isEmpty()) 0
+                         else feedList.lastIndex + 1
+        feedList.addAll(statuses)
+        statusListView.adapter?.notifyItemRangeChanged(startIndex, statuses.size)
+    }
+
+    fun showFailedToGetStatuses(){
+        Toast.makeText(context, getText(R.string.status_could_not_retrieve_next_page), Toast.LENGTH_LONG).show()
+    }
+
+    override fun fetchMoreStatuses(nextStatusIndex: Int) {
+        GlobalScope.launch (Dispatchers.IO){
+            listener?.getStatusFeedList(hashtag, {appendStatuses(it)}, {showFailedToGetStatuses()})
         }
     }
 

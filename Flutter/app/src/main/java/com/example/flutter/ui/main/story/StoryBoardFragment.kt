@@ -24,12 +24,16 @@ import com.example.flutter.ui.main.status.StatusRecyclerViewAdapter
 import java.io.FileNotFoundException
 import java.lang.Exception
 import com.example.flutter.utils.Constants
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.IO
+import kotlinx.coroutines.launch
 
 
 /**
  * A placeholder fragment containing a simple view.
  */
-class StoryBoardFragment : Fragment() {
+class StoryBoardFragment : Fragment(), StatusRecyclerViewAdapter.OnFetchStatusesListener {
     private val storyFeed = ArrayList<Status>()
     private var userId: String? = null
     private var alias: String? = null
@@ -135,7 +139,13 @@ class StoryBoardFragment : Fragment() {
         // Set the adapter
         with(statusList) {
             layoutManager = LinearLayoutManager(context)
-            adapter = StatusRecyclerViewAdapter(storyFeed, listener)
+            adapter = StatusRecyclerViewAdapter(storyFeed, listener, this@StoryBoardFragment)
+        }
+    }
+
+    override fun fetchMoreStatuses(nextStatusIndex: Int) {
+        GlobalScope.launch (Dispatchers.IO){
+            listener?.getUserStory(displayedUser, {appendStatuses(it)}, {showFailedToGetStatuses()})
         }
     }
 
@@ -150,6 +160,17 @@ class StoryBoardFragment : Fragment() {
                 loadUserInfo()
             },
             {})
+    }
+
+    fun appendStatuses(statuses: List<Status>){
+        val startIndex = if(storyFeed.isEmpty()) 0
+                        else storyFeed.lastIndex + 1
+        storyFeed.addAll(statuses)
+        statusList.adapter?.notifyItemRangeChanged(startIndex, statuses.size)
+    }
+
+    fun showFailedToGetStatuses(){
+        Toast.makeText(context, getText(R.string.status_could_not_retrieve_next_page), Toast.LENGTH_LONG).show()
     }
 
     private fun initializeCurrentUserEditing(){

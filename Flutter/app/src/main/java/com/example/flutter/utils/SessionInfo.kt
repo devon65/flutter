@@ -2,17 +2,16 @@ package com.example.flutter.utils
 
 import com.example.flutter.models.Status
 import com.example.flutter.models.User
-import com.example.flutter.utils.awsgateway.AwsApiClient
-import kotlinx.coroutines.Dispatchers.IO
+import com.example.flutter.utils.awsgateway.AwsDataRetrieval
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Dispatchers.Main
 import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.android.UI
-import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 object SessionInfo {
 
-    private val dataExtractor: DataExtractionInterface = DummyData
+    private val dataExtractor: DataExtractionInterface = AwsDataRetrieval
 
 //    private var mCurrentUser: User? = null
 //    val currentUser: User
@@ -47,7 +46,9 @@ object SessionInfo {
 
     fun getStatusesByHashtag(tag: String, onSuccess: (List<Status>) -> Unit, onFailure: () -> Unit){ //done
         GlobalScope.launch(Main) {
-            val statuses = async {dataExtractor.getStatusesByHashtag(tag)}.await()
+            val statuses = withContext(Dispatchers.IO) {
+                dataExtractor.getStatusesByHashtag(tag)
+            }
             if (statuses.isNullOrEmpty()) onFailure()
             else {
                 onSuccess(statuses)
@@ -62,7 +63,9 @@ object SessionInfo {
 
     fun getUserById(userId: String?, onSuccess: (User) -> Unit, onFailure: () -> Unit){ //done
         GlobalScope.launch(Main) {
-            val user = async {dataExtractor.getUserById(userId)}.await()
+            val user = withContext(Dispatchers.IO) {
+                dataExtractor.getUserById(userId)
+            }
             if (user == null) onFailure()
             else onSuccess(user)
         }
@@ -70,7 +73,9 @@ object SessionInfo {
 
     fun getUserFeed(user: User?, onSuccess: (List<Status>) -> Unit, onFailure: () -> Unit){ //done
         GlobalScope.launch(Main) {
-            val statuses = async {dataExtractor.getUserFeed(user)}.await()
+            val statuses = withContext(Dispatchers.IO) {
+                dataExtractor.getUserFeed(user)
+            }
             if (statuses.isNullOrEmpty()) onFailure()
             else{
                 onSuccess(statuses)
@@ -81,7 +86,9 @@ object SessionInfo {
 
     fun getUserStory(user: User?, onSuccess: (List<Status>) -> Unit, onFailure: () -> Unit){ //done
         GlobalScope.launch(Main) {
-            val statuses = async {dataExtractor.getUserStory(user)}.await()
+            val statuses = withContext(Dispatchers.IO) {
+                dataExtractor.getUserStory(user)
+            }
             if (statuses.isNullOrEmpty()) onFailure()
             else {
                 onSuccess(statuses)
@@ -92,7 +99,9 @@ object SessionInfo {
 
     fun getUserFollowers(userId: String, onSuccess: (List<User>) -> Unit, onFailure: () -> Unit){ //done
         GlobalScope.launch(Main) {
-            val users = async {dataExtractor.getUserFollowers(userId)}.await()
+            val users = withContext(Dispatchers.IO) {
+                dataExtractor.getUserFollowers(userId)
+            }
             if (users.isNullOrEmpty()) onFailure()
             else{
                 onSuccess(users)
@@ -103,7 +112,9 @@ object SessionInfo {
 
     fun getPersonsFollowedByUser(userId: String, onSuccess: (List<User>) -> Unit, onFailure: () -> Unit){ //done
         GlobalScope.launch(Main) {
-            val users = async {dataExtractor.getPersonsFollowedByUser(userId)}.await()
+            val users = withContext(Dispatchers.IO) {
+                dataExtractor.getPersonsFollowedByUser(userId)
+            }
             if (users.isNullOrEmpty()) onFailure()
             else {
                 onSuccess(users)
@@ -114,7 +125,9 @@ object SessionInfo {
 
     fun getUserByAlias(alias: String?, onSuccess: (User) -> Unit, onFailure: () -> Unit){
         GlobalScope.launch(Main) {
-            val user = async {dataExtractor.getUserByAlias(alias)}.await()
+            val user = withContext(Dispatchers.IO) {
+                dataExtractor.getUserByAlias(alias)
+            }
             if (user == null) onFailure()
             else onSuccess(user)
         }

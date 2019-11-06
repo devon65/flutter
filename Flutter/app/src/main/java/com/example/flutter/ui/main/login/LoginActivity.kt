@@ -6,19 +6,21 @@ import android.graphics.Bitmap
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
+import android.widget.ProgressBar
 import android.widget.Toast
 import com.example.flutter.R
-import com.example.flutter.ui.main.feed.NewsFeedFragment
-import kotlinx.android.synthetic.main.activity_login.*
 
 
 class LoginActivity : AppCompatActivity(), LoginContract.ILoginActivity,
     LoginFragment.OnLoginFragmentInteractionListener, SignUpFragment.OnSignUpFragmentInteractionListener {
-    lateinit var loginPresenter: LoginContract.ILoginPresenter
+    private lateinit var loginPresenter: LoginContract.ILoginPresenter
+    private lateinit var loadingSpinner: ProgressBar
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
+
+        loadingSpinner = findViewById(R.id.login_loading)
 
         setPresenter(LoginPresenter(this))
         loginPresenter.onViewCreated()
@@ -30,10 +32,12 @@ class LoginActivity : AppCompatActivity(), LoginContract.ILoginActivity,
     }
 
     override fun onLoginClicked(username: String, password: String) {
+        loadingSpinner.visibility = View.VISIBLE
         loginPresenter.onLoginPressed(username, password)
     }
 
     override fun onSignUpPressed(nameOfUser: String, userAlias: String, password: String) {
+        loadingSpinner.visibility = View.VISIBLE
         loginPresenter.onSignupPressed(nameOfUser, userAlias, password)
     }
 
@@ -56,20 +60,24 @@ class LoginActivity : AppCompatActivity(), LoginContract.ILoginActivity,
     }
 
     override fun onLoginSuccess() {
+        loadingSpinner.visibility = View.GONE
         setResult(Activity.RESULT_OK)
         finish()
     }
 
     override fun onLoginFailure() {
+        loadingSpinner.visibility = View.GONE
         Toast.makeText(this, "Login didn't work", Toast.LENGTH_LONG).show()
     }
 
     override fun onSignupSuccess() {
+        loadingSpinner.visibility = View.GONE
         setResult(Activity.RESULT_OK)
         finish()
     }
 
     override fun onSignupFailure() {
+        loadingSpinner.visibility = View.GONE
         Toast.makeText(this, "Sign up didn't work", Toast.LENGTH_LONG).show()
     }
 

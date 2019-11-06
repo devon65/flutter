@@ -12,8 +12,13 @@ import com.example.flutter.models.User
 
 class PersonListRecyclerViewAdapter(
     private val mValues: List<User>,
-    private val mListener: PersonListFragment.PersonListFragmentListener?
+    private val mListener: PersonListFragment.PersonListFragmentListener?,
+    private val onFetchMorePeopleListener: OnFetchMorePeopleListener
 ) : RecyclerView.Adapter<PersonListRecyclerViewAdapter.ViewHolder>() {
+
+    interface OnFetchMorePeopleListener{
+        fun fetchMorePeople(nextIndex: Int)
+    }
 
     private val mOnClickListener: View.OnClickListener
 

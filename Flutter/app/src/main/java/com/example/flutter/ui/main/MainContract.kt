@@ -11,6 +11,7 @@ interface MainContract {
         fun onViewCreated()
         fun getStatusFeedList(onSuccess: (List<Status>) -> Unit, onFailure: () -> Unit)
         fun getUserStory(onSuccess: (List<Status>) -> Unit, onFailure: () -> Unit)
+        fun postStatus(status: Status, onSuccess: (status: Status) -> Unit, onFailure: () -> Unit)
         fun getUser(): User
     }
 

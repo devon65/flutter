@@ -14,8 +14,12 @@ object AwsDataSending: DataSenderInterface {
 
     }
 
-    override fun postStatus(status: Status) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    override fun postStatus(
+        status: Status,
+        onSuccess: (status: Status) -> Unit,
+        onFailure: () -> Unit
+    ) {
+
     }
 
     override fun updateUser(user: User) {

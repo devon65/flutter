@@ -3,8 +3,7 @@ package com.example.flutter.ui.main
 import com.example.flutter.utils.SessionInfo
 import com.example.flutter.models.Status
 import com.example.flutter.models.User
-import com.example.flutter.utils.Constants
-import com.example.flutter.utils.PreferencesUtil
+import com.example.flutter.utils.SendData
 
 class MainActivityPresenter(mainActivity: MainContract.IMainActivity) :
     MainContract.IMainPresenter {
@@ -30,6 +29,14 @@ class MainActivityPresenter(mainActivity: MainContract.IMainActivity) :
 
     override fun getUser(): User {
         return SessionInfo.currentUser
+    }
+
+    override fun postStatus(
+        status: Status,
+        onSuccess: (status: Status) -> Unit,
+        onFailure: () -> Unit
+    ) {
+        SendData.postStatus(status, onSuccess, onFailure)
     }
 
     override fun onDestroy() {

@@ -100,6 +100,14 @@ class MainActivity : AppCompatActivity(), MainContract.IMainActivity,
         storyFragment.loadStoryBoard()
     }
 
+    override fun postStatus(
+        status: Status,
+        onSuccess: (status: Status) -> Unit,
+        onFailure: () -> Unit
+    ) {
+        presenter.postStatus(status, onSuccess, onFailure)
+    }
+
     override fun getContext(): Context {
         return this
     }

@@ -8,7 +8,7 @@ interface DataSenderInterface {
 
     fun unfollowUser(currentUserId: String, userToUnfollowId: String)
 
-    fun postStatus(status: Status)
+    fun postStatus(status: Status, onSuccess: (status: Status) -> Unit, onFailure: () -> Unit)
 
     fun updateUser(user: User)
 

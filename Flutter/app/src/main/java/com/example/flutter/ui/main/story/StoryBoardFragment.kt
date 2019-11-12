@@ -310,6 +310,7 @@ class StoryBoardFragment : Fragment(), StatusRecyclerViewAdapter.OnFetchStatuses
         fun launchPersonList(personListType: String, userId: String?, usersName: String?)
         fun followUser(userId: String, onSuccess: () -> Unit, onFailure: () -> Unit)
         fun unfollowUser(userId: String, onSuccess: () -> Unit, onFailure: () -> Unit)
+        fun postStatus(status: Status, onSuccess: (status: Status) -> Unit, onFailure: () -> Unit)
     }
 
     companion object {

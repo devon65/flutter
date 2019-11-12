@@ -87,6 +87,14 @@ class UserStoryActivity : AppCompatActivity(), StoryContract.IStoryActivity, Sto
         presenter.unfollowUser(userId, onSuccess, onFailure)
     }
 
+    override fun postStatus(
+        status: Status,
+        onSuccess: (status: Status) -> Unit,
+        onFailure: () -> Unit
+    ) {
+
+    }
+
     companion object{
         const val USER_ID = "user_id"
         const val USER_ALIAS = "user_alias"

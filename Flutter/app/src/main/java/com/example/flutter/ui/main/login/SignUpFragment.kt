@@ -10,24 +10,23 @@ import android.graphics.BitmapFactory
 import android.net.Uri
 import android.nfc.Tag
 import android.os.Bundle
+import android.util.Base64
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.EditText
-import android.widget.ImageView
-import android.widget.TextView
+import android.widget.*
 import androidx.core.graphics.drawable.toDrawable
 
 import com.example.flutter.R
 import kotlinx.android.synthetic.main.fragment_sign_up.*
+import java.io.ByteArrayOutputStream
 import java.io.FileNotFoundException
 
 class SignUpFragment : Fragment() {
-    private var param1: String? = null
     private lateinit var profilePic: ImageView
+    private var profilePicEncoding: String? = null
     private var listener: OnSignUpFragmentInteractionListener? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -51,8 +50,16 @@ class SignUpFragment : Fragment() {
         val password = view.findViewById<EditText>(R.id.signup_password)
 
         val signUpButton = view.findViewById<Button>(R.id.signup_button)
-        signUpButton.setOnClickListener{listener?.onSignUpPressed(nameOfUser.text.toString(),
-            userAlias.text.toString(), password.text.toString())}
+        signUpButton.setOnClickListener {
+            val profPicEncoded = profilePicEncoding
+            if (profPicEncoded == null) {
+                Toast.makeText(context, "Please select a profile picture", Toast.LENGTH_LONG).show()
+            } else {
+                listener?.onSignUpPressed(
+                    nameOfUser.text.toString(),
+                    userAlias.text.toString(), password.text.toString(), profPicEncoded)
+            }
+        }
 
         profilePic = view.findViewById(R.id.signup_profile_pic)
         profilePic.setOnClickListener{getProfilePic()}
@@ -78,6 +85,17 @@ class SignUpFragment : Fragment() {
                 val bitmap = BitmapFactory.decodeStream(context?.contentResolver?.openInputStream(targetUri))
                 if (bitmap != null){
                     profilePic.background = bitmap.toDrawable(resources)
+                    val filePath = targetUri?.path
+                    val imageType = filePath?.substring(filePath.lastIndexOf(".") + 1); // Without dot jpg, png
+                    val byteArrayOutStream = ByteArrayOutputStream()
+                    if (imageType?.toUpperCase() == PNG_FORMAT){
+                        bitmap.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutStream)
+                    }
+                    else {
+                        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOutStream)
+                    }
+                    val byteArray = byteArrayOutStream.toByteArray()
+                    profilePicEncoding = Base64.encodeToString(byteArray, Base64.DEFAULT)
                 }
             }catch (e: FileNotFoundException){
                 Log.e(TAG, "Could not find profile picture on system.")
@@ -100,13 +118,14 @@ class SignUpFragment : Fragment() {
     }
 
     interface OnSignUpFragmentInteractionListener {
-        fun onSignUpPressed(nameOfUser: String, userAlias: String, password: String)
+        fun onSignUpPressed(nameOfUser: String, userAlias: String, password: String, profilePicEncoding: String)
         fun launchLoginScreen()
         fun selectProfilePicture(callback: (bitmap: Bitmap) -> Unit)
     }
 
     companion object {
         private val TAG = "SignUpFragment"
+        private val PNG_FORMAT = "PNG"
         @JvmStatic
         fun newInstance() =
             SignUpFragment().apply {

@@ -2,8 +2,10 @@ package com.example.flutter.utils
 
 import com.example.flutter.models.Status
 import com.example.flutter.models.User
+import com.example.flutter.utils.awsgateway.AwsAuthentication
 import com.example.flutter.utils.awsgateway.AwsDataRetrieval
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.Dispatchers.Main
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -12,6 +14,8 @@ import kotlinx.coroutines.withContext
 object SessionInfo {
 
     private val dataExtractor: DataExtractionInterface = AwsDataRetrieval
+    private val authenticationHelper: UserAuthenticationInterface = AwsAuthentication
+    private var accessToken: String? = null
 
 //    private var mCurrentUser: User? = null
 //    val currentUser: User
@@ -42,11 +46,66 @@ object SessionInfo {
         }
     }
 
-    var currentUser: User = User("0", "Lame O", "noWorky")
+    var currentUser: User = User("0", "Network Error", "Network Error")
+
+    fun userSignUp(name: String, alias: String, password: String, profilePicEncoding: String,
+                   onSuccess: () -> Unit, onFailure: () -> Unit){
+
+        GlobalScope.launch(IO) {
+            val createUserSuccess: (user: User) -> Unit = {
+                currentUser = it
+                userSignIn(alias, password, onSuccess, onFailure)
+            }
+            val signUpSuccess: () -> Unit = {
+                SendData.createUser(name, alias, profilePicEncoding, createUserSuccess, onFailure)
+            }
+            authenticationHelper.signUp(name, alias, password, profilePicEncoding, signUpSuccess, onFailure)
+        }
+    }
+
+    fun userSignIn(username: String, password: String, onSuccess: () -> Unit, onFailure: () -> Unit) {
+        GlobalScope.launch(IO) {
+            val getCurrentUserSuccess: (user: User) -> Unit = {
+                currentUser = it
+                onSuccess()
+            }
+            val userSignInSuccess: (token: String?, alias: String?) -> Unit =
+                { token: String?, alias: String? ->
+                    accessToken = token
+                    if (alias == null) {
+                        onFailure()
+                    }
+                    getUserByAlias(alias, getCurrentUserSuccess, onFailure)
+                }
+            authenticationHelper.signIn(username, password, userSignInSuccess, onFailure)
+        }
+    }
+
+    fun ninjaSignIn(onSuccess: () -> Unit, onFailure: () -> Unit) {
+        GlobalScope.launch(IO) {
+            val getCurrentUserSuccess: (user: User) -> Unit = {
+                currentUser = it
+                onSuccess()
+            }
+            val userSignInSuccess: (token: String?, alias: String?) -> Unit =
+                { token: String?, alias: String? ->
+                    accessToken = token
+                    if (alias == null) {
+                        onFailure()
+                    }
+                    getUserByAlias(alias, getCurrentUserSuccess, onFailure)
+                }
+            authenticationHelper.ninjaSignIn(userSignInSuccess, onFailure)
+        }
+    }
+
+    fun userLogout(){
+        authenticationHelper.logout()
+    }
 
     fun getStatusesByHashtag(tag: String, onSuccess: (List<Status>) -> Unit, onFailure: () -> Unit){ //done
         GlobalScope.launch(Main) {
-            val statuses = withContext(Dispatchers.IO) {
+            val statuses = withContext(IO) {
                 dataExtractor.getStatusesByHashtag(tag)
             }
             if (statuses.isNullOrEmpty()) onFailure()

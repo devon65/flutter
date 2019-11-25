@@ -36,9 +36,14 @@ class LoginActivity : AppCompatActivity(), LoginContract.ILoginActivity,
         loginPresenter.onLoginPressed(username, password)
     }
 
-    override fun onSignUpPressed(nameOfUser: String, userAlias: String, password: String) {
+    override fun onSignUpPressed(
+        nameOfUser: String,
+        userAlias: String,
+        password: String,
+        profilePicEncoding: String
+    ) {
         loadingSpinner.visibility = View.VISIBLE
-        loginPresenter.onSignupPressed(nameOfUser, userAlias, password)
+        loginPresenter.onSignupPressed(nameOfUser, userAlias, password, profilePicEncoding)
     }
 
     override fun selectProfilePicture(callback: (bitmap: Bitmap) -> Unit) {
@@ -54,6 +59,13 @@ class LoginActivity : AppCompatActivity(), LoginContract.ILoginActivity,
 
     override fun launchSignUpScreen() {
         val fragment = SignUpFragment.newInstance()
+        supportFragmentManager.beginTransaction()
+            .replace(R.id.login_fragment_holder, fragment)
+            .commit()
+    }
+
+    override fun launchLoadingScreen() {
+        val fragment = LoginLoadingFragment()
         supportFragmentManager.beginTransaction()
             .replace(R.id.login_fragment_holder, fragment)
             .commit()

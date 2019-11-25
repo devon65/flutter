@@ -14,7 +14,7 @@ import com.github.kittinunf.fuel.gson.responseObject
 import com.github.kittinunf.fuel.httpGet
 
 object AwsDataRetrieval: DataExtractionInterface {
-    
+
     init {
         FuelManager.instance.basePath = "https://mjinkdnq6b.execute-api.us-west-2.amazonaws.com/develop"
         FuelManager.instance.baseHeaders = mapOf("Content-Type" to "application/json")

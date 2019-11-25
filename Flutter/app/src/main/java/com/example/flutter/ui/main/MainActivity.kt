@@ -20,7 +20,7 @@ import com.example.flutter.ui.main.status.StatusViewActivity
 import com.example.flutter.ui.main.story.StoryBoardFragment
 import com.example.flutter.ui.main.story.UserStoryActivity
 import com.example.flutter.ui.main.personlist.PersonListActivity
-import com.example.flutter.ui.main.status.StatusRecyclerViewAdapter
+import com.example.flutter.utils.SessionInfo
 
 class MainActivity : AppCompatActivity(), MainContract.IMainActivity,
     NewsFeedFragment.OnNewsFeedInteractionListener, StoryBoardFragment.OnStoryBoardInteractionListener {
@@ -72,6 +72,7 @@ class MainActivity : AppCompatActivity(), MainContract.IMainActivity,
     }
 
     override fun onLogout() {
+        SessionInfo.userLogout()
         launchLoginActivity()
     }
 

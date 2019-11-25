@@ -118,7 +118,7 @@ class StoryBoardFragment : Fragment(), StatusRecyclerViewAdapter.OnFetchStatuses
     private fun loadUserInfo(){
         profilePicture.settings?.setLoadWithOverviewMode(true)
         profilePicture.settings?.setUseWideViewPort(true)
-        profilePicture.loadUrl(displayedUser?.profilePicUrl)
+        profilePicture.loadUrl("https://flutter-profile-pics.s3-us-west-2.amazonaws.com/likeARock-profilePic.jpg")// displayedUser?.profilePicUrl)
 
         userNameView.text = displayedUser?.name
         userAliasView.text = displayedUser?.alias

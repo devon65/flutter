@@ -2,6 +2,7 @@
 <resources>
 
     <string name="app_name">Flutter</string>
+    <string name="flutter_slogan">Let\'s get chirping!</string>
     <string name="main_my_story">My Story</string>
     <string name="main_news_feed">News Feed</string>
     <string name="logout">LOGOUT</string>
@@ -47,5 +48,8 @@
     <string name="user_could_not_retrieve_next_page">Could not retrieve next page of users</string>
 
     <string name="action_settings">Settings</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 </resources>

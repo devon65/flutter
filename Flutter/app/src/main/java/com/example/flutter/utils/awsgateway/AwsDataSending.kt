@@ -1,5 +1,6 @@
 package com.example.flutter.utils.awsgateway
 
+import android.util.Log
 import com.example.flutter.models.Status
 import com.example.flutter.models.User
 import com.example.flutter.utils.DataSenderInterface
@@ -9,6 +10,7 @@ import com.github.kittinunf.fuel.gson.responseObject
 import com.github.kittinunf.fuel.httpPost
 
 object AwsDataSending: DataSenderInterface {
+    private val TAG = this.javaClass.name
 
     init {
         FuelManager.instance.basePath = "https://mjinkdnq6b.execute-api.us-west-2.amazonaws.com/develop"
@@ -37,7 +39,7 @@ object AwsDataSending: DataSenderInterface {
 
     override fun createUser(name: String, alias: String, profilePicEncoding: String): User? {
 //        val jsonBody1 = mapOf<String, String>()
-        val jsonBody = "\"{\"alias\":\"%s\", \"name\":\"%s\", \"profilePicEncoding\":\"%s\"}".format(alias, name, profilePicEncoding)
+        val jsonBody = "{\"alias\":\"%s\", \"name\":\"%s\", \"profilePicEncoded\":\"%s\"}".format(alias, name, profilePicEncoding)
         val requestPath = "/user/newuser"
         val (request, response, result) = requestPath
             .httpPost()
@@ -46,7 +48,11 @@ object AwsDataSending: DataSenderInterface {
 
         return if (response.statusCode == 200) {
             val user = result.component1() as UserResponse
-            user.body
+            if  (user.statusCode != null && user.statusCode == 200) { user.body }
+            else {
+                Log.e(TAG, user.message ?: "")
+                null
+            }
         }
         else null
     }

@@ -15,7 +15,7 @@ interface LoginContract {
         fun onLoginSuccess()
         fun onLoginFailure()
         fun onSignupSuccess()
-        fun onSignupFailure()
+        fun onSignupFailure(message: String? = null)
         fun launchLoginScreen()
         fun launchSignUpScreen()
         fun launchLoadingScreen()

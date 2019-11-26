@@ -9,5 +9,5 @@ interface UserAuthenticationInterface {
 
     fun ninjaSignIn(onSuccess: (accessToken: String?, userAlias: String?) -> Unit, onFailure: () -> Unit)
 
-    fun logout()
+    fun logout(onSuccess: () -> Unit, onFailure: () -> Unit)
 }

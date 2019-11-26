@@ -6,6 +6,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.Toast
 import com.google.android.material.tabs.TabLayout
 import androidx.viewpager.widget.ViewPager
 import androidx.appcompat.app.AppCompatActivity
@@ -37,7 +38,7 @@ class MainActivity : AppCompatActivity(), MainContract.IMainActivity,
         viewPager.adapter = sectionsPagerAdapter
         val tabs: TabLayout = findViewById(R.id.tabs)
         tabs.setupWithViewPager(viewPager)
-        viewPager.setCurrentItem(HomePagerAdapter.FEED_FRAGMENT)
+        viewPager.currentItem = HomePagerAdapter.FEED_FRAGMENT
 
         setPresenter(MainActivityPresenter(this))
 
@@ -72,8 +73,12 @@ class MainActivity : AppCompatActivity(), MainContract.IMainActivity,
     }
 
     override fun onLogout() {
-        SessionInfo.userLogout()
-        launchLoginActivity()
+        presenter.onLogout(onSuccess = {
+            launchLoginActivity()
+            viewPager.currentItem = HomePagerAdapter.FEED_FRAGMENT
+        }, onFailure = {
+            Toast.makeText(this, "Could not log out. Please try again later.", Toast.LENGTH_LONG).show()
+        })
     }
 
     override fun launchLoginActivity(){

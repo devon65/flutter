@@ -55,9 +55,13 @@ class SignUpFragment : Fragment() {
             if (profPicEncoded == null) {
                 Toast.makeText(context, "Please select a profile picture", Toast.LENGTH_LONG).show()
             } else {
+                var alias = userAlias.text.toString().toLowerCase()
+                alias = alias.replace("@", "")
+                alias = alias.replace("#", "")
+                alias = "@" + alias
                 listener?.onSignUpPressed(
                     nameOfUser.text.toString(),
-                    userAlias.text.toString(), password.text.toString(), profPicEncoded)
+                    alias, password.text.toString(), profPicEncoded)
             }
         }
 
@@ -95,7 +99,7 @@ class SignUpFragment : Fragment() {
                         bitmap.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOutStream)
                     }
                     val byteArray = byteArrayOutStream.toByteArray()
-                    profilePicEncoding = Base64.encodeToString(byteArray, Base64.DEFAULT)
+                    profilePicEncoding = Base64.encodeToString(byteArray, Base64.NO_WRAP)
                 }
             }catch (e: FileNotFoundException){
                 Log.e(TAG, "Could not find profile picture on system.")

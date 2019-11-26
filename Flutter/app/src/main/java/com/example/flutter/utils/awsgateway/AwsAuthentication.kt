@@ -1,7 +1,6 @@
 package com.example.flutter.utils.awsgateway
 
 import android.util.Log
-import com.amazonaws.auth.CognitoCredentialsProvider
 import com.amazonaws.regions.Regions
 import com.example.flutter.utils.BlueBird.Companion.context
 import com.example.flutter.utils.UserAuthenticationInterface
@@ -12,7 +11,9 @@ import com.amazonaws.mobileconnectors.cognitoidentityprovider.continuations.Auth
 import com.amazonaws.mobileconnectors.cognitoidentityprovider.continuations.ChallengeContinuation
 import com.amazonaws.mobileconnectors.cognitoidentityprovider.handlers.AuthenticationHandler
 import com.amazonaws.mobileconnectors.cognitoidentityprovider.continuations.MultiFactorAuthenticationContinuation
-
+import com.amazonaws.mobileconnectors.cognitoidentityprovider.handlers.GenericHandler
+import com.amazonaws.services.cognitoidentityprovider.model.UsernameExistsException
+import kotlinx.coroutines.handleCoroutineException
 
 
 object AwsAuthentication: UserAuthenticationInterface{
@@ -45,6 +46,9 @@ object AwsAuthentication: UserAuthenticationInterface{
 
             override fun onFailure(exception: Exception) {
                 Log.d(TAG, exception.message)
+                if  (exception is UsernameExistsException){
+                    "crud."
+                }
                 onFailure()
             }
         }
@@ -115,8 +119,23 @@ object AwsAuthentication: UserAuthenticationInterface{
         signIn(cognitoUser, onSuccess, onFailure)
     }
 
-    override fun logout() {
-        val credsProvider = CognitoCredentialsProvider(USER_POOL_ID, Regions.DEFAULT_REGION)
-        credsProvider.clear()
+    override fun logout(onSuccess: () -> Unit, onFailure: () -> Unit) {
+//        val credsProvider = CognitoCredentialsProvider(USER_POOL_ID, Regions.DEFAULT_REGION)
+//        credsProvider.clear()
+        val userPool = CognitoUserPool(context, USER_POOL_ID, CLIENT_ID, CLIENT_SECRET, REGION)
+        val user = userPool.getCurrentUser()
+        if (user != null) {
+            val handler = object: GenericHandler {
+                override fun onSuccess() {
+                    onSuccess()
+                }
+
+                override fun onFailure(exception: java.lang.Exception?) {
+                    Log.e(TAG, exception?.message)
+                    onFailure()
+                }
+            }
+            user.globalSignOutInBackground(handler)
+        }
     }
 }

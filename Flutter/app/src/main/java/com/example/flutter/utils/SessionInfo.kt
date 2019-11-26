@@ -99,8 +99,8 @@ object SessionInfo {
         }
     }
 
-    fun userLogout(){
-        authenticationHelper.logout()
+    fun userLogout(onSuccess: () -> Unit, onFailure: () -> Unit){
+        authenticationHelper.logout(onSuccess, onFailure)
     }
 
     fun getStatusesByHashtag(tag: String, onSuccess: (List<Status>) -> Unit, onFailure: () -> Unit){ //done
@@ -184,7 +184,7 @@ object SessionInfo {
 
     fun getUserByAlias(alias: String?, onSuccess: (User) -> Unit, onFailure: () -> Unit){
         GlobalScope.launch(Main) {
-            val user = withContext(Dispatchers.IO) {
+            val user = withContext(IO) {
                 dataExtractor.getUserByAlias(alias)
             }
             if (user == null) onFailure()

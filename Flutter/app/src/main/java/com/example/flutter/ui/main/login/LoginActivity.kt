@@ -86,9 +86,9 @@ class LoginActivity : AppCompatActivity(), LoginContract.ILoginActivity,
         finish()
     }
 
-    override fun onSignupFailure() {
+    override fun onSignupFailure(message: String?) {
         loadingSpinner.visibility = View.GONE
-        Toast.makeText(this, "Sign up didn't work", Toast.LENGTH_LONG).show()
+        Toast.makeText(this, message ?: "Sign up didn't work", Toast.LENGTH_LONG).show()
     }
 
     override fun getContext(): Context {

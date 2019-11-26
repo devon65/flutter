@@ -31,6 +31,10 @@ class MainActivityPresenter(mainActivity: MainContract.IMainActivity) :
         return SessionInfo.currentUser
     }
 
+    override fun onLogout(onSuccess: () -> Unit, onFailure: () -> Unit) {
+        SessionInfo.userLogout(onSuccess, onFailure)
+    }
+
     override fun postStatus(
         status: Status,
         onSuccess: (status: Status) -> Unit,

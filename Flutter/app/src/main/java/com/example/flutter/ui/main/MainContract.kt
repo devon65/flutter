@@ -13,6 +13,7 @@ interface MainContract {
         fun getUserStory(onSuccess: (List<Status>) -> Unit, onFailure: () -> Unit)
         fun postStatus(status: Status, onSuccess: (status: Status) -> Unit, onFailure: () -> Unit)
         fun getUser(): User
+        fun onLogout(onSuccess: () -> Unit, onFailure: () -> Unit)
     }
 
     interface IMainActivity : BaseStatusesView<MainActivityPresenter> {

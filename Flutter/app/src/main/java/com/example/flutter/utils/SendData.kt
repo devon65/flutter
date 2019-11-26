@@ -3,9 +3,11 @@ package com.example.flutter.utils
 import com.example.flutter.models.Status
 import com.example.flutter.models.User
 import com.example.flutter.utils.awsgateway.AwsDataSending
-import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Dispatchers.Main
+import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 object SendData {
     private val dataSender: DataSenderInterface = AwsDataSending
@@ -31,10 +33,10 @@ object SendData {
                    profilePicEncoding: String,
                    onSuccess: (user: User) -> Unit,
                    onFailure: () -> Unit) {
-        GlobalScope.launch(Dispatchers.IO) {
+        GlobalScope.launch(IO) {
             val user = dataSender.createUser(name, alias, profilePicEncoding)
-            if (user == null) { onFailure() }
-            else { onSuccess(user) }
+            if (user == null) withContext(Main){ onFailure() }
+            else withContext(Main){ onSuccess(user) }
         }
     }
 }

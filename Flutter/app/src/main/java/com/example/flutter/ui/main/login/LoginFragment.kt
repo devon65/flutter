@@ -42,7 +42,12 @@ class LoginFragment : Fragment() {
         val password = view.findViewById<EditText>(R.id.login_password)
 
         val loginButton = view.findViewById<Button>(R.id.login_button)
-        loginButton.setOnClickListener{listener?.onLoginClicked(userAlias.text.toString(), password.text.toString())}
+        loginButton.setOnClickListener{
+            var alias = userAlias.text.toString().toLowerCase()
+            alias = alias.replace("@", "")
+            alias = "@" + alias
+            listener?.onLoginClicked(alias, password.text.toString())
+        }
         return view
     }
 

@@ -50,8 +50,7 @@ object AwsDataRetrieval: DataExtractionInterface {
 
     override fun getUserByAlias(alias: String?): User? {
         if (alias == null) return null
-        val userAlias = alias.replace("@", "")
-        val requestPath = "/user/alias/" + userAlias
+        val requestPath = "/user/alias/" + alias
         val (request, response, result) = requestPath
             .httpGet()
             .responseObject<UserResponse>()

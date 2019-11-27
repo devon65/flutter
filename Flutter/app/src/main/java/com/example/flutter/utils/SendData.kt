@@ -21,7 +21,11 @@ object SendData {
     }
 
     fun postStatus(status: Status, onSuccess: (status: Status) -> Unit, onFailure: () -> Unit) {
-        dataSender.postStatus(status, onSuccess, onFailure)
+        GlobalScope.launch(IO) {
+            val postedStatus = dataSender.postStatus(status)
+            if (postedStatus == null) withContext(Main){ onFailure() }
+            else withContext(Main) { onSuccess(postedStatus) }
+        }
     }
 
     fun updateUser(user: User) {

@@ -13,7 +13,6 @@ import com.amazonaws.mobileconnectors.cognitoidentityprovider.handlers.Authentic
 import com.amazonaws.mobileconnectors.cognitoidentityprovider.continuations.MultiFactorAuthenticationContinuation
 import com.amazonaws.mobileconnectors.cognitoidentityprovider.handlers.GenericHandler
 import com.amazonaws.services.cognitoidentityprovider.model.UsernameExistsException
-import kotlinx.coroutines.handleCoroutineException
 
 
 object AwsAuthentication: UserAuthenticationInterface{
@@ -120,8 +119,6 @@ object AwsAuthentication: UserAuthenticationInterface{
     }
 
     override fun logout(onSuccess: () -> Unit, onFailure: () -> Unit) {
-//        val credsProvider = CognitoCredentialsProvider(USER_POOL_ID, Regions.DEFAULT_REGION)
-//        credsProvider.clear()
         val userPool = CognitoUserPool(context, USER_POOL_ID, CLIENT_ID, CLIENT_SECRET, REGION)
         val user = userPool.getCurrentUser()
         if (user != null) {

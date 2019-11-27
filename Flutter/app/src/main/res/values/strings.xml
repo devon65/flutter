@@ -42,10 +42,10 @@
     <string name="person_list_my_peeps">MY PEEPS!</string>
 
     <!--Statuses-->
-    <string name="status_could_not_retrieve_next_page">Could not retrieve next page of statuses</string>
+    <string name="status_could_not_retrieve_next_page">That\'s all of them! Now Get out there and do something worthwhile!</string>
 
     <!--Users-->
-    <string name="user_could_not_retrieve_next_page">Could not retrieve next page of users</string>
+    <string name="user_could_not_retrieve_next_page">That\'s all the peeps!</string>
 
     <string name="action_settings">Settings</string>
 

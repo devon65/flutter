@@ -3,7 +3,9 @@ package com.example.flutter.utils.awsgateway
 import android.util.Log
 import com.example.flutter.models.Status
 import com.example.flutter.models.User
+import com.example.flutter.utils.Constants
 import com.example.flutter.utils.DataSenderInterface
+import com.example.flutter.utils.awsgateway.model.StatusResponse
 import com.example.flutter.utils.awsgateway.model.UserResponse
 import com.github.kittinunf.fuel.core.FuelManager
 import com.github.kittinunf.fuel.gson.responseObject
@@ -25,12 +27,26 @@ object AwsDataSending: DataSenderInterface {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
-    override fun postStatus(
-        status: Status,
-        onSuccess: (status: Status) -> Unit,
-        onFailure: () -> Unit
-    ): Status {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    override fun postStatus(status: Status): Status? {
+        val requestPath = "/user/" + status.user.userId + "/status"
+        val headers = mutableMapOf("messageBody" to status.messageBody)
+        if (status.attachmentUrl != null){
+            headers.put("attachmentUrl", status.attachmentUrl)
+        }
+        val (request, response, result) = requestPath
+            .httpPost()
+            .header(headers)
+            .responseObject<StatusResponse>()
+
+        return if (response.statusCode == 200) {
+            val statusResponse = result.component1() as StatusResponse
+            if  (statusResponse.statusCode != null && statusResponse.statusCode == 200) { statusResponse.body }
+            else {
+                Log.e(TAG, statusResponse.message ?: "")
+                null
+            }
+        }
+        else null
     }
 
     override fun updateProfilePic(profilePicEncoding: String): Boolean {

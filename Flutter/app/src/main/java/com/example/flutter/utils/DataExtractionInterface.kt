@@ -11,17 +11,17 @@ interface DataExtractionInterface {
 
     fun getUserByAlias(alias: String?): User?
 
-    fun getUserFeed(user: User?, nextIndex: Int = 0): List<Status>
+    fun getUserFeed(user: User?, lastStatus: Status? = null): List<Status>
 
-    fun getUserStory(user: User?, nextIndex: Int = 0): List<Status>
+    fun getUserStory(user: User?, lastStatus: Status? = null): List<Status>
 
 //    fun getUserIdByAlias(alias: String?): String?
 
     fun getCurrentUser(): User?
 
-    fun getUserFollowers(userId: String, nextIndex: Int = 0): List<User>
+    fun getUserFollowers(userId: String, lastFollower: User? = null): List<User>
 
-    fun getPersonsFollowedByUser(userId: String, nextIndex: Int = 0): List<User>
+    fun getPersonsFollowedByUser(userId: String, lastUserFollowed: User? = null): List<User>
 
     fun getStatusById(statusId: String?): Status?
 }

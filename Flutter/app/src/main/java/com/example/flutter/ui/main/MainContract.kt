@@ -10,7 +10,7 @@ interface MainContract {
     interface IMainPresenter : BasePresenter {
         fun onViewCreated()
         fun getStatusFeedList(onSuccess: (List<Status>) -> Unit, onFailure: () -> Unit)
-        fun getUserStory(onSuccess: (List<Status>) -> Unit, onFailure: () -> Unit)
+        fun getUserStory(onSuccess: (List<Status>) -> Unit, onFailure: () -> Unit, status: Status? = null)
         fun postStatus(status: Status, onSuccess: (status: Status) -> Unit, onFailure: () -> Unit)
         fun getUser(): User
         fun onLogout(onSuccess: () -> Unit, onFailure: () -> Unit)

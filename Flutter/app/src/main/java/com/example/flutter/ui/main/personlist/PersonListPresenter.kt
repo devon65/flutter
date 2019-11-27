@@ -8,10 +8,10 @@ class PersonListPresenter(personListActivity: PersonListContract.IPersonListActi
 
     private var personListActivity: PersonListContract.IPersonListActivity? = personListActivity
 
-    override fun getPersonList(personListType: String, userId: String, onSuccess: (List<User>) -> Unit, onFailure: () -> Unit) {
+    override fun getPersonList(personListType: String, userId: String, onSuccess: (List<User>) -> Unit, onFailure: () -> Unit, lastUser: User?) {
         when(personListType){
-            Constants.FOLLOWERS -> SessionInfo.getUserFollowers(userId, onSuccess, onFailure)
-            Constants.USERS_FOLLOWED -> SessionInfo.getPersonsFollowedByUser(userId, onSuccess, onFailure)
+            Constants.FOLLOWERS -> SessionInfo.getUserFollowers(userId, onSuccess, onFailure, lastUser)
+            Constants.USERS_FOLLOWED -> SessionInfo.getPersonsFollowedByUser(userId, onSuccess, onFailure, lastUser)
         }
     }
 

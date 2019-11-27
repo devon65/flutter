@@ -130,11 +130,14 @@ class StoryBoardFragment : Fragment(), StatusRecyclerViewAdapter.OnFetchStatuses
             listener?.launchPersonList(Constants.USERS_FOLLOWED, displayedUser?.userId, displayedUser?.name)
         }
 
-        listener?.getUserStory(displayedUser,
-            {
-                storyFeed.addAll(it)
-                statusList.adapter?.notifyDataSetChanged()
-            },  { Toast.makeText(context, getText(R.string.status_could_not_retrieve_next_page), Toast.LENGTH_LONG).show() })
+        GlobalScope.launch (Dispatchers.IO) {
+            listener?.getUserStory(displayedUser,
+                onSuccess = {
+                    appendStatuses(it)
+                }, onFailure = {
+                    showFailedToGetStatuses()
+                })
+        }
 
         // Set the adapter
         with(statusList) {
@@ -143,9 +146,14 @@ class StoryBoardFragment : Fragment(), StatusRecyclerViewAdapter.OnFetchStatuses
         }
     }
 
-    override fun fetchMoreStatuses(nextStatusIndex: Int) {
+    override fun fetchMoreStatuses(status: Status) {
         GlobalScope.launch (Dispatchers.IO){
-            listener?.getUserStory(displayedUser, {appendStatuses(it)}, {showFailedToGetStatuses()})
+            listener?.getUserStory(displayedUser, status = status,
+                onSuccess = {
+                    appendStatuses(it)
+                }, onFailure = {
+                    showFailedToGetStatuses()
+                })
         }
     }
 
@@ -162,15 +170,29 @@ class StoryBoardFragment : Fragment(), StatusRecyclerViewAdapter.OnFetchStatuses
             {})
     }
 
-    fun appendStatuses(statuses: List<Status>){
+    fun clearStatuses(){
+        storyFeed.clear()
+        statusList.adapter?.notifyDataSetChanged()
+    }
+
+    private fun prependStatus(status: Status){
+        storyFeed.add(0, status)
+        statusList.adapter?.notifyDataSetChanged()
+    }
+
+    private fun appendStatuses(statuses: List<Status>){
         val startIndex = if(storyFeed.isEmpty()) 0
                         else storyFeed.lastIndex + 1
         storyFeed.addAll(statuses)
         statusList.adapter?.notifyItemRangeChanged(startIndex, statuses.size)
     }
 
-    fun showFailedToGetStatuses(){
+    private fun showFailedToGetStatuses(){
         Toast.makeText(context, getText(R.string.status_could_not_retrieve_next_page), Toast.LENGTH_LONG).show()
+    }
+
+    private fun showFailedToPostStatus(){
+        Toast.makeText(context, "Failed to post status. Please try again later.", Toast.LENGTH_LONG).show()
     }
 
     private fun initializeCurrentUserEditing(){
@@ -255,7 +277,25 @@ class StoryBoardFragment : Fragment(), StatusRecyclerViewAdapter.OnFetchStatuses
     }
 
     private fun onPostStatusClicked(){
-        clearOutStatusEdit()
+        val messageBody = statusText?.text.toString() ?: ""
+        var attachmentUrl: String? = statusAttachUrlText?.text.toString()
+        if (messageBody.isEmpty() && attachmentUrl.isNullOrEmpty()){
+            Toast.makeText(context, "Please enter a message or attachmentUrl", Toast.LENGTH_LONG).show()
+            return
+        }
+        if (attachmentUrl.isNullOrEmpty()){ attachmentUrl = null }
+        val currentUser = displayedUser
+        if (currentUser == null){
+            Log.wtf(TAG, "Something went horribly wrong")
+            return
+        }
+        val status = Status(currentUser, messageBody, attachmentUrl)
+        listener?.postStatus(status, onSuccess = {
+            prependStatus(it)
+            clearOutStatusEdit()
+        }, onFailure = {
+            showFailedToPostStatus()
+        })
     }
 
     private fun clearOutStatusEdit(){
@@ -306,7 +346,7 @@ class StoryBoardFragment : Fragment(), StatusRecyclerViewAdapter.OnFetchStatuses
 
     interface OnStoryBoardInteractionListener: OnStatusInteractionListener {
         fun getUser(userId: String?, alias: String?, onSuccess: (User) -> Unit, onFailure: () -> Unit)
-        fun getUserStory(user: User?, onSuccess: (List<Status>) -> Unit, onFailure: () -> Unit)
+        fun getUserStory(user: User?, onSuccess: (List<Status>) -> Unit, onFailure: () -> Unit, status: Status? = null)
         fun launchPersonList(personListType: String, userId: String?, usersName: String?)
         fun followUser(userId: String, onSuccess: () -> Unit, onFailure: () -> Unit)
         fun unfollowUser(userId: String, onSuccess: () -> Unit, onFailure: () -> Unit)

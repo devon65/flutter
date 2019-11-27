@@ -185,7 +185,7 @@ object DummyData: DataExtractionInterface {
         return statusList
     }
 
-    override fun getUserFeed(user: User?, nextIndex: Int): List<Status> {
+    override fun getUserFeed(user: User?, lastStatus: Status?): List<Status> {
         val friendList = user?.usersFollowed
         val statusesOfFriends = ArrayList<Status>()
         for(userId in friendList ?: listOf()){
@@ -194,7 +194,7 @@ object DummyData: DataExtractionInterface {
         return statusesOfFriends
     }
 
-    override fun getUserStory(user: User?, nextIndex: Int): List<Status> {
+    override fun getUserStory(user: User?, lastStatus: Status?): List<Status> {
         val storyStatuses = ArrayList<Status>()
         for(statusId in user?.statusList ?: listOf<String>()){
             val status = idToStatusMap[statusId]
@@ -203,7 +203,7 @@ object DummyData: DataExtractionInterface {
         return storyStatuses
     }
 
-    override fun getUserFollowers(userId: String, nextIndex: Int): List<User> {
+    override fun getUserFollowers(userId: String, lastFollower: User?): List<User> {
         val followerIds = getUserById(userId)?.followers ?: listOf()
         val result = mutableListOf<User>()
         for (id in followerIds){
@@ -215,7 +215,7 @@ object DummyData: DataExtractionInterface {
         return result
     }
 
-    override fun getPersonsFollowedByUser(userId: String, nextIndex: Int): List<User> {
+    override fun getPersonsFollowedByUser(userId: String, lastUserFollowed: User?): List<User> {
         val followerIds = getUserById(userId)?.usersFollowed ?: listOf()
         val result = mutableListOf<User>()
         for (id in followerIds){

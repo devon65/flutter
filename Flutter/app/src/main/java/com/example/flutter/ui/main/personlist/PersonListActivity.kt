@@ -54,7 +54,11 @@ class PersonListActivity : AppCompatActivity(), PersonListFragment.PersonListFra
         }
     }
 
-    override fun getPersonList(onSuccess: (List<User>) -> Unit, onFailure: () -> Unit) {
+    override fun getPersonList(
+        onSuccess: (List<User>) -> Unit,
+        onFailure: () -> Unit,
+        lastUser: User?
+    ) {
         presenter.getPersonList(personListType, displayedUserId,
         {
             titleView.text = when {
@@ -64,7 +68,7 @@ class PersonListActivity : AppCompatActivity(), PersonListFragment.PersonListFra
                 else -> "My Peeps!"
             }
             onSuccess(it)
-        }, onFailure)
+        }, onFailure, lastUser)
     }
 
     companion object{

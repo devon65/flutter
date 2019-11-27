@@ -8,7 +8,7 @@ interface DataSenderInterface {
 
     fun unfollowUser(currentUserId: String, userToUnfollowId: String): Boolean
 
-    fun postStatus(status: Status, onSuccess: (status: Status) -> Unit, onFailure: () -> Unit): Status?
+    fun postStatus(status: Status): Status?
 
     fun updateProfilePic(profilePicEncoding: String): Boolean
 

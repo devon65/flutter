@@ -60,18 +60,23 @@ class NewsFeedFragment : Fragment(), StatusRecyclerViewAdapter.OnFetchStatusesLi
         }
     }
 
-    fun appendStatuses(statuses: List<Status>){
+    fun clearStatuses(){
+        feedList.clear()
+        statusListView.adapter?.notifyDataSetChanged()
+    }
+
+    private fun appendStatuses(statuses: List<Status>){
         val startIndex = if(feedList.isEmpty()) 0
                          else feedList.lastIndex + 1
         feedList.addAll(statuses)
         statusListView.adapter?.notifyItemRangeChanged(startIndex, statuses.size)
     }
 
-    fun showFailedToGetStatuses(){
+    private fun showFailedToGetStatuses(){
         Toast.makeText(context, getText(R.string.status_could_not_retrieve_next_page), Toast.LENGTH_LONG).show()
     }
 
-    override fun fetchMoreStatuses(nextStatusIndex: Int) {
+    override fun fetchMoreStatuses(status: Status) {
         GlobalScope.launch (Dispatchers.IO){
             listener?.getStatusFeedList(hashtag, {appendStatuses(it)}, {showFailedToGetStatuses()})
         }

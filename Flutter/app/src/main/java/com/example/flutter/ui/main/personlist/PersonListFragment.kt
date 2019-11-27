@@ -69,13 +69,13 @@ class PersonListFragment : Fragment(), PersonListRecyclerViewAdapter.OnFetchMore
         listener = null
     }
 
-    override fun fetchMorePeople(nextIndex: Int) {
-        listener?.getPersonList({appendUsers(it)}, {showFailedToGetUsers()})
+    override fun fetchMorePeople(lastUser: User) {
+        listener?.getPersonList({appendUsers(it)}, {showFailedToGetUsers()}, lastUser)
     }
 
     interface PersonListFragmentListener {
         fun onPersonClicked(person: User?)
-        fun getPersonList(onSuccess: (List<User>) -> Unit, onFailure: () -> Unit)
+        fun getPersonList(onSuccess: (List<User>) -> Unit, onFailure: () -> Unit, lastUser: User? = null)
     }
 
     companion object {

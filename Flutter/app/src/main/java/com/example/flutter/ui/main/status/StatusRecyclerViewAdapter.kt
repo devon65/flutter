@@ -27,7 +27,7 @@ class StatusRecyclerViewAdapter(
     RecyclerView.Adapter<StatusRecyclerViewAdapter.ViewHolder>() {
 
     interface OnFetchStatusesListener {
-        fun fetchMoreStatuses(nextStatusIndex: Int)
+        fun fetchMoreStatuses(status: Status)
     }
 
 
@@ -62,7 +62,7 @@ class StatusRecyclerViewAdapter(
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         GlobalScope.launch (IO){
             if(position == mValues.lastIndex) {
-                onFetchStatusesListener.fetchMoreStatuses(mValues.lastIndex + 1)
+                onFetchStatusesListener.fetchMoreStatuses(mValues[position])
             }
         }
         val status = mValues[position]

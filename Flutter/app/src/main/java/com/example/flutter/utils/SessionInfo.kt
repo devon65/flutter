@@ -16,18 +16,7 @@ object SessionInfo {
     private val dataExtractor: DataExtractionInterface = AwsDataRetrieval
     private val authenticationHelper: UserAuthenticationInterface = AwsAuthentication
     private var accessToken: String? = null
-
-//    private var mCurrentUser: User? = null
-//    val currentUser: User
-//        get() {
-//            return mCurrentUser ?: extractCurrentUser()
-//        }
-//
-//    private fun extractCurrentUser(): User{
-//        val theCurrentUser = dataExtractor.getCurrentUser()
-//        mCurrentUser = theCurrentUser
-//        return theCurrentUser
-//    }
+    var currentUser: User = User("0", "Network Error", "Network Error")
 
     private val statusByIdCache = HashMap<String, Status>()
     private val userByIdCache = HashMap<String, User>()
@@ -46,7 +35,13 @@ object SessionInfo {
         }
     }
 
-    var currentUser: User = User("0", "Network Error", "Network Error")
+    fun clearCache(){
+        currentUser = User("0", "Network Error", "Network Error")
+        accessToken = null
+        statusByIdCache.clear()
+        userByIdCache.clear()
+        userByAliasCache.clear()
+    }
 
     fun userSignUp(name: String, alias: String, password: String, profilePicEncoding: String,
                    onSuccess: () -> Unit, onFailure: () -> Unit){
@@ -54,10 +49,18 @@ object SessionInfo {
         GlobalScope.launch(IO) {
             val createUserSuccess: (user: User) -> Unit = {
                 currentUser = it
-                userSignIn(alias, password, onSuccess, onFailure)
+                onSuccess()
             }
+            val userSignInSuccess: (token: String?, alias: String?) -> Unit =
+                { token: String?, userAlias: String? ->
+                    accessToken = token
+                    if (userAlias == null) { onFailure() }
+                    else {
+                        SendData.createUser(name, userAlias, profilePicEncoding, createUserSuccess, onFailure)
+                    }
+                }
             val signUpSuccess: () -> Unit = {
-                SendData.createUser(name, alias, profilePicEncoding, createUserSuccess, onFailure)
+                authenticationHelper.signIn(alias, password, userSignInSuccess, onFailure)
             }
             authenticationHelper.signUp(name, alias, password, profilePicEncoding, signUpSuccess, onFailure)
         }
@@ -143,10 +146,10 @@ object SessionInfo {
         }
     }
 
-    fun getUserStory(user: User?, onSuccess: (List<Status>) -> Unit, onFailure: () -> Unit){ //done
+    fun getUserStory(user: User?, onSuccess: (List<Status>) -> Unit, onFailure: () -> Unit, status: Status? = null){ //done
         GlobalScope.launch(Main) {
-            val statuses = withContext(Dispatchers.IO) {
-                dataExtractor.getUserStory(user)
+            val statuses = withContext(IO) {
+                dataExtractor.getUserStory(user, status)
             }
             if (statuses.isNullOrEmpty()) onFailure()
             else {
@@ -156,10 +159,10 @@ object SessionInfo {
         }
     }
 
-    fun getUserFollowers(userId: String, onSuccess: (List<User>) -> Unit, onFailure: () -> Unit){ //done
+    fun getUserFollowers(userId: String, onSuccess: (List<User>) -> Unit, onFailure: () -> Unit, lastFollower: User? = null){ //done
         GlobalScope.launch(Main) {
-            val users = withContext(Dispatchers.IO) {
-                dataExtractor.getUserFollowers(userId)
+            val users = withContext(IO) {
+                dataExtractor.getUserFollowers(userId, lastFollower)
             }
             if (users.isNullOrEmpty()) onFailure()
             else{
@@ -169,10 +172,10 @@ object SessionInfo {
         }
     }
 
-    fun getPersonsFollowedByUser(userId: String, onSuccess: (List<User>) -> Unit, onFailure: () -> Unit){ //done
+    fun getPersonsFollowedByUser(userId: String, onSuccess: (List<User>) -> Unit, onFailure: () -> Unit, lastFollower: User? = null){ //done
         GlobalScope.launch(Main) {
             val users = withContext(Dispatchers.IO) {
-                dataExtractor.getPersonsFollowedByUser(userId)
+                dataExtractor.getPersonsFollowedByUser(userId, lastFollower)
             }
             if (users.isNullOrEmpty()) onFailure()
             else {

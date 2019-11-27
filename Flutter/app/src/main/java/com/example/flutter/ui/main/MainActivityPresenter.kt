@@ -23,8 +23,9 @@ class MainActivityPresenter(mainActivity: MainContract.IMainActivity) :
         return SessionInfo.getUserFeed(SessionInfo.currentUser, onSuccess, onFailure)
     }
 
-    override fun getUserStory(onSuccess: (List<Status>) -> Unit, onFailure: () -> Unit) {
-        return SessionInfo.getUserStory(SessionInfo.currentUser, onSuccess, onFailure)
+    override fun getUserStory(onSuccess: (List<Status>) -> Unit, onFailure: () -> Unit, status: Status?
+    ) {
+        return SessionInfo.getUserStory(SessionInfo.currentUser, onSuccess, onFailure, status)
     }
 
     override fun getUser(): User {
@@ -32,7 +33,10 @@ class MainActivityPresenter(mainActivity: MainContract.IMainActivity) :
     }
 
     override fun onLogout(onSuccess: () -> Unit, onFailure: () -> Unit) {
-        SessionInfo.userLogout(onSuccess, onFailure)
+        SessionInfo.userLogout(onSuccess = {
+            SessionInfo.clearCache()
+            onSuccess()
+        }, onFailure = onFailure)
     }
 
     override fun postStatus(

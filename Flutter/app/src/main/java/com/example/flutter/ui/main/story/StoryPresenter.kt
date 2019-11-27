@@ -18,8 +18,13 @@ class StoryPresenter(storyActivity: StoryContract.IStoryActivity): StoryContract
             else SessionInfo.getUserByAlias(alias, onSuccess, onFailure)
     }
 
-    override fun getUserStory(user: User?, onSuccess: (List<Status>) -> Unit, onFailure: () -> Unit) {
-        SessionInfo.getUserStory(user, onSuccess, onFailure)
+    override fun getUserStory(
+        user: User?,
+        onSuccess: (List<Status>) -> Unit,
+        onFailure: () -> Unit,
+        status: Status?
+    ) {
+        SessionInfo.getUserStory(user, onSuccess, onFailure, status)
     }
 
     override fun onDestroy() {

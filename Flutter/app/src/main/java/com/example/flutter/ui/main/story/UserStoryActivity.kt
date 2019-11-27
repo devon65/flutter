@@ -75,8 +75,13 @@ class UserStoryActivity : AppCompatActivity(), StoryContract.IStoryActivity, Sto
         presenter.getUser(userId, alias, onSuccess, onFailure)
     }
 
-    override fun getUserStory(user: User?, onSuccess: (List<Status>) -> Unit, onFailure: () -> Unit) {
-        return presenter.getUserStory(user, onSuccess, onFailure)
+    override fun getUserStory(
+        user: User?,
+        onSuccess: (List<Status>) -> Unit,
+        onFailure: () -> Unit,
+        status: Status?
+    ) {
+        return presenter.getUserStory(user, onSuccess, onFailure, status)
     }
 
     override fun followUser(userId: String, onSuccess: () -> Unit, onFailure: () -> Unit) {

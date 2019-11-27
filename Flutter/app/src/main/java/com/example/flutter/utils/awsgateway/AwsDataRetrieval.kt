@@ -10,6 +10,7 @@ import com.example.flutter.utils.awsgateway.model.StatusListResponse
 import com.example.flutter.utils.awsgateway.model.UserListResponse
 import com.example.flutter.utils.awsgateway.model.UserResponse
 import com.github.kittinunf.fuel.core.FuelManager
+import com.github.kittinunf.fuel.core.Parameters
 import com.github.kittinunf.fuel.gson.responseObject
 import com.github.kittinunf.fuel.httpGet
 
@@ -62,11 +63,19 @@ object AwsDataRetrieval: DataExtractionInterface {
         else null
     }
 
-    override fun getUserFeed(user: User?, nextIndex: Int): List<Status> {
-        if (user == null) return listOf()
+    override fun getUserFeed(user: User?, lastStatus: Status?): List<Status> {
+        if (user?.userId == null) return listOf()
+
+        val params: Parameters =
+            if (lastStatus?.timeStamp != null && lastStatus.statusId != null){
+                listOf(Pair("pagesize", Constants.STATUS_PAGE_SIZE),
+                    Pair("lastTimeStamp", lastStatus.timeStamp),
+                    Pair("lastStatusId", lastStatus.statusId))
+            } else listOf(Pair("pagesize", Constants.STATUS_PAGE_SIZE))
+
         val requestPath = "/user/" + user.userId + "/feed"
         val (request, response, result) = requestPath
-            .httpGet(listOf("nextindex" to nextIndex, "pagesize" to Constants.STATUS_PAGE_SIZE))
+            .httpGet(params)
             .responseObject<StatusListResponse>()
 
         return if (response.statusCode == 200) {
@@ -76,11 +85,19 @@ object AwsDataRetrieval: DataExtractionInterface {
         else listOf()
     }
 
-    override fun getUserStory(user: User?, nextIndex: Int): List<Status> {
+    override fun getUserStory(user: User?, lastStatus: Status?): List<Status> {
         if (user?.userId == null) return listOf()
+
+        val params: Parameters =
+            if (lastStatus?.timeStamp != null && lastStatus.statusId != null){
+                listOf(Pair("pagesize", Constants.STATUS_PAGE_SIZE),
+                    Pair("lastTimeStamp", lastStatus.timeStamp),
+                    Pair("lastStatusId", lastStatus.statusId))
+            } else listOf(Pair("pagesize", Constants.STATUS_PAGE_SIZE))
+
         val requestPath = "/user/" + user.userId + "/story"
         val (request, response, result) = requestPath
-            .httpGet(listOf("nextindex" to nextIndex, "pagesize" to Constants.STATUS_PAGE_SIZE))
+            .httpGet(params)
             .responseObject<StatusListResponse>()
 
         return if (response.statusCode == 200) {
@@ -94,10 +111,17 @@ object AwsDataRetrieval: DataExtractionInterface {
          return this.getUserById("0") ?: User("0", "Joe Cool", "jcool")
     }
 
-    override fun getUserFollowers(userId: String, nextIndex: Int): List<User> {
+    override fun getUserFollowers(userId: String, lastFollower: User?): List<User> {
         val requestPath = "/user/" + userId + "/followers"
+
+        val params: Parameters =
+            if (lastFollower?.userId != null){
+                listOf(Pair("pagesize", Constants.STATUS_PAGE_SIZE),
+                    Pair("lastFollowerId", lastFollower.userId))
+            } else listOf(Pair("pagesize", Constants.STATUS_PAGE_SIZE))
+
         val (request, response, result) = requestPath
-            .httpGet(listOf("nextindex" to nextIndex, "pagesize" to Constants.USER_PAGE_SIZE))
+            .httpGet(params)
             .responseObject<UserListResponse>()
 
         return if (response.statusCode == 200) {
@@ -107,10 +131,17 @@ object AwsDataRetrieval: DataExtractionInterface {
         else listOf()
     }
 
-    override fun getPersonsFollowedByUser(userId: String, nextIndex: Int): List<User> {
+    override fun getPersonsFollowedByUser(userId: String, lastUserFollowed: User?): List<User> {
         val requestPath = "/user/" + userId + "/usersfollowed"
+
+        val params: Parameters =
+            if (lastUserFollowed?.userId != null){
+                listOf(Pair("pagesize", Constants.STATUS_PAGE_SIZE),
+                    Pair("lastUserFollowedId", lastUserFollowed.userId))
+            } else listOf(Pair("pagesize", Constants.STATUS_PAGE_SIZE))
+
         val (request, response, result) = requestPath
-            .httpGet(listOf("nextindex" to nextIndex, "pagesize" to Constants.USER_PAGE_SIZE))
+            .httpGet(params)
             .responseObject<UserListResponse>()
 
         return if (response.statusCode == 200) {

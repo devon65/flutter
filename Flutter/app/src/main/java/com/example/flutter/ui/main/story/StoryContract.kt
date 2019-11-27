@@ -9,7 +9,7 @@ interface StoryContract {
     interface IStoryPresenter : BasePresenter {
         fun onViewCreated(userId: String)
         fun getUser(userId: String?, alias: String?, onSuccess: (User) -> Unit, onFailure: () -> Unit)
-        fun getUserStory(user: User?, onSuccess: (List<Status>) -> Unit, onFailure: () -> Unit)
+        fun getUserStory(user: User?, onSuccess: (List<Status>) -> Unit, onFailure: () -> Unit, status: Status? = null)
         fun followUser(userId: String, onSuccess: () -> Unit, onFailure: () -> Unit)
         fun unfollowUser(userId: String, onSuccess: () -> Unit, onFailure: () -> Unit)
     }

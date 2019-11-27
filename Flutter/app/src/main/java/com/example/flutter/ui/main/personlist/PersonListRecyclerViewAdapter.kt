@@ -21,7 +21,7 @@ class PersonListRecyclerViewAdapter(
 ) : RecyclerView.Adapter<PersonListRecyclerViewAdapter.ViewHolder>() {
 
     interface OnFetchMorePeopleListener{
-        fun fetchMorePeople(nextIndex: Int)
+        fun fetchMorePeople(lastUser: User)
     }
 
     private val mOnClickListener: View.OnClickListener
@@ -42,7 +42,7 @@ class PersonListRecyclerViewAdapter(
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         GlobalScope.launch (Dispatchers.IO){
             if(position == mValues.lastIndex) {
-                onFetchMorePeopleListener.fetchMorePeople(mValues.lastIndex + 1)
+                onFetchMorePeopleListener.fetchMorePeople(mValues[position])
             }
         }
         val person = mValues[position]

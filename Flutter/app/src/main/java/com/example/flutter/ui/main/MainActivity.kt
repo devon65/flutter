@@ -28,16 +28,17 @@ class MainActivity : AppCompatActivity(), MainContract.IMainActivity,
 
     internal lateinit var presenter: MainContract.IMainPresenter
     private lateinit var viewPager: ViewPager
+    private lateinit var menuTabs: TabLayout
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val sectionsPagerAdapter = HomePagerAdapter(this, supportFragmentManager)
         viewPager = findViewById(R.id.view_pager)
+        menuTabs = findViewById(R.id.tabs)
+        val sectionsPagerAdapter = HomePagerAdapter(this, supportFragmentManager)
         viewPager.adapter = sectionsPagerAdapter
-        val tabs: TabLayout = findViewById(R.id.tabs)
-        tabs.setupWithViewPager(viewPager)
+        menuTabs.setupWithViewPager(viewPager)
         viewPager.currentItem = HomePagerAdapter.FEED_FRAGMENT
 
         setPresenter(MainActivityPresenter(this))
@@ -75,6 +76,7 @@ class MainActivity : AppCompatActivity(), MainContract.IMainActivity,
     override fun onLogout() {
         presenter.onLogout(onSuccess = {
             launchLoginActivity()
+            clearStatuses()
             viewPager.currentItem = HomePagerAdapter.FEED_FRAGMENT
         }, onFailure = {
             Toast.makeText(this, "Could not log out. Please try again later.", Toast.LENGTH_LONG).show()
@@ -104,6 +106,15 @@ class MainActivity : AppCompatActivity(), MainContract.IMainActivity,
         val storyFragment = supportFragmentManager.findFragmentByTag(
             "android:switcher:" + R.id.view_pager + ":" + HomePagerAdapter.STORY_FRAGMENT) as StoryBoardFragment
         storyFragment.loadStoryBoard()
+    }
+
+    private fun clearStatuses(){
+        val newsFeedFragment = supportFragmentManager.findFragmentByTag(
+            "android:switcher:" + R.id.view_pager + ":" + HomePagerAdapter.FEED_FRAGMENT) as NewsFeedFragment
+        newsFeedFragment.clearStatuses()
+        val storyFragment = supportFragmentManager.findFragmentByTag(
+            "android:switcher:" + R.id.view_pager + ":" + HomePagerAdapter.STORY_FRAGMENT) as StoryBoardFragment
+        storyFragment.clearStatuses()
     }
 
     override fun postStatus(
@@ -164,8 +175,8 @@ class MainActivity : AppCompatActivity(), MainContract.IMainActivity,
         onSuccess(presenter.getUser())
     }
 
-    override fun getUserStory(user: User?, onSuccess: (List<Status>) -> Unit, onFailure: () -> Unit) {
-        return presenter.getUserStory(onSuccess, onFailure)
+    override fun getUserStory(user: User?, onSuccess: (List<Status>) -> Unit, onFailure: () -> Unit, status: Status?) {
+        return presenter.getUserStory(onSuccess, onFailure, status)
     }
 
     override fun followUser(userId: String, onSuccess: () -> Unit, onFailure: () -> Unit) {

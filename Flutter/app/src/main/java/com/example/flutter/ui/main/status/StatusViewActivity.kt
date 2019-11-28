@@ -86,7 +86,7 @@ class StatusViewActivity : AppCompatActivity(), StatusContract.IStatusActivity {
     }
 
     override fun launchUserStory(userMentionText: String, userId: String?) {
-        if (userId != null || userMentionText != null) {
+        if (userId != null || !userMentionText.isEmpty()) {
             val intent = Intent(this, UserStoryActivity::class.java).apply {
                 putExtra(UserStoryActivity.USER_ID, userId)
                 putExtra(UserStoryActivity.USER_ALIAS, userMentionText)

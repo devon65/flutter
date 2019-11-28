@@ -12,12 +12,26 @@ import kotlinx.coroutines.withContext
 object SendData {
     private val dataSender: DataSenderInterface = AwsDataSending
 
-    fun followUser(currentUserId: String, userToFollowId: String, onSuccess: () -> Unit, onFailure: () -> Unit) {
-        dataSender.followUser(currentUserId, userToFollowId)
+    fun followUser(userToFollowId: String, onSuccess: () -> Unit, onFailure: () -> Unit) {
+        val currentUserId = SessionInfo.currentUser.userId
+        if (currentUserId.isEmpty()) { onFailure() }
+
+        GlobalScope.launch(IO) {
+            val isSuccess = dataSender.followUser(currentUserId, userToFollowId)
+            if (isSuccess) withContext(Main){ onSuccess() }
+            else withContext(Main) { onFailure() }
+        }
     }
 
-    fun unfollowUser(currentUserId: String, userToUnfollowId: String, onSuccess: () -> Unit, onFailure: () -> Unit) {
-        dataSender.unfollowUser(currentUserId, userToUnfollowId)
+    fun unfollowUser(userToUnfollowId: String, onSuccess: () -> Unit, onFailure: () -> Unit) {
+        val currentUserId = SessionInfo.currentUser.userId
+        if (currentUserId.isEmpty()) { onFailure() }
+
+        GlobalScope.launch(IO) {
+            val isSuccess = dataSender.unfollowUser(currentUserId, userToUnfollowId)
+            if (isSuccess) withContext(Main){ onSuccess() }
+            else withContext(Main) { onFailure() }
+        }
     }
 
     fun postStatus(status: Status, onSuccess: (status: Status) -> Unit, onFailure: () -> Unit) {
@@ -28,8 +42,15 @@ object SendData {
         }
     }
 
-    fun updateUser(user: User) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    fun updateProfile(profilePicEncoding: String, onSuccess: () -> Unit, onFailure: () -> Unit) {
+        val currentUserId = SessionInfo.currentUser.userId
+        if (currentUserId.isEmpty()) { onFailure() }
+
+        GlobalScope.launch(IO) {
+            val success = dataSender.updateProfilePic(currentUserId, profilePicEncoding)
+            if (success) withContext(Main){ onSuccess() }
+            else withContext(Main) { onFailure() }
+        }
     }
 
     fun createUser(name: String,

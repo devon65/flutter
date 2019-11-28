@@ -106,10 +106,10 @@ object SessionInfo {
         authenticationHelper.logout(onSuccess, onFailure)
     }
 
-    fun getStatusesByHashtag(tag: String, onSuccess: (List<Status>) -> Unit, onFailure: () -> Unit){ //done
+    fun getStatusesByHashtag(tag: String, onSuccess: (List<Status>) -> Unit, onFailure: () -> Unit, status: Status? = null){ //done
         GlobalScope.launch(Main) {
             val statuses = withContext(IO) {
-                dataExtractor.getStatusesByHashtag(tag)
+                dataExtractor.getStatusesByHashtag(tag, status)
             }
             if (statuses.isNullOrEmpty()) onFailure()
             else {
@@ -133,10 +133,10 @@ object SessionInfo {
         }
     }
 
-    fun getUserFeed(user: User?, onSuccess: (List<Status>) -> Unit, onFailure: () -> Unit){ //done
+    fun getUserFeed(user: User?, onSuccess: (List<Status>) -> Unit, onFailure: () -> Unit, status: Status? = null){ //done
         GlobalScope.launch(Main) {
-            val statuses = withContext(Dispatchers.IO) {
-                dataExtractor.getUserFeed(user)
+            val statuses = withContext(IO) {
+                dataExtractor.getUserFeed(user, status)
             }
             if (statuses.isNullOrEmpty()) onFailure()
             else{
@@ -159,6 +159,19 @@ object SessionInfo {
         }
     }
 
+    fun checkIsFollowing(userId: String, onSuccess: (isFollowing: Boolean) -> Unit){
+        val potentialFollowerId = currentUser.userId
+        if (userId == potentialFollowerId || userId.isEmpty()) { onSuccess(false) }
+
+        GlobalScope.launch(Main) {
+            val isFollowing = withContext(IO) {
+                dataExtractor.getIsFollowing(userId, potentialFollowerId)
+            }
+
+            onSuccess(isFollowing)
+        }
+    }
+
     fun getUserFollowers(userId: String, onSuccess: (List<User>) -> Unit, onFailure: () -> Unit, lastFollower: User? = null){ //done
         GlobalScope.launch(Main) {
             val users = withContext(IO) {
@@ -174,7 +187,7 @@ object SessionInfo {
 
     fun getPersonsFollowedByUser(userId: String, onSuccess: (List<User>) -> Unit, onFailure: () -> Unit, lastFollower: User? = null){ //done
         GlobalScope.launch(Main) {
-            val users = withContext(Dispatchers.IO) {
+            val users = withContext(IO) {
                 dataExtractor.getPersonsFollowedByUser(userId, lastFollower)
             }
             if (users.isNullOrEmpty()) onFailure()

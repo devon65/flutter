@@ -51,7 +51,7 @@ class HashtagFeedActivity : AppCompatActivity(), FeedContract.IFeedActivity, New
     }
 
     override fun launchUserStory(userMentionText: String, userId: String?) {
-        if (userId != null || userMentionText != null) {
+        if (userId != null || !userMentionText.isEmpty()) {
             val intent = Intent(this, UserStoryActivity::class.java).apply {
                 putExtra(UserStoryActivity.USER_ID, userId)
                 putExtra(UserStoryActivity.USER_ALIAS, userMentionText)
@@ -69,8 +69,13 @@ class HashtagFeedActivity : AppCompatActivity(), FeedContract.IFeedActivity, New
         startActivity(intent)
     }
 
-    override fun getStatusFeedList(hashtagText: String?, onSuccess: (List<Status>) -> Unit, onFailure: () -> Unit) {
-        presenter.getStatusFeedList(hashtagText, onSuccess, onFailure)
+    override fun getStatusFeedList(
+        hashtagText: String?,
+        onSuccess: (List<Status>) -> Unit,
+        onFailure: () -> Unit,
+        status: Status?
+    ) {
+        presenter.getStatusFeedList(hashtagText, onSuccess, onFailure, status)
     }
 
     companion object {

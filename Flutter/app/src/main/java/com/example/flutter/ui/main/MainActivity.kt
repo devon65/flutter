@@ -125,8 +125,12 @@ class MainActivity : AppCompatActivity(), MainContract.IMainActivity,
         presenter.postStatus(status, onSuccess, onFailure)
     }
 
-    override fun getContext(): Context {
-        return this
+    override fun updateProfile(
+        profilePicEncoded: String,
+        onSuccess: () -> Unit,
+        onFailure: () -> Unit
+    ) {
+        presenter.updateProfile(profilePicEncoded, onSuccess, onFailure)
     }
 
     override fun launchHashtagFeed(hashtagText: String) {
@@ -137,7 +141,8 @@ class MainActivity : AppCompatActivity(), MainContract.IMainActivity,
     }
 
     override fun launchUserStory(userMentionText: String, userId: String?) {
-        if (userId != null || userMentionText != null) {
+        if (userId != null || !userMentionText.isEmpty()) {
+
             val intent = Intent(this, UserStoryActivity::class.java).apply {
                 putExtra(UserStoryActivity.USER_ID, userId)
                 putExtra(UserStoryActivity.USER_ALIAS, userMentionText)
@@ -162,8 +167,13 @@ class MainActivity : AppCompatActivity(), MainContract.IMainActivity,
         startActivity(intent)
     }
 
-    override fun getStatusFeedList(hashtagText: String?, onSuccess: (List<Status>) -> Unit, onFailure: () -> Unit) {
-        return presenter.getStatusFeedList(onSuccess, onFailure)
+    override fun getStatusFeedList(
+        hashtagText: String?,
+        onSuccess: (List<Status>) -> Unit,
+        onFailure: () -> Unit,
+        status: Status?
+    ) {
+        return presenter.getStatusFeedList(onSuccess, onFailure, status)
     }
 
     override fun getUser(
@@ -177,6 +187,11 @@ class MainActivity : AppCompatActivity(), MainContract.IMainActivity,
 
     override fun getUserStory(user: User?, onSuccess: (List<Status>) -> Unit, onFailure: () -> Unit, status: Status?) {
         return presenter.getUserStory(onSuccess, onFailure, status)
+    }
+
+    override fun checkIsFollowing(userId: String, onSuccess: (isFollowing: Boolean) -> Unit) {
+        //We'll claim that we are not currently following self. This shouldn't display anything anyway
+        onSuccess(false)
     }
 
     override fun followUser(userId: String, onSuccess: () -> Unit, onFailure: () -> Unit) {

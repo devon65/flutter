@@ -3,13 +3,14 @@ package com.example.flutter.utils.awsgateway
 import android.util.Log
 import com.example.flutter.models.Status
 import com.example.flutter.models.User
-import com.example.flutter.utils.Constants
 import com.example.flutter.utils.DataSenderInterface
+import com.example.flutter.utils.awsgateway.model.MessageResponse
 import com.example.flutter.utils.awsgateway.model.StatusResponse
 import com.example.flutter.utils.awsgateway.model.UserResponse
 import com.github.kittinunf.fuel.core.FuelManager
 import com.github.kittinunf.fuel.gson.responseObject
 import com.github.kittinunf.fuel.httpPost
+import com.github.kittinunf.fuel.httpPut
 
 object AwsDataSending: DataSenderInterface {
     private val TAG = this.javaClass.name
@@ -20,11 +21,41 @@ object AwsDataSending: DataSenderInterface {
     }
 
     override fun followUser(currentUserId: String, userToFollowId: String): Boolean {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        val requestPath = "/user/" + currentUserId + "/follow/" + userToFollowId
+
+        val (request, response, result) = requestPath
+            .httpPost()
+            .responseObject<MessageResponse>()
+
+        return if (response.statusCode == 200) {
+            val messageResponse = result.component1() as MessageResponse
+            if  (messageResponse.statusCode != null && messageResponse.statusCode == 200) { true }
+            else {
+                Log.e(TAG, messageResponse.message ?: "")
+                false
+            }
+        } else {
+            false
+        }
     }
 
     override fun unfollowUser(currentUserId: String, userToUnfollowId: String): Boolean {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        val requestPath = "/user/" + currentUserId + "/unfollow/" + userToUnfollowId
+
+        val (request, response, result) = requestPath
+            .httpPost()
+            .responseObject<MessageResponse>()
+
+        return if (response.statusCode == 200) {
+            val messageResponse = result.component1() as MessageResponse
+            if  (messageResponse.statusCode != null && messageResponse.statusCode == 200) { true }
+            else {
+                Log.e(TAG, messageResponse.message ?: "")
+                false
+            }
+        } else {
+            false
+        }
     }
 
     override fun postStatus(status: Status): Status? {
@@ -49,8 +80,23 @@ object AwsDataSending: DataSenderInterface {
         else null
     }
 
-    override fun updateProfilePic(profilePicEncoding: String): Boolean {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    override fun updateProfilePic(currentUserId: String, profilePicEncoding: String): Boolean {
+        val jsonBody = "{\"profilePicEncoded\":\"%s\"}".format(profilePicEncoding)
+        val requestPath = "/user/" + currentUserId + "/update"
+        val (request, response, result) = requestPath
+            .httpPut()
+            .body(jsonBody)
+            .responseObject<MessageResponse>()
+
+        return if (response.statusCode == 200) {
+            val messageResponse = result.component1() as MessageResponse
+            if  (messageResponse.statusCode != null && messageResponse.statusCode == 200) { true }
+            else {
+                Log.e(TAG, messageResponse.message ?: "")
+                false
+            }
+        }
+        else false
     }
 
     override fun createUser(name: String, alias: String, profilePicEncoding: String): User? {

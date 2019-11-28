@@ -5,7 +5,7 @@ import com.example.flutter.models.User
 
 interface DataExtractionInterface {
 
-    fun getStatusesByHashtag(tag: String, nextIndex: Int = 0): List<Status>
+    fun getStatusesByHashtag(tag: String, lastStatus: Status? = null): List<Status>
 
     fun getUserById(userId: String?): User?
 
@@ -16,12 +16,15 @@ interface DataExtractionInterface {
     fun getUserStory(user: User?, lastStatus: Status? = null): List<Status>
 
 //    fun getUserIdByAlias(alias: String?): String?
-
+    @Deprecated("No longer used.")
     fun getCurrentUser(): User?
+
+    fun getIsFollowing(userId: String, potentialFollowerId: String): Boolean
 
     fun getUserFollowers(userId: String, lastFollower: User? = null): List<User>
 
     fun getPersonsFollowedByUser(userId: String, lastUserFollowed: User? = null): List<User>
 
+    @Deprecated("Status caching prevents need for this function. Could be useful in future implementations.")
     fun getStatusById(statusId: String?): Status?
 }

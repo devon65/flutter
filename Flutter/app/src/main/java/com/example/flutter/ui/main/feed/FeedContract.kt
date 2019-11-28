@@ -7,7 +7,7 @@ import com.example.flutter.models.Status
 interface FeedContract {
     interface IFeedPresenter : BasePresenter {
         fun onViewCreated(hashtagText: String)
-        fun getStatusFeedList(hashtagText: String?, onSuccess: (List<Status>) -> Unit, onFailure: () -> Unit)
+        fun getStatusFeedList(hashtagText: String?, onSuccess: (List<Status>) -> Unit, onFailure: () -> Unit, status: Status? = null)
     }
 
     interface IFeedActivity : BaseStatusesView<IFeedPresenter> {

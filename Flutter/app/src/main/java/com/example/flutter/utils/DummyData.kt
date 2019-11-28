@@ -174,7 +174,7 @@ object DummyData: DataExtractionInterface {
 
 
     //Getters
-    override fun getStatusesByHashtag(tag: String, nextIndex: Int): List<Status> {
+    override fun getStatusesByHashtag(tag: String, lastStatus: Status?): List<Status> {
         val statusList = ArrayList<Status>()
         for (statusId in hashtagToStatuses[tag] ?: listOf<String>()){
             val taggedStatus = idToStatusMap[statusId]
@@ -233,6 +233,10 @@ object DummyData: DataExtractionInterface {
 
     override fun getUserByAlias(alias: String?): User? {
         return aliasToUserMap[alias]
+    }
+
+    override fun getIsFollowing(userId: String, potentialFollowerId: String): Boolean {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
     override fun getCurrentUser(): User? {

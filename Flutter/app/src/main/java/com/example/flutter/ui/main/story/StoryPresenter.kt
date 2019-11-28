@@ -31,11 +31,31 @@ class StoryPresenter(storyActivity: StoryContract.IStoryActivity): StoryContract
         this.storyActivity = null
     }
 
+    override fun checkIsFollowing(userId: String, onSuccess: (isFollowing: Boolean) -> Unit) {
+        SessionInfo.checkIsFollowing(userId, onSuccess)
+    }
+
     override fun followUser(userId: String, onSuccess: () -> Unit, onFailure: () -> Unit) {
-        SendData.followUser(userId, SessionInfo.currentUser.userId, onSuccess, onFailure)
+        SendData.followUser(userId, onSuccess, onFailure)
     }
 
     override fun unfollowUser(userId: String, onSuccess: () -> Unit, onFailure: () -> Unit) {
-        SendData.unfollowUser(userId, SessionInfo.currentUser.userId, onSuccess, onFailure)
+        SendData.unfollowUser(userId, onSuccess, onFailure)
+    }
+
+    override fun postStatus(
+        status: Status,
+        onSuccess: (status: Status) -> Unit,
+        onFailure: () -> Unit
+    ) {
+        SendData.postStatus(status, onSuccess, onFailure)
+    }
+
+    override fun updateProfile(
+        profilePicEncoded: String,
+        onSuccess: () -> Unit,
+        onFailure: () -> Unit
+    ) {
+        SendData.updateProfile(profilePicEncoded, onSuccess, onFailure)
     }
 }

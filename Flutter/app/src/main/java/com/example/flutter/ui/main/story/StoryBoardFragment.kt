@@ -3,15 +3,17 @@ package com.example.flutter.ui.main.story
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.net.Uri
 import android.os.Bundle
+import android.util.Base64
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.webkit.WebView
 import android.widget.*
-import androidx.core.graphics.drawable.toDrawable
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -19,15 +21,15 @@ import com.example.flutter.R
 import com.example.flutter.utils.SessionInfo
 import com.example.flutter.models.Status
 import com.example.flutter.models.User
+import com.example.flutter.ui.main.login.SignUpFragment
 import com.example.flutter.ui.main.status.OnStatusInteractionListener
 import com.example.flutter.ui.main.status.StatusRecyclerViewAdapter
 import java.io.FileNotFoundException
-import java.lang.Exception
 import com.example.flutter.utils.Constants
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.IO
 import kotlinx.coroutines.launch
+import java.io.ByteArrayOutputStream
 
 
 /**
@@ -39,6 +41,12 @@ class StoryBoardFragment : Fragment(), StatusRecyclerViewAdapter.OnFetchStatuses
     private var alias: String? = null
     private var loadUponCreation: Boolean? = null
     private var isAlreadyFollowing: Boolean = true
+        set(value){
+            field = value
+            followButton.text =
+                if (value) getText(R.string.story_unfollow)
+                else getText(R.string.story_follow)
+        }
 
     private var displayedUser: User? = null
     private var listener: OnStoryBoardInteractionListener? = null
@@ -188,7 +196,7 @@ class StoryBoardFragment : Fragment(), StatusRecyclerViewAdapter.OnFetchStatuses
     }
 
     private fun showFailedToGetStatuses(){
-        Toast.makeText(context, getText(R.string.status_could_not_retrieve_next_page), Toast.LENGTH_LONG).show()
+//        Toast.makeText(context, getText(R.string.status_could_not_retrieve_next_page), Toast.LENGTH_LONG).show()
     }
 
     private fun showFailedToPostStatus(){
@@ -233,20 +241,22 @@ class StoryBoardFragment : Fragment(), StatusRecyclerViewAdapter.OnFetchStatuses
     }
 
     private fun initializeOtherUser(){
-        followButton.visibility = View.VISIBLE
-        followButton.text = if (isAlreadyFollowing) getText(R.string.story_unfollow)
-                            else getText(R.string.story_follow)
+        listener?.checkIsFollowing(displayedUser?.userId ?: "", onSuccess = {
+            followButton.visibility = View.VISIBLE
+            isAlreadyFollowing = it
+        })
+
         val displayedUser = displayedUser
         if(displayedUser != null) {
             followButton.setOnClickListener {
                 if (isAlreadyFollowing) listener?.unfollowUser(displayedUser.userId, {
-                    followButton.text = getText(R.string.story_unfollow)
+                    isAlreadyFollowing = false
                 },{
                     Toast.makeText(context, getText(R.string.story_unfollow_fail_message), Toast.LENGTH_LONG).show()
                 })
 
                 else listener?.followUser(displayedUser.userId, {
-                    followButton.text = getText(R.string.story_follow)
+                    isAlreadyFollowing = true
                 },{
                     Toast.makeText(context, getText(R.string.story_follow_fail_message), Toast.LENGTH_LONG).show()
                 })
@@ -313,21 +323,43 @@ class StoryBoardFragment : Fragment(), StatusRecyclerViewAdapter.OnFetchStatuses
         super.onActivityResult(requestCode, resultCode, data)
 
         if(resultCode == Activity.RESULT_OK){
-            try {
-                val targetUri = data?.data
-                val bitmap = BitmapFactory.decodeStream(context?.contentResolver?.openInputStream(targetUri))
-                if (bitmap != null){
-                    when (requestCode) {
-                        EDIT_PROFILE_PIC_REQUEST_CODE -> this.profilePicture?.background = bitmap.toDrawable(resources)
-//                        ADD_ATTACHMENT_REQUEST_CODE -> this.statusAttachment?.setImageBitmap(bitmap)
-                    }
-                }
-            }catch (e: FileNotFoundException){
-                Log.e(TAG, "Could not find selected picture on system.")
-            }catch (e: Exception){
-                Log.e(TAG, "Could not convert file")
-            }
+            val targetUri = data?.data
+            if (targetUri != null){ updateProfilePic(targetUri) }
+            else { showFailedToGetStatuses() }
         }
+    }
+
+    private fun updateProfilePic(targetUri: Uri){
+        try {
+            val bitmap = BitmapFactory.decodeStream(context?.contentResolver?.openInputStream(targetUri))
+            if (bitmap != null){
+                val filePath = targetUri.path
+                val imageType = filePath?.substring(filePath.lastIndexOf(".") + 1); // Without dot jpg, png
+                val byteArrayOutStream = ByteArrayOutputStream()
+                if (imageType?.toUpperCase() == PNG_FORMAT){
+                    bitmap.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutStream)
+                }
+                else {
+                    bitmap.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOutStream)
+                }
+                val byteArray = byteArrayOutStream.toByteArray()
+                val profilePicEncoding = Base64.encodeToString(byteArray, Base64.NO_WRAP)
+
+                listener?.updateProfile(profilePicEncoding,
+                    onSuccess = {
+                        profilePicture.reload()
+                    }, onFailure = {
+                        showProfileUpdateFailed()
+                    })
+            }
+        }catch (e: FileNotFoundException){
+            Log.e(TAG, "Could not find profile picture on system.")
+            showProfileUpdateFailed()
+        }
+    }
+
+    private fun showProfileUpdateFailed(){
+        Toast.makeText(context, "Failed to update profile picture.", Toast.LENGTH_LONG).show()
     }
 
     override fun onAttach(context: Context) {
@@ -348,13 +380,16 @@ class StoryBoardFragment : Fragment(), StatusRecyclerViewAdapter.OnFetchStatuses
         fun getUser(userId: String?, alias: String?, onSuccess: (User) -> Unit, onFailure: () -> Unit)
         fun getUserStory(user: User?, onSuccess: (List<Status>) -> Unit, onFailure: () -> Unit, status: Status? = null)
         fun launchPersonList(personListType: String, userId: String?, usersName: String?)
+        fun checkIsFollowing(userId: String, onSuccess: (isFollowing: Boolean) -> Unit)
         fun followUser(userId: String, onSuccess: () -> Unit, onFailure: () -> Unit)
         fun unfollowUser(userId: String, onSuccess: () -> Unit, onFailure: () -> Unit)
         fun postStatus(status: Status, onSuccess: (status: Status) -> Unit, onFailure: () -> Unit)
+        fun updateProfile(profilePicEncoded: String, onSuccess: () -> Unit, onFailure: () -> Unit)
     }
 
     companion object {
-        private const val TAG = "StoryBoardFragment"
+        private val TAG = this::class.java.name
+        private val PNG_FORMAT = "PNG"
         private const val USER_ID = "userId"
         private const val USER_ALIAS = "userAlias"
         private const val LOAD_UPON_CREATION = "loadUponCreation"

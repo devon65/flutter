@@ -73,12 +73,12 @@ class NewsFeedFragment : Fragment(), StatusRecyclerViewAdapter.OnFetchStatusesLi
     }
 
     private fun showFailedToGetStatuses(){
-        Toast.makeText(context, getText(R.string.status_could_not_retrieve_next_page), Toast.LENGTH_LONG).show()
+//        Toast.makeText(context, getText(R.string.status_could_not_retrieve_next_page), Toast.LENGTH_LONG).show()
     }
 
     override fun fetchMoreStatuses(status: Status) {
         GlobalScope.launch (Dispatchers.IO){
-            listener?.getStatusFeedList(hashtag, {appendStatuses(it)}, {showFailedToGetStatuses()})
+            listener?.getStatusFeedList(hashtag, {appendStatuses(it)}, {showFailedToGetStatuses()}, status)
         }
     }
 
@@ -97,7 +97,12 @@ class NewsFeedFragment : Fragment(), StatusRecyclerViewAdapter.OnFetchStatusesLi
     }
 
     interface OnNewsFeedInteractionListener: OnStatusInteractionListener {
-        fun getStatusFeedList(hashtagText: String?, onSuccess: (List<Status>) -> Unit, onFailure: () -> Unit)
+        fun getStatusFeedList(
+            hashtagText: String?,
+            onSuccess: (List<Status>) -> Unit,
+            onFailure: () -> Unit,
+            status: Status? = null
+        )
     }
 
     companion object {

@@ -84,6 +84,10 @@ class UserStoryActivity : AppCompatActivity(), StoryContract.IStoryActivity, Sto
         return presenter.getUserStory(user, onSuccess, onFailure, status)
     }
 
+    override fun checkIsFollowing(userId: String, onSuccess: (isFollowing: Boolean) -> Unit) {
+        presenter.checkIsFollowing(userId, onSuccess)
+    }
+
     override fun followUser(userId: String, onSuccess: () -> Unit, onFailure: () -> Unit) {
         presenter.followUser(userId, onSuccess, onFailure)
     }
@@ -92,12 +96,20 @@ class UserStoryActivity : AppCompatActivity(), StoryContract.IStoryActivity, Sto
         presenter.unfollowUser(userId, onSuccess, onFailure)
     }
 
+    override fun updateProfile(
+        profilePicEncoded: String,
+        onSuccess: () -> Unit,
+        onFailure: () -> Unit
+    ) {
+        presenter.updateProfile(profilePicEncoded, onSuccess, onFailure)
+    }
+
     override fun postStatus(
         status: Status,
         onSuccess: (status: Status) -> Unit,
         onFailure: () -> Unit
     ) {
-
+        presenter.postStatus(status, onSuccess, onFailure)
     }
 
     companion object{

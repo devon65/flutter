@@ -19,11 +19,18 @@ class MainActivityPresenter(mainActivity: MainContract.IMainActivity) :
         }
     }
 
-    override fun getStatusFeedList(onSuccess: (List<Status>) -> Unit, onFailure: () -> Unit) {
-        return SessionInfo.getUserFeed(SessionInfo.currentUser, onSuccess, onFailure)
+    override fun getStatusFeedList(
+        onSuccess: (List<Status>) -> Unit,
+        onFailure: () -> Unit,
+        status: Status?
+    ) {
+        return SessionInfo.getUserFeed(SessionInfo.currentUser, onSuccess, onFailure, status)
     }
 
-    override fun getUserStory(onSuccess: (List<Status>) -> Unit, onFailure: () -> Unit, status: Status?
+    override fun getUserStory(
+        onSuccess: (List<Status>) -> Unit,
+        onFailure: () -> Unit,
+        status: Status?
     ) {
         return SessionInfo.getUserStory(SessionInfo.currentUser, onSuccess, onFailure, status)
     }
@@ -45,6 +52,14 @@ class MainActivityPresenter(mainActivity: MainContract.IMainActivity) :
         onFailure: () -> Unit
     ) {
         SendData.postStatus(status, onSuccess, onFailure)
+    }
+
+    override fun updateProfile(
+        profilePicEncoded: String,
+        onSuccess: () -> Unit,
+        onFailure: () -> Unit
+    ) {
+        SendData.updateProfile(profilePicEncoded, onSuccess, onFailure)
     }
 
     override fun onDestroy() {

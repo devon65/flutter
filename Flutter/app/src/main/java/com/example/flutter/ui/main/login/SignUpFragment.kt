@@ -128,7 +128,7 @@ class SignUpFragment : Fragment() {
     }
 
     companion object {
-        private val TAG = "SignUpFragment"
+        private val TAG = this::class.java.name
         private val PNG_FORMAT = "PNG"
         @JvmStatic
         fun newInstance() =

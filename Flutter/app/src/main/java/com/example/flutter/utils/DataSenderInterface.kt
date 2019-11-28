@@ -10,7 +10,7 @@ interface DataSenderInterface {
 
     fun postStatus(status: Status): Status?
 
-    fun updateProfilePic(profilePicEncoding: String): Boolean
+    fun updateProfilePic(currentUserId: String, profilePicEncoding: String): Boolean
 
     fun createUser(name: String, alias: String, profilePicEncoding: String): User?
 }

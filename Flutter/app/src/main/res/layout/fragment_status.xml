@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/status_layout"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:padding="10dp"
+    android:orientation="horizontal">
+
+
+    <LinearLayout
+        android:id="@+id/status_pro_pic_holder"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginRight="10dp">
+
+        <WebView
+            android:id="@+id/status_profile_pic"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_gravity="center_horizontal"/>
+    </LinearLayout>
+
+
+    <!--    <ImageView android:id="@+id/status_profile_pic"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_marginRight="10dp"-->
+<!--        android:background="@mipmap/ic_flutter_bird_round"-->
+<!--        android:src="@drawable/picture_frame" />-->
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView android:id="@+id/status_handle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/hyperlinkBlue"
+            android:text="\@Jcool"/>
+
+        <TextView android:id="@+id/status_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="10dp"
+            android:layout_marginVertical="5dp"
+            android:text="October 31, 2019"/>
+
+        <TextView android:id="@+id/status_message_body"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAllCaps="false"
+            android:textSize="18sp"
+            android:lineSpacingExtra="3sp"
+            android:text="Snoopy is a fictional character, the pet beagle of Charlie Brown in the comic strip Peanuts by Charles M. Schulz. Snoopy is a fictional character, the pet beagle of Charlie Brown in the comic strip Peanuts by Charles M. Schulz. "/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="10dp">
+
+            <WebView
+                android:id="@+id/status_attachment"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                tools:visibility="visible" />
+        </LinearLayout>
+
+<!--        <ImageView-->
+<!--            android:id="@+id/status_image_attachment"-->
+<!--            android:layout_width="fill_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:minHeight="200dp"-->
+<!--            android:visibility="gone"-->
+<!--            tools:src="@mipmap/ic_rock_climbing2"-->
+<!--            tools:visibility="visible" />-->
+        <!--        <VideoView-->
+<!--            android:id="@+id/status_video_attachment"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:visibility="gone"-->
+<!--            tools:visibility="visible" />-->
+    </LinearLayout>
+
+
+</LinearLayout>

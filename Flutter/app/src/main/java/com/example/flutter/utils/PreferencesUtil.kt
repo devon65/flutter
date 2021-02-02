@@ -1,9 +1,9 @@
-package com.example.flutter.Utils
+package com.example.flutter.utils
 
 import android.content.Context
 import android.preference.PreferenceManager
 
-object SharedPreferencesUtil {
+object PreferencesUtil {
     fun getBoolean(context: Context?, key: String, defaultBoolean: Boolean): Boolean{
         if(context == null){return defaultBoolean}
         val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)
@@ -20,7 +20,7 @@ object SharedPreferencesUtil {
     fun getString(context: Context?, key: String, defaultString: String = ""): String{
         if(context == null){return defaultString}
         val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)
-        return sharedPreferences.getString(key, defaultString)
+        return sharedPreferences.getString(key, defaultString) ?: defaultString
     }
 
     fun setString(context: Context?, key: String, value: String): Boolean{

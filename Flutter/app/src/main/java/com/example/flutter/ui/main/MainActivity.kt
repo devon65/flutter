@@ -4,37 +4,62 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.preference.PreferenceManager
-import com.google.android.material.floatingactionbutton.FloatingActionButton
-import com.google.android.material.snackbar.Snackbar
+import android.view.Menu
+import android.view.MenuItem
 import com.google.android.material.tabs.TabLayout
 import androidx.viewpager.widget.ViewPager
 import androidx.appcompat.app.AppCompatActivity
 import com.example.flutter.R
-import com.example.flutter.Utils.Constants
+import com.example.flutter.utils.Constants
+import com.example.flutter.models.Status
+import com.example.flutter.models.User
+import com.example.flutter.ui.main.feed.HashtagFeedActivity
+import com.example.flutter.ui.main.feed.NewsFeedFragment
 import com.example.flutter.ui.main.login.LoginActivity
+import com.example.flutter.ui.main.status.StatusViewActivity
+import com.example.flutter.ui.main.story.StoryBoardFragment
+import com.example.flutter.ui.main.story.UserStoryActivity
+import com.example.flutter.ui.main.personlist.PersonListActivity
+import com.example.flutter.ui.main.status.StatusRecyclerViewAdapter
 
-class MainActivity : AppCompatActivity(), MainContract.IMainActivity {
+class MainActivity : AppCompatActivity(), MainContract.IMainActivity,
+    NewsFeedFragment.OnNewsFeedInteractionListener, StoryBoardFragment.OnStoryBoardInteractionListener {
+
     internal lateinit var presenter: MainContract.IMainPresenter
+    private lateinit var viewPager: ViewPager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        val sectionsPagerAdapter = SectionsPagerAdapter(this, supportFragmentManager)
-        val viewPager: ViewPager = findViewById(R.id.view_pager)
+
+        val sectionsPagerAdapter = HomePagerAdapter(this, supportFragmentManager)
+        viewPager = findViewById(R.id.view_pager)
         viewPager.adapter = sectionsPagerAdapter
         val tabs: TabLayout = findViewById(R.id.tabs)
         tabs.setupWithViewPager(viewPager)
-        val fab: FloatingActionButton = findViewById(R.id.fab)
+        viewPager.setCurrentItem(HomePagerAdapter.FEED_FRAGMENT)
 
-        val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this)
         setPresenter(MainActivityPresenter(this))
-        presenter.onViewCreated()
 
-        fab.setOnClickListener { view ->
-            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                    .setAction("Action", null).show()
+//        val fab: FloatingActionButton = findViewById(R.id.fab)
+//        fab.setOnClickListener { view ->
+//            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+//                    .setAction("Action", null).show()
+//        }
+        presenter.onViewCreated()
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        val inflater = menuInflater
+        inflater.inflate(R.menu.menu_main, menu)
+        return super.onCreateOptionsMenu(menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        when (item?.itemId){
+            R.id.action_logout -> onLogout()
         }
+        return super.onOptionsItemSelected(item)
     }
 
     override fun onDestroy() {
@@ -42,14 +67,13 @@ class MainActivity : AppCompatActivity(), MainContract.IMainActivity {
         super.onDestroy()
     }
 
-    override fun displayWeatherState() {
-        return
-    }
-
     override fun setPresenter(presenter: MainActivityPresenter) {
         this.presenter = presenter
     }
 
+    override fun onLogout() {
+        launchLoginActivity()
+    }
 
     override fun launchLoginActivity(){
         val intent = Intent(this, LoginActivity::class.java).apply {
@@ -59,16 +83,90 @@ class MainActivity : AppCompatActivity(), MainContract.IMainActivity {
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        // Check which request we're responding to
+        super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == Constants.ON_LOGIN_COMPLETE) {
             if (resultCode == Activity.RESULT_OK) {
-                //TODO: Do something if necessary
+                loadUserHomepage()
             }
         }
     }
 
+    override fun loadUserHomepage(){
+        val newsFeedFragment = supportFragmentManager.findFragmentByTag(
+            "android:switcher:" + R.id.view_pager + ":" + HomePagerAdapter.FEED_FRAGMENT) as NewsFeedFragment
+        newsFeedFragment.loadNewsFeed()
+        val storyFragment = supportFragmentManager.findFragmentByTag(
+            "android:switcher:" + R.id.view_pager + ":" + HomePagerAdapter.STORY_FRAGMENT) as StoryBoardFragment
+        storyFragment.loadStoryBoard()
+    }
+
+    override fun postStatus(
+        status: Status,
+        onSuccess: (status: Status) -> Unit,
+        onFailure: () -> Unit
+    ) {
+        presenter.postStatus(status, onSuccess, onFailure)
+    }
 
     override fun getContext(): Context {
         return this
+    }
+
+    override fun launchHashtagFeed(hashtagText: String) {
+        val intent = Intent(this, HashtagFeedActivity::class.java).apply {
+            putExtra(HashtagFeedActivity.HASHTAG_ID, hashtagText)
+        }
+        startActivity(intent)
+    }
+
+    override fun launchUserStory(userMentionText: String, userId: String?) {
+        if (userId != null || userMentionText != null) {
+            val intent = Intent(this, UserStoryActivity::class.java).apply {
+                putExtra(UserStoryActivity.USER_ID, userId)
+                putExtra(UserStoryActivity.USER_ALIAS, userMentionText)
+            }
+            startActivity(intent)
+        }
+    }
+
+    override fun launchStatusView(status: Status) {
+        val intent = Intent(this, StatusViewActivity::class.java).apply {
+            putExtra(StatusViewActivity.STATUS_ID, status.statusId)
+        }
+        startActivity(intent)
+    }
+
+    override fun launchPersonList(personListType: String, userId: String?, usersName: String?) {
+        val intent = Intent(this, PersonListActivity::class.java).apply {
+            putExtra(PersonListActivity.PERSON_LIST_TYPE, personListType)
+            putExtra(PersonListActivity.USER_ID, userId)
+            putExtra(PersonListActivity.NAME, usersName)
+        }
+        startActivity(intent)
+    }
+
+    override fun getStatusFeedList(hashtagText: String?, onSuccess: (List<Status>) -> Unit, onFailure: () -> Unit) {
+        return presenter.getStatusFeedList(onSuccess, onFailure)
+    }
+
+    override fun getUser(
+        userId: String?,
+        alias: String?,
+        onSuccess: (User) -> Unit,
+        onFailure: () -> Unit
+    ) {
+        onSuccess(presenter.getUser())
+    }
+
+    override fun getUserStory(user: User?, onSuccess: (List<Status>) -> Unit, onFailure: () -> Unit) {
+        return presenter.getUserStory(onSuccess, onFailure)
+    }
+
+    override fun followUser(userId: String, onSuccess: () -> Unit, onFailure: () -> Unit) {
+        //can't follow self
+    }
+
+    override fun unfollowUser(userId: String, onSuccess: () -> Unit, onFailure: () -> Unit) {
+        //can't unfollow self
     }
 }
